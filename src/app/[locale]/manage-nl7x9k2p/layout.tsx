@@ -23,12 +23,16 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
       fetch("/api/subscription")
         .then((r) => r.json())
         .then((data) => {
+          if (data.planChosen === false) {
+            router.push("/choose-plan");
+            return;
+          }
           setSubActive(data.isActive === true);
           setSubChecked(true);
         })
         .catch(() => setSubChecked(true));
     }
-  }, [status]);
+  }, [status, router]);
 
   if (status === "loading" || (status === "authenticated" && !subChecked)) {
     return (

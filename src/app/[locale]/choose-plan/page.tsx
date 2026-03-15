@@ -2,7 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { SessionProvider, useSession } from "next-auth/react";
 import { Wifi, Zap, Crown, Rocket, Check } from "lucide-react";
 
 const PLANS = [
@@ -27,11 +28,26 @@ const PLANS = [
   },
 ];
 
-export default function ChoosePlanPage() {
+function ChoosePlanContent() {
   const t = useTranslations("landing.pricing");
   const tp = useTranslations("plans");
   const router = useRouter();
+  const { status } = useSession();
   const [loading, setLoading] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/auth/login");
+    }
+  }, [status, router]);
+
+  if (status !== "authenticated") {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   async function selectPlan(plan: string) {
     setLoading(plan);
@@ -130,5 +146,13 @@ export default function ChoosePlanPage() {
         ))}
       </div>
     </div>
+  );
+}
+
+export default function ChoosePlanPage() {
+  return (
+    <SessionProvider>
+      <ChoosePlanContent />
+    </SessionProvider>
   );
 }

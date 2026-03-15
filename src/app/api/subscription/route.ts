@@ -25,6 +25,7 @@ export async function GET() {
   });
 
   const now = new Date();
+  const planChosen = user.trialEndsAt !== null; // user has selected a plan
   const isTrialActive = user.trialEndsAt && user.trialEndsAt > now;
   const isSubscriptionActive =
     subscription &&
@@ -35,6 +36,7 @@ export async function GET() {
 
   return NextResponse.json({
     plan: user.plan,
+    planChosen,
     trialEndsAt: user.trialEndsAt,
     subscription: subscription
       ? {
@@ -44,7 +46,7 @@ export async function GET() {
           currentPeriodEnd: subscription.currentPeriodEnd,
         }
       : null,
-    isActive: isTrialActive || isSubscriptionActive,
+    isActive: !planChosen || isTrialActive || isSubscriptionActive,
     limits,
   });
 }

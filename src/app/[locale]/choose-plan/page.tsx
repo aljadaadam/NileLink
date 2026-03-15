@@ -6,6 +6,27 @@ import { useState, useEffect } from "react";
 import { SessionProvider, useSession } from "next-auth/react";
 import { Wifi, Zap, Crown, Rocket, Check } from "lucide-react";
 
+interface CurrencyInfo {
+  code: string;
+  symbol: string;
+  rate: number;
+}
+
+function formatPrice(amount: number, currency: CurrencyInfo): string {
+  let rounded: number;
+  if (currency.rate >= 1000) {
+    rounded = Math.round(amount / 1000) * 1000;
+  } else if (currency.rate >= 100) {
+    rounded = Math.round(amount / 10) * 10;
+  } else if (currency.rate >= 10) {
+    rounded = Math.round(amount);
+  } else {
+    rounded = Math.round(amount * 100) / 100;
+  }
+  if (currency.code === "USD") return `$${rounded}`;
+  return `${rounded} ${currency.symbol}`;
+}
+
 const PLANS = [
   {
     key: "STARTER",
@@ -34,12 +55,22 @@ function ChoosePlanContent() {
   const router = useRouter();
   const { status } = useSession();
   const [loading, setLoading] = useState<string | null>(null);
+  const [currency, setCurrency] = useState<CurrencyInfo>({ code: "USD", symbol: "$", rate: 1 });
 
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/auth/login");
     }
   }, [status, router]);
+
+  useEffect(() => {
+    fetch("/api/geo")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.currency) setCurrency(data.currency);
+      })
+      .catch(() => {});
+  }, []);
 
   if (status !== "authenticated") {
     return (
@@ -109,7 +140,7 @@ function ChoosePlanContent() {
 
             <div className="mb-2">
               <span className={`text-3xl font-bold ${popular ? "text-white" : "text-slate-900"}`}>
-                ${priceUSD}
+                {formatPrice(priceUSD * currency.rate, currency)}
               </span>
               <span className={`text-sm ms-1 ${popular ? "text-primary-100" : "text-slate-500"}`}>
                 / {t("month")}

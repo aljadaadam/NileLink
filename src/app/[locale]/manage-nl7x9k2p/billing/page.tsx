@@ -58,20 +58,44 @@ function formatDate(d: string) {
   return new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 }
 
+interface CurrencyInfo {
+  code: string;
+  symbol: string;
+  rate: number;
+}
+
+function formatPrice(amount: number, currency: CurrencyInfo): string {
+  let rounded: number;
+  if (currency.rate >= 1000) {
+    rounded = Math.round(amount / 1000) * 1000;
+  } else if (currency.rate >= 100) {
+    rounded = Math.round(amount / 10) * 10;
+  } else if (currency.rate >= 10) {
+    rounded = Math.round(amount);
+  } else {
+    rounded = Math.round(amount * 100) / 100;
+  }
+  if (currency.code === "USD") return `$${rounded}`;
+  return `${rounded} ${currency.symbol}`;
+}
+
 export default function BillingPage() {
   const t = useTranslations("billing");
   const [sub, setSub] = useState<SubscriptionInfo | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currency, setCurrency] = useState<CurrencyInfo>({ code: "USD", symbol: "$", rate: 1 });
 
   useEffect(() => {
     Promise.all([
       fetch("/api/subscription").then((r) => r.json()),
       fetch("/api/invoices").then((r) => r.json()),
+      fetch("/api/geo").then((r) => r.json()),
     ])
-      .then(([subData, invData]) => {
+      .then(([subData, invData, geoData]) => {
         setSub(subData);
         setInvoices(Array.isArray(invData) ? invData : []);
+        if (geoData.currency) setCurrency(geoData.currency);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -119,7 +143,7 @@ export default function BillingPage() {
               </div>
             </div>
             <div className="text-end">
-              <p className="text-2xl font-bold text-slate-900">${sub.limits.priceUSD}</p>
+              <p className="text-2xl font-bold text-slate-900">{formatPrice(sub.limits.priceUSD * currency.rate, currency)}</p>
               <p className="text-sm text-slate-500">/ {t("month")}</p>
             </div>
           </div>

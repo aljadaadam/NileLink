@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Auth Models ───────────────────────────────────────────
+
+model User {
+  id             String    @id @default(cuid())
+  name           String
+  email          String    @unique
+  hashedPassword String
+  company        String?
+  phone          String?
+  locale         String    @default("en")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  routers        Router[]
+  packages       Package[]
+  vouchers       Voucher[]
+  hotspotUsers   HotspotUser[]
+  sessions       Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// ─── Router Models ─────────────────────────────────────────
+
+model Router {
+  id            String       @id @default(cuid())
+  name          String
+  host          String
+  port          Int          @default(8728)
+  username      String
+  password      String
+  apiKey        String       @unique
+  status        RouterStatus @default(OFFLINE)
+  lastSeen      DateTime?
+  loginPageHtml String?      @db.Text
+  loginPageCss  String?      @db.Text
+  userId        String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hotspotUsers  HotspotUser[]
+  activeSessions HotspotSession[]
+
+  @@map("routers")
+}
+
+enum RouterStatus {
+  ONLINE
+  OFFLINE
+  ERROR
+}
+
+// ─── Package Models ────────────────────────────────────────
+
+model Package {
+  id           String      @id @default(cuid())
+  name         String
+  nameAr       String?
+  duration     Int?        // minutes
+  dataLimit    BigInt?     // bytes
+  uploadSpeed  Int?        // kbps
+  downloadSpeed Int?       // kbps
+  price        Decimal     @db.Decimal(10, 2)
+  currency     String      @default("USD")
+  isActive     Boolean     @default(true)
+  userId       String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vouchers     Voucher[]
+
+  @@map("packages")
+}
+
+// ─── Voucher Models ────────────────────────────────────────
+
+model Voucher {
+  id          String        @id @default(cuid())
+  code        String        @unique
+  status      VoucherStatus @default(UNUSED)
+  packageId   String
+  userId      String
+  usedBy      String?
+  usedAt      DateTime?
+  expiresAt   DateTime?
+  createdAt   DateTime      @default(now())
+
+  package     Package       @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([code])
+  @@index([status])
+  @@map("vouchers")
+}
+
+enum VoucherStatus {
+  UNUSED
+  ACTIVE
+  USED
+  EXPIRED
+}
+
+// ─── Hotspot User Models ───────────────────────────────────
+
+model HotspotUser {
+  id            String          @id @default(cuid())
+  username      String
+  password      String
+  routerId      String
+  userId        String
+  packageName   String?
+  bytesIn       BigInt          @default(0)
+  bytesOut      BigInt          @default(0)
+  uptime        Int             @default(0) // seconds
+  isActive      Boolean         @default(true)
+  expiresAt     DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  router        Router          @relation(fields: [routerId], references: [id], onDelete: Cascade)
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions      HotspotSession[]
+
+  @@unique([username, routerId])
+  @@map("hotspot_users")
+}
+
+model HotspotSession {
+  id            String   @id @default(cuid())
+  hotspotUserId String
+  routerId      String
+  ipAddress     String?
+  macAddress    String?
+  bytesIn       BigInt   @default(0)
+  bytesOut      BigInt   @default(0)
+  startedAt     DateTime @default(now())
+  endedAt       DateTime?
+
+  hotspotUser   HotspotUser @relation(fields: [hotspotUserId], references: [id], onDelete: Cascade)
+  router        Router      @relation(fields: [routerId], references: [id], onDelete: Cascade)
+
+  @@map("hotspot_sessions")
+}

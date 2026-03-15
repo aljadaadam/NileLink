@@ -10,6 +10,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
+import PricingSection from "@/components/landing/PricingSection";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 export default async function HomePage({
@@ -113,6 +114,9 @@ export default async function HomePage({
           </div>
         </div>
       </section>
+
+      {/* Pricing */}
+      <PricingSection />
 
       {/* CTA */}
       <section className="py-24 bg-gradient-to-br from-primary-600 to-primary-800">

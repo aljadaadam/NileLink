@@ -59,6 +59,44 @@
         "desc": "View real-time statistics, connected users, and revenue analytics."
       }
     },
+    "pricing": {
+      "title": "Simple, Transparent Pricing",
+      "subtitle": "Choose the plan that fits your network size. Upgrade or downgrade anytime.",
+      "month": "mo",
+      "popular": "Most Popular",
+      "cta": "Get Started",
+      "converted": "Prices shown in {currency} (approximate conversion)",
+      "plans": {
+        "starter": {
+          "name": "Starter",
+          "desc": "Perfect for small cafés and single-location hotspots."
+        },
+        "pro": {
+          "name": "Professional",
+          "desc": "For growing businesses with multiple locations."
+        },
+        "enterprise": {
+          "name": "Enterprise",
+          "desc": "Full power for large networks and ISPs."
+        }
+      },
+      "features": {
+        "routers3": "Up to 3 routers",
+        "users50": "50 hotspot users",
+        "vouchers100": "100 vouchers/month",
+        "support": "Email support",
+        "routers10": "Up to 10 routers",
+        "usersUnlimited": "Unlimited hotspot users",
+        "vouchersUnlimited": "Unlimited vouchers",
+        "customLogin": "Custom login pages",
+        "analytics": "Advanced analytics",
+        "priority": "Priority support",
+        "routersUnlimited": "Unlimited routers",
+        "api": "API access",
+        "dedicated": "Dedicated account manager",
+        "whiteLabel": "White-label branding"
+      }
+    },
     "footer": {
       "rights": "All rights reserved."
     }

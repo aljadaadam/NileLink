@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { useState, useEffect } from "react";
-import { Wifi, Mail, Lock, User, Building2, Phone, Eye, EyeOff, ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Wifi, Mail, Lock, User, Building2, Phone, Eye, EyeOff, ChevronDown, Loader2 } from "lucide-react";
 
 const COUNTRY_CODES = [
   // Arab countries
@@ -193,6 +193,18 @@ export default function RegisterPage() {
   const [countryCode, setCountryCode] = useState("+249");
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowDropdown(false);
+      }
+    }
+    if (showDropdown) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showDropdown]);
 
   useEffect(() => {
     fetch("/api/geo")
@@ -237,14 +249,16 @@ export default function RegisterPage() {
         }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
         setError(data.error || "Registration failed");
         setLoading(false);
         return;
       }
 
-      router.push("/auth/login");
+      const email = formData.get("email") as string;
+      router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
     } catch {
       setError("Something went wrong");
       setLoading(false);
@@ -373,7 +387,7 @@ export default function RegisterPage() {
               </label>
               <div className="flex gap-2" dir="ltr">
                 {/* Country Code Selector */}
-                <div className="relative">
+                <div className="relative" ref={dropdownRef}>
                   <button
                     type="button"
                     onClick={() => { setShowDropdown(!showDropdown); setSearchQuery(""); }}
@@ -439,7 +453,12 @@ export default function RegisterPage() {
               disabled={loading}
               className="btn-primary w-full"
             >
-              {loading ? t("submit") + "..." : t("submit")}
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {t("submit")}
+                </span>
+              ) : t("submit")}
             </button>
           </form>
 

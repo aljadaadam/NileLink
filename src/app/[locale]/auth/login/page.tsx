@@ -1,15 +1,14 @@
 "use client";
 
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "@/i18n/navigation";
-import { Wifi, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Wifi, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const t = useTranslations("auth.login");
-  const locale = useLocale();
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,6 +30,10 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
+      if (result.error.includes("EMAIL_NOT_VERIFIED") || result.code === "EMAIL_NOT_VERIFIED") {
+        router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
+        return;
+      }
       setError(t("error"));
       setLoading(false);
     } else {
@@ -109,7 +112,12 @@ export default function LoginPage() {
               disabled={loading}
               className="btn-primary w-full"
             >
-              {loading ? t("submit") + "..." : t("submit")}
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {t("submit")}
+                </span>
+              ) : t("submit")}
             </button>
           </form>
 

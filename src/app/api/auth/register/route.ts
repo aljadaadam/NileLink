@@ -3,6 +3,8 @@ import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
+import { sendEmail, generateVerifyCode } from "@/lib/email";
+import { verificationCodeEmail } from "@/lib/email-templates";
 
 const registerSchema = z.object({
   name: z.string().min(2).max(100),
@@ -38,6 +40,8 @@ export async function POST(req: NextRequest) {
     }
 
     const hashedPassword = await hash(data.password, 12);
+    const verifyCode = generateVerifyCode();
+    const verifyExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     await prisma.user.create({
       data: {
@@ -46,10 +50,19 @@ export async function POST(req: NextRequest) {
         hashedPassword,
         company: data.company,
         phone: data.phone,
+        verifyCode,
+        verifyExpires,
       },
     });
 
-    return NextResponse.json({ success: true }, { status: 201 });
+    // Send verification email (non-blocking)
+    sendEmail(
+      data.email,
+      "Verify your email - NileLink",
+      verificationCodeEmail(verifyCode, data.name)
+    ).catch((err) => console.error("Failed to send verification email:", err));
+
+    return NextResponse.json({ success: true, requireVerification: true }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(

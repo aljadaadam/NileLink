@@ -126,6 +126,19 @@
       "login": "Sign In",
       "passwordMismatch": "Passwords do not match",
       "emailExists": "This email is already registered"
+    },
+    "verify": {
+      "title": "Verify Your Email",
+      "subtitle": "Enter the 6-digit code sent to your email",
+      "verify": "Verify",
+      "verifying": "Verifying...",
+      "resend": "Resend Code",
+      "resendCooldown": "Resend in {seconds}s",
+      "invalidCode": "Invalid or expired code",
+      "successTitle": "Email Verified!",
+      "successMessage": "Redirecting you to sign in...",
+      "noEmail": "No email address provided.",
+      "goRegister": "Go to Registration"
     }
   },
   "dashboard": {

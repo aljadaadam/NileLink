@@ -23,6 +23,9 @@ model User {
   phone          String?
   role           UserRole  @default(USER)
   locale         String    @default("en")
+  emailVerified  Boolean   @default(false)
+  verifyCode     String?
+  verifyExpires  DateTime?
   plan           PlanType  @default(STARTER)
   trialEndsAt    DateTime?
   createdAt      DateTime  @default(now())

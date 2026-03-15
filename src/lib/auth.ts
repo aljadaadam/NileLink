@@ -2,9 +2,10 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import { prisma } from "./prisma";
+import { rateLimit } from "./rate-limit";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt", maxAge: 8 * 60 * 60 },
   pages: {
     signIn: "/en/auth/login",
   },
@@ -15,8 +16,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         if (!credentials?.email || !credentials?.password) return null;
+
+        const ip = (request as any)?.headers?.get?.("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+        const { limited } = rateLimit(`login:${ip}`, 10);
+        if (limited) return null;
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string },

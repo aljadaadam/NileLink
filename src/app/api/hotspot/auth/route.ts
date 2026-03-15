@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 // This endpoint is called by the MikroTik router to authenticate hotspot users
 export async function POST(req: NextRequest) {
   try {
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const { limited } = rateLimit(`hotspot:${clientIp}`, 30);
+    if (limited) {
+      return NextResponse.json(
+        { error: "Too many requests" },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const { apiKey, username, password, mac, ip } = body;
 
@@ -21,7 +31,7 @@ export async function POST(req: NextRequest) {
 
     if (!router) {
       return NextResponse.json(
-        { error: "Invalid API key" },
+        { error: "Authentication failed" },
         { status: 401 }
       );
     }
@@ -107,8 +117,8 @@ export async function POST(req: NextRequest) {
           data: { isActive: false },
         });
         return NextResponse.json(
-          { error: "User expired" },
-          { status: 403 }
+          { error: "Authentication failed" },
+          { status: 401 }
         );
       }
 
@@ -126,7 +136,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: "Invalid credentials" },
+      { error: "Authentication failed" },
       { status: 401 }
     );
   } catch {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 
 const registerSchema = z.object({
@@ -13,6 +14,15 @@ const registerSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const { limited } = rateLimit(`register:${ip}`, 5);
+    if (limited) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const data = registerSchema.parse(body);
 
@@ -22,7 +32,7 @@ export async function POST(req: NextRequest) {
 
     if (existing) {
       return NextResponse.json(
-        { error: "Email already registered" },
+        { error: "Registration failed. Please try again or use a different email." },
         { status: 409 }
       );
     }
@@ -47,7 +57,7 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    console.error("Register error:", error);
+    console.error("Register error");
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { z } from "zod";
+
+const updateRoleSchema = z.object({
+  role: z.enum(["USER", "ADMIN"]),
+});
 
 async function getAdminId() {
   const session = await auth();
@@ -22,22 +27,26 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  const body = await req.json();
 
-  if (body.role && (body.role === "USER" || body.role === "ADMIN")) {
-    // Prevent admin from removing their own admin role
-    if (id === adminId && body.role === "USER") {
-      return NextResponse.json(
-        { error: "Cannot remove your own admin role" },
-        { status: 400 }
-      );
-    }
-
-    await prisma.user.update({
-      where: { id },
-      data: { role: body.role },
-    });
+  let data;
+  try {
+    data = updateRoleSchema.parse(await req.json());
+  } catch {
+    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
   }
+
+  // Prevent admin from removing their own admin role
+  if (id === adminId && data.role === "USER") {
+    return NextResponse.json(
+      { error: "Cannot remove your own admin role" },
+      { status: 400 }
+    );
+  }
+
+  await prisma.user.update({
+    where: { id },
+    data: { role: data.role },
+  });
 
   return NextResponse.json({ success: true });
 }

@@ -4,9 +4,14 @@ import { prisma } from "@/lib/prisma";
 import { generateApiKey } from "@/lib/api-key";
 import { z } from "zod";
 
+const PRIVATE_IP_REGEX = /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|0\.|169\.254\.|localhost|::1|fc|fd|fe80)/i;
+
 const createRouterSchema = z.object({
   name: z.string().min(1).max(100),
-  host: z.string().min(1).max(255),
+  host: z.string().min(1).max(255).refine(
+    (h) => !PRIVATE_IP_REGEX.test(h),
+    { message: "Private/internal IP addresses are not allowed" }
+  ),
   port: z.number().int().min(1).max(65535).default(8728),
   username: z.string().min(1).max(100),
   password: z.string().min(1).max(100),

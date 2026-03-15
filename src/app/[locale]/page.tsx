@@ -1,4 +1,3 @@
-import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import {
   Wifi,
@@ -11,16 +10,17 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
-export default function HomePage({
+export default async function HomePage({
   params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
-  setRequestLocale(params.locale);
-  const t = useTranslations("landing");
-  const isRtl = params.locale === "ar";
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("landing");
+  const isRtl = locale === "ar";
   const Arrow = isRtl ? ArrowLeft : ArrowRight;
 
   const features = [
@@ -118,12 +118,12 @@ export default function HomePage({
       <section className="py-24 bg-gradient-to-br from-primary-600 to-primary-800">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white">
-            {params.locale === "ar"
+            {locale === "ar"
               ? "ابدأ بإدارة شبكاتك الآن"
               : "Start Managing Your Networks Today"}
           </h2>
           <p className="mt-4 text-primary-100 text-lg">
-            {params.locale === "ar"
+            {locale === "ar"
               ? "انضم لمنصة NileLink وتحكم بشبكات الواي فاي من أي مكان"
               : "Join NileLink and control your WiFi networks from anywhere"}
           </p>

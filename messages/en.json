@@ -227,13 +227,25 @@
     "empty": "No hotspot users created yet."
   },
   "loginPages": {
-    "title": "Custom Login Pages",
-    "edit": "Edit Login Page",
+    "title": "Login Page Templates",
+    "description": "Choose a template, add your brand name and logo — your customers will see it when connecting to WiFi.",
     "preview": "Preview",
-    "reset": "Reset to Default",
     "router": "Select Router",
     "saved": "Login page saved successfully!",
-    "description": "Customize the captive portal login page that your WiFi users will see."
+    "noRouters": "Add a router first to customize login pages.",
+    "templates": "Templates",
+    "advancedEditor": "Advanced Editor",
+    "chooseTemplate": "Choose Template",
+    "businessName": "Business Name",
+    "businessNamePlaceholder": "e.g. My Café WiFi",
+    "businessNameHint": "This name will appear on the login page your customers see.",
+    "logoUpload": "Logo",
+    "uploadLogoHint": "Click to upload your logo",
+    "logoMaxSize": "Max 500 KB — PNG, JPG, or SVG",
+    "changeLogo": "Change",
+    "removeLogo": "Remove",
+    "logoTooLarge": "Logo must be under 500 KB",
+    "logoInvalidType": "Please upload an image file"
   },
   "settings": {
     "title": "Settings",

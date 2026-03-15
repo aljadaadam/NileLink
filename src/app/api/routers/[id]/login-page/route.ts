@@ -4,8 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
 const loginPageSchema = z.object({
-  html: z.string().max(50000),
-  css: z.string().max(50000),
+  html: z.string().max(100000),
+  css: z.string().max(100000),
+  template: z.string().max(50).optional(),
+  title: z.string().max(100).optional(),
+  logo: z.string().max(700000).nullable().optional(), // base64 logo ~500KB
 });
 
 export async function PUT(
@@ -36,6 +39,9 @@ export async function PUT(
       data: {
         loginPageHtml: data.html,
         loginPageCss: data.css,
+        loginPageTemplate: data.template ?? null,
+        loginPageTitle: data.title ?? null,
+        loginPageLogo: data.logo ?? null,
       },
     });
 

@@ -123,9 +123,12 @@ model Router {
   apiKey        String       @unique
   status        RouterStatus @default(OFFLINE)
   lastSeen      DateTime?
-  loginPageHtml String?      @db.Text
-  loginPageCss  String?      @db.Text
-  userId        String
+  loginPageHtml     String?      @db.Text
+  loginPageCss      String?      @db.Text
+  loginPageTemplate String?      @default("modern")
+  loginPageTitle    String?
+  loginPageLogo     String?      @db.Text
+  userId            String
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 

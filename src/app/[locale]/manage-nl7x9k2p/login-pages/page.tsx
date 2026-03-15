@@ -189,30 +189,29 @@ export default function LoginPagesPage() {
       </div>
 
       {routers.length === 0 ? (
-        <div className="card text-center py-16">
-          <Palette className="w-12 h-12 text-slate-300 mx-auto" />
-          <p className="mt-4 text-slate-500">{t("noRouters")}</p>
+        <div className="card bg-amber-50 border-amber-200 py-3 px-4">
+          <p className="text-sm text-amber-700">{t("noRouters")}</p>
         </div>
       ) : (
-        <div className="space-y-6">
-          {/* Router Select */}
-          <div className="card">
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              {t("router")}
-            </label>
-            <select
-              value={selectedRouter}
-              onChange={(e) => handleRouterChange(e.target.value)}
-              className="input-field w-full max-w-xs"
-            >
-              {routers.map((r) => (
-                <option key={r.id} value={r.id}>
-                  {r.name}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="card">
+          <label className="block text-sm font-medium text-slate-700 mb-2">
+            {t("router")}
+          </label>
+          <select
+            value={selectedRouter}
+            onChange={(e) => handleRouterChange(e.target.value)}
+            className="input-field w-full max-w-xs"
+          >
+            {routers.map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
+      <div className="space-y-6">
           {/* Mode Toggle */}
           <div className="flex gap-2">
             <button
@@ -409,8 +408,7 @@ export default function LoginPagesPage() {
               </div>
             </div>
           )}
-        </div>
-      )}
+      </div>
     </div>
   );
 }

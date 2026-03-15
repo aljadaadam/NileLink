@@ -14,6 +14,8 @@ import {
   HardDrive,
   ArrowUp,
   ArrowDown,
+  ToggleLeft,
+  ToggleRight,
 } from "lucide-react";
 import { cn, formatBytes, formatDuration } from "@/lib/utils";
 import { toast } from "sonner";
@@ -39,6 +41,7 @@ export default function PackagesPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const [editingPkg, setEditingPkg] = useState<PackageItem | null>(null);
   const [saving, setSaving] = useState(false);
 
   async function loadPackages() {
@@ -66,16 +69,16 @@ export default function PackagesPage() {
       nameAr: formData.get("nameAr") || undefined,
       duration: formData.get("duration")
         ? parseInt(formData.get("duration") as string)
-        : undefined,
+        : editId ? null : undefined,
       dataLimit: formData.get("dataLimit")
         ? parseInt(formData.get("dataLimit") as string) * 1024 * 1024
-        : undefined,
+        : editId ? null : undefined,
       uploadSpeed: formData.get("uploadSpeed")
         ? parseInt(formData.get("uploadSpeed") as string)
-        : undefined,
+        : editId ? null : undefined,
       downloadSpeed: formData.get("downloadSpeed")
         ? parseInt(formData.get("downloadSpeed") as string)
-        : undefined,
+        : editId ? null : undefined,
       price: parseFloat(formData.get("price") as string),
       currency: formData.get("currency") || "USD",
     };
@@ -88,10 +91,16 @@ export default function PackagesPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        toast.error(err?.error || "Failed to save package");
+        return;
+      }
       setShowModal(false);
       setEditId(null);
+      setEditingPkg(null);
       loadPackages();
+      toast.success(editId ? tc("saved") : t("add"));
     } catch {
       toast.error("Failed to save package");
     } finally {
@@ -102,15 +111,37 @@ export default function PackagesPage() {
   async function handleDelete(id: string) {
     if (!confirm(t("deleteConfirm"))) return;
     try {
-      await fetch(`/api/packages/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/packages/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        toast.error(err?.error || "Failed to delete");
+        return;
+      }
       setPackages((prev) => prev.filter((p) => p.id !== id));
     } catch {
       toast.error("Failed to delete");
     }
   }
 
+  async function handleToggleActive(pkg: PackageItem) {
+    try {
+      const res = await fetch(`/api/packages/${pkg.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isActive: !pkg.isActive }),
+      });
+      if (!res.ok) return;
+      setPackages((prev) =>
+        prev.map((p) => p.id === pkg.id ? { ...p, isActive: !p.isActive } : p)
+      );
+    } catch {
+      toast.error("Failed to update");
+    }
+  }
+
   function openEdit(pkg: PackageItem) {
     setEditId(pkg.id);
+    setEditingPkg(pkg);
     setShowModal(true);
   }
 
@@ -129,6 +160,7 @@ export default function PackagesPage() {
         <button
           onClick={() => {
             setEditId(null);
+            setEditingPkg(null);
             setShowModal(true);
           }}
           className="btn-primary"
@@ -202,6 +234,17 @@ export default function PackagesPage() {
                 </span>
                 <div className="flex items-center gap-1">
                   <button
+                    onClick={() => handleToggleActive(pkg)}
+                    className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                    title={pkg.isActive ? tc("inactive") : tc("active")}
+                  >
+                    {pkg.isActive ? (
+                      <ToggleRight className="w-5 h-5 text-emerald-500" />
+                    ) : (
+                      <ToggleLeft className="w-5 h-5 text-slate-400" />
+                    )}
+                  </button>
+                  <button
                     onClick={() => openEdit(pkg)}
                     className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
                   >
@@ -232,24 +275,25 @@ export default function PackagesPage() {
                 onClick={() => {
                   setShowModal(false);
                   setEditId(null);
+                  setEditingPkg(null);
                 }}
                 className="text-slate-400 hover:text-slate-600"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4" key={editId || "new"}>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
                   {t("name")} (EN)
                 </label>
-                <input name="name" required className="input-field" />
+                <input name="name" required className="input-field" defaultValue={editingPkg?.name || ""} />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
                   {t("name")} (AR)
                 </label>
-                <input name="nameAr" className="input-field" />
+                <input name="nameAr" className="input-field" defaultValue={editingPkg?.nameAr || ""} />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -262,6 +306,7 @@ export default function PackagesPage() {
                     min="0"
                     className="input-field"
                     dir="ltr"
+                    defaultValue={editingPkg?.duration ?? ""}
                   />
                 </div>
                 <div>
@@ -274,6 +319,7 @@ export default function PackagesPage() {
                     min="0"
                     className="input-field"
                     dir="ltr"
+                    defaultValue={editingPkg?.dataLimit ? Math.round(Number(editingPkg.dataLimit) / (1024 * 1024)) : ""}
                   />
                 </div>
               </div>
@@ -288,6 +334,7 @@ export default function PackagesPage() {
                     min="0"
                     className="input-field"
                     dir="ltr"
+                    defaultValue={editingPkg?.downloadSpeed ?? ""}
                   />
                 </div>
                 <div>
@@ -300,6 +347,7 @@ export default function PackagesPage() {
                     min="0"
                     className="input-field"
                     dir="ltr"
+                    defaultValue={editingPkg?.uploadSpeed ?? ""}
                   />
                 </div>
               </div>
@@ -316,18 +364,28 @@ export default function PackagesPage() {
                     required
                     className="input-field"
                     dir="ltr"
+                    defaultValue={editingPkg?.price || ""}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     {t("currency")}
                   </label>
-                  <select name="currency" className="input-field" defaultValue="USD">
-                    <option value="USD">USD</option>
-                    <option value="EGP">EGP</option>
-                    <option value="SAR">SAR</option>
-                    <option value="AED">AED</option>
-                    <option value="EUR">EUR</option>
+                  <select name="currency" className="input-field" defaultValue={editingPkg?.currency || "USD"}>
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="EGP">EGP (ج.م)</option>
+                    <option value="SAR">SAR (ر.س)</option>
+                    <option value="AED">AED (د.إ)</option>
+                    <option value="IQD">IQD (د.ع)</option>
+                    <option value="JOD">JOD (د.أ)</option>
+                    <option value="KWD">KWD (د.ك)</option>
+                    <option value="QAR">QAR (ر.ق)</option>
+                    <option value="OMR">OMR (ر.ع)</option>
+                    <option value="BHD">BHD (د.ب)</option>
+                    <option value="TRY">TRY (₺)</option>
+                    <option value="MAD">MAD (د.م)</option>
                   </select>
                 </div>
               </div>
@@ -340,6 +398,7 @@ export default function PackagesPage() {
                   onClick={() => {
                     setShowModal(false);
                     setEditId(null);
+                    setEditingPkg(null);
                   }}
                   className="btn-secondary"
                 >

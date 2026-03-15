@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateApiKey } from "@/lib/api-key";
+import { PLAN_LIMITS } from "@/lib/plans";
 import { z } from "zod";
 
 const PRIVATE_IP_REGEX = /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|0\.|169\.254\.|localhost|::1|fc|fd|fe80)/i;
@@ -56,6 +57,24 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const data = createRouterSchema.parse(body);
+
+    // Enforce plan limit
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { plan: true },
+    });
+    const limits = PLAN_LIMITS[user?.plan ?? "STARTER"];
+    if (limits.maxRouters !== -1) {
+      const currentCount = await prisma.router.count({
+        where: { userId: session.user.id },
+      });
+      if (currentCount >= limits.maxRouters) {
+        return NextResponse.json(
+          { error: `Router limit reached (${limits.maxRouters}). Upgrade your plan.` },
+          { status: 403 }
+        );
+      }
+    }
 
     const router = await prisma.router.create({
       data: {

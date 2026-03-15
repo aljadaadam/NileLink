@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { CreditCard, FileText, Clock, CheckCircle, AlertCircle, Zap, Crown, Rocket } from "lucide-react";
 import { PLAN_LIMITS } from "@/lib/plans";
+import { toast } from "sonner";
 
 interface SubscriptionInfo {
   plan: string;
@@ -97,7 +98,7 @@ export default function BillingPage() {
         setInvoices(Array.isArray(invData) ? invData : []);
         if (geoData.currency) setCurrency(geoData.currency);
       })
-      .catch(() => {})
+      .catch(() => toast.error("Failed to load billing data"))
       .finally(() => setLoading(false));
   }, []);
 

@@ -184,6 +184,7 @@
     "connectionSuccess": "تم الاتصال بنجاح!",
     "connectionFailed": "فشل الاتصال",
     "deleteConfirm": "هل أنت متأكد من إزالة هذا الراوتر؟",
+    "passwordPlaceholder": "اتركه فارغاً للإبقاء على كلمة المرور الحالية",
     "empty": "لا توجد راوترات. اضغط 'إضافة راوتر' للبدء."
   },
   "packages": {

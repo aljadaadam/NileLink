@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { StatsData } from "@/types";
+import { toast } from "sonner";
 
 export default function DashboardPage() {
   const t = useTranslations("dashboard");
@@ -26,7 +27,7 @@ export default function DashboardPage() {
     fetch("/api/manage-nl7x9k2p/stats")
       .then((r) => r.json())
       .then(setStats)
-      .catch(() => {})
+      .catch(() => toast.error("Failed to load stats"))
       .finally(() => setLoading(false));
   }, []);
 

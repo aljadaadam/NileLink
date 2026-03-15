@@ -44,7 +44,17 @@ export default function LoginPagesPage() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [customHtml, setCustomHtml] = useState("");
   const [customCss, setCustomCss] = useState("");
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!hasUnsavedChanges) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [hasUnsavedChanges]);
 
   useEffect(() => {
     fetch("/api/routers")
@@ -72,6 +82,7 @@ export default function LoginPagesPage() {
     const router = routers.find((r) => r.id === id);
     if (router) loadRouterSettings(router);
     setShowAdvanced(false);
+    setHasUnsavedChanges(false);
   }
 
   function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -86,7 +97,7 @@ export default function LoginPagesPage() {
       return;
     }
     const reader = new FileReader();
-    reader.onload = () => setLogoBase64(reader.result as string);
+    reader.onload = () => { setLogoBase64(reader.result as string); setHasUnsavedChanges(true); };
     reader.readAsDataURL(file);
   }
 
@@ -133,6 +144,7 @@ export default function LoginPagesPage() {
       );
       if (!res.ok) throw new Error();
       toast.success(t("saved"));
+      setHasUnsavedChanges(false);
 
       // Update local state
       setRouters((prev) =>
@@ -261,7 +273,7 @@ export default function LoginPagesPage() {
                   {LOGIN_TEMPLATES.map((tmpl) => (
                     <button
                       key={tmpl.id}
-                      onClick={() => setSelectedTemplate(tmpl.id)}
+                      onClick={() => { setSelectedTemplate(tmpl.id); setHasUnsavedChanges(true); }}
                       className={`group relative rounded-xl overflow-hidden border-2 transition-all duration-200 ${
                         selectedTemplate === tmpl.id
                           ? "border-primary-500 ring-2 ring-primary-200 scale-[1.02]"
@@ -317,7 +329,7 @@ export default function LoginPagesPage() {
                   <input
                     type="text"
                     value={businessName}
-                    onChange={(e) => setBusinessName(e.target.value)}
+                    onChange={(e) => { setBusinessName(e.target.value); setHasUnsavedChanges(true); }}
                     placeholder={t("businessNamePlaceholder")}
                     className="input-field w-full"
                     maxLength={100}
@@ -390,7 +402,7 @@ export default function LoginPagesPage() {
                 </h3>
                 <textarea
                   value={customHtml}
-                  onChange={(e) => setCustomHtml(e.target.value)}
+                  onChange={(e) => { setCustomHtml(e.target.value); setHasUnsavedChanges(true); }}
                   className="input-field font-mono text-sm h-80 resize-none"
                   dir="ltr"
                 />
@@ -401,7 +413,7 @@ export default function LoginPagesPage() {
                 </h3>
                 <textarea
                   value={customCss}
-                  onChange={(e) => setCustomCss(e.target.value)}
+                  onChange={(e) => { setCustomCss(e.target.value); setHasUnsavedChanges(true); }}
                   className="input-field font-mono text-sm h-80 resize-none"
                   dir="ltr"
                 />

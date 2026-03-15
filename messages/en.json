@@ -184,6 +184,7 @@
     "connectionSuccess": "Connected successfully!",
     "connectionFailed": "Connection failed",
     "deleteConfirm": "Are you sure you want to remove this router?",
+    "passwordPlaceholder": "Leave empty to keep current",
     "empty": "No routers added yet. Click 'Add Router' to get started."
   },
   "packages": {

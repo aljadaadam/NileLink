@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateVoucherCodes } from "@/lib/api-key";
+import { PLAN_LIMITS } from "@/lib/plans";
 import { z } from "zod";
 
 const generateSchema = z.object({
@@ -30,6 +31,31 @@ export async function POST(req: NextRequest) {
         { error: "Package not found" },
         { status: 404 }
       );
+    }
+
+    // Enforce monthly voucher limit
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { plan: true },
+    });
+    const limits = PLAN_LIMITS[user?.plan ?? "STARTER"];
+    if (limits.maxVouchersPerMonth !== -1) {
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
+      const monthlyCount = await prisma.voucher.count({
+        where: {
+          userId: session.user.id,
+          createdAt: { gte: startOfMonth },
+        },
+      });
+      if (monthlyCount + data.count > limits.maxVouchersPerMonth) {
+        const remaining = limits.maxVouchersPerMonth - monthlyCount;
+        return NextResponse.json(
+          { error: `Monthly voucher limit: ${remaining} remaining of ${limits.maxVouchersPerMonth}` },
+          { status: 403 }
+        );
+      }
     }
 
     const codes = generateVoucherCodes(data.count);

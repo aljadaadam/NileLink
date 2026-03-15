@@ -13,6 +13,7 @@ import {
   Loader2,
   X,
   Plug,
+  Pencil,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -36,6 +37,7 @@ export default function RoutersPage() {
   const [routers, setRouters] = useState<RouterItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [editingRouter, setEditingRouter] = useState<RouterItem | null>(null);
   const [saving, setSaving] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [testingId, setTestingId] = useState<string | null>(null);
@@ -69,15 +71,23 @@ export default function RoutersPage() {
     };
 
     try {
-      const res = await fetch("/api/routers", {
-        method: "POST",
+      const isEdit = !!editingRouter;
+      const url = isEdit ? `/api/routers/${editingRouter.id}` : "/api/routers";
+      const method = isEdit ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        toast.error(err?.error || t("connectionFailed"));
+        return;
+      }
       setShowModal(false);
+      setEditingRouter(null);
       loadRouters();
-      toast.success(t("connectionSuccess"));
+      toast.success(isEdit ? tc("saved") : t("connectionSuccess"));
     } catch {
       toast.error(t("connectionFailed"));
     } finally {
@@ -139,7 +149,7 @@ export default function RoutersPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
-        <button onClick={() => setShowModal(true)} className="btn-primary">
+        <button onClick={() => { setEditingRouter(null); setShowModal(true); }} className="btn-primary">
           <Plus className="w-4 h-4" />
           {t("add")}
         </button>
@@ -205,6 +215,13 @@ export default function RoutersPage() {
                   </div>
                 </div>
 
+                {/* Last Seen */}
+                {router.lastSeen && (
+                  <p className="text-xs text-slate-400">
+                    {t("lastSeen")}: {new Date(router.lastSeen).toLocaleString()}
+                  </p>
+                )}
+
                 {/* Actions */}
                 <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
                   <button
@@ -218,6 +235,15 @@ export default function RoutersPage() {
                       <Plug className="w-3.5 h-3.5" />
                     )}
                     {t("testConnection")}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setEditingRouter(router);
+                      setShowModal(true);
+                    }}
+                    className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                  >
+                    <Pencil className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(router.id)}
@@ -237,27 +263,29 @@ export default function RoutersPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-900">{t("add")}</h2>
+              <h2 className="text-lg font-bold text-slate-900">
+                {editingRouter ? tc("edit") : t("add")}
+              </h2>
               <button
-                onClick={() => setShowModal(false)}
+                onClick={() => { setShowModal(false); setEditingRouter(null); }}
                 className="text-slate-400 hover:text-slate-600"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleCreate} className="space-y-4">
+            <form onSubmit={handleCreate} className="space-y-4" key={editingRouter?.id || "new"}>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
                   {t("name")}
                 </label>
-                <input name="name" required className="input-field" />
+                <input name="name" required className="input-field" defaultValue={editingRouter?.name || ""} />
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div className="col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     {t("host")}
                   </label>
-                  <input name="host" required className="input-field" dir="ltr" />
+                  <input name="host" required className="input-field" dir="ltr" defaultValue={editingRouter?.host || ""} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -266,7 +294,7 @@ export default function RoutersPage() {
                   <input
                     name="port"
                     type="number"
-                    defaultValue={8728}
+                    defaultValue={editingRouter?.port ?? 8728}
                     className="input-field"
                     dir="ltr"
                   />
@@ -276,7 +304,7 @@ export default function RoutersPage() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">
                   {t("username")}
                 </label>
-                <input name="username" required className="input-field" dir="ltr" />
+                <input name="username" required className="input-field" dir="ltr" defaultValue={editingRouter?.username || ""} />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -285,18 +313,19 @@ export default function RoutersPage() {
                 <input
                   name="password"
                   type="password"
-                  required
+                  required={!editingRouter}
+                  placeholder={editingRouter ? t("passwordPlaceholder") : ""}
                   className="input-field"
                   dir="ltr"
                 />
               </div>
               <div className="flex gap-3 pt-2">
                 <button type="submit" disabled={saving} className="btn-primary flex-1">
-                  {saving ? tc("loading") : t("add")}
+                  {saving ? tc("loading") : editingRouter ? tc("save") : t("add")}
                 </button>
                 <button
                   type="button"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => { setShowModal(false); setEditingRouter(null); }}
                   className="btn-secondary"
                 >
                   {tc("cancel")}

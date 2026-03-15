@@ -86,6 +86,17 @@ export async function DELETE(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
+  const voucherCount = await prisma.voucher.count({
+    where: { packageId: id, status: { in: ["UNUSED", "ACTIVE"] } },
+  });
+
+  if (voucherCount > 0) {
+    return NextResponse.json(
+      { error: `Cannot delete: ${voucherCount} active/unused voucher(s) use this package` },
+      { status: 400 }
+    );
+  }
+
   await prisma.package.delete({ where: { id } });
 
   return NextResponse.json({ success: true });

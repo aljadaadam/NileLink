@@ -11,9 +11,11 @@ import {
   Printer,
   Copy,
   CheckCircle,
+  QrCode,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import QRCode from "qrcode";
 
 interface VoucherItem {
   id: string;
@@ -31,6 +33,14 @@ interface PackageOption {
   name: string;
 }
 
+function escapeHtml(str: string) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 export default function VouchersPage() {
   const t = useTranslations("vouchers");
   const tc = useTranslations("common");
@@ -42,6 +52,7 @@ export default function VouchersPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>("ALL");
+  const [currentPage, setCurrentPage] = useState(1);
 
   async function loadData() {
     try {
@@ -77,7 +88,11 @@ export default function VouchersPage() {
           expiresAt: formData.get("expiresAt") || undefined,
         }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        toast.error(err?.error || "Failed to generate vouchers");
+        return;
+      }
       const data = await res.json();
       setShowModal(false);
       loadData();
@@ -92,11 +107,16 @@ export default function VouchersPage() {
   async function handleDeleteSelected() {
     if (!confirm(t("deleteConfirm"))) return;
     try {
-      await fetch("/api/vouchers", {
+      const res = await fetch("/api/vouchers", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids: Array.from(selected) }),
       });
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        toast.error(err?.error || "Failed to delete");
+        return;
+      }
       setVouchers((prev) => prev.filter((v) => !selected.has(v.id)));
       setSelected(new Set());
     } catch {
@@ -111,25 +131,54 @@ export default function VouchersPage() {
     setTimeout(() => setCopiedCode(null), 2000);
   }
 
-  function printSelected() {
-    const codes = vouchers
-      .filter((v) => selected.has(v.id))
-      .map((v) => v.code);
+  async function printSelected() {
+    const selectedVouchers = vouchers.filter((v) => selected.has(v.id));
+    if (selectedVouchers.length === 0) return;
+
+    // Generate QR codes for each voucher
+    const voucherData = await Promise.all(
+      selectedVouchers.map(async (v) => {
+        const qrDataUrl = await QRCode.toDataURL(v.code, {
+          width: 120,
+          margin: 1,
+          color: { dark: "#0e7490", light: "#ffffff" },
+        });
+        return { code: v.code, qr: qrDataUrl, pkg: v.package };
+      })
+    );
+
     const win = window.open("", "_blank");
     if (!win) return;
     win.document.write(`
       <html><head><title>NileLink Vouchers</title>
       <style>
-        body { font-family: monospace; padding: 20px; }
-        .voucher { border: 2px dashed #0891b2; padding: 16px; margin: 8px;
-          display: inline-block; text-align: center; border-radius: 12px; }
-        .code { font-size: 24px; font-weight: bold; letter-spacing: 3px; color: #0e7490; }
-        .label { font-size: 12px; color: #64748b; margin-top: 4px; }
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #fff; }
+        .grid { display: flex; flex-wrap: wrap; gap: 12px; }
+        .voucher { border: 2px dashed #0891b2; padding: 16px; width: 260px;
+          text-align: center; border-radius: 12px; background: #f0fdfa; }
+        .qr { margin: 8px auto; }
+        .code { font-size: 22px; font-weight: bold; letter-spacing: 3px; color: #0e7490;
+          font-family: 'Courier New', monospace; margin: 8px 0; }
+        .pkg { font-size: 13px; color: #334155; font-weight: 600; margin-top: 4px; }
+        .price { font-size: 12px; color: #64748b; margin-top: 2px; }
+        .label { font-size: 11px; color: #94a3b8; margin-top: 6px; }
+        @media print { body { padding: 0; } .voucher { break-inside: avoid; } }
       </style></head><body>
-      ${codes.map((c) => `<div class="voucher"><div class="code">${c}</div><div class="label">NileLink WiFi Voucher</div></div>`).join("")}
-      <script>window.print();window.close();</script>
+      <div class="grid">
+      ${voucherData.map((v) => `
+        <div class="voucher">
+          <img class="qr" src="${v.qr}" width="120" height="120" />
+          <div class="code">${escapeHtml(v.code)}</div>
+          <div class="pkg">${escapeHtml(v.pkg.name)}</div>
+          <div class="price">${escapeHtml(v.pkg.price)} ${escapeHtml(v.pkg.currency)}</div>
+          <div class="label">NileLink WiFi Voucher</div>
+        </div>
+      `).join("")}
+      </div>
+      <script>window.print();<\/script>
       </body></html>
     `);
+    win.document.close();
   }
 
   const statusBadge = {
@@ -150,6 +199,13 @@ export default function VouchersPage() {
     filterStatus === "ALL"
       ? vouchers
       : vouchers.filter((v) => v.status === filterStatus);
+
+  const ITEMS_PER_PAGE = 20;
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginated = filtered.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   if (loading) {
     return (
@@ -191,7 +247,7 @@ export default function VouchersPage() {
         {["ALL", "UNUSED", "ACTIVE", "USED", "EXPIRED"].map((s) => (
           <button
             key={s}
-            onClick={() => setFilterStatus(s)}
+            onClick={() => { setFilterStatus(s); setCurrentPage(1); }}
             className={cn(
               "px-3 py-1.5 text-sm rounded-lg transition-colors",
               filterStatus === s
@@ -218,10 +274,10 @@ export default function VouchersPage() {
                   <th className="p-3 text-start">
                     <input
                       type="checkbox"
-                      checked={selected.size === filtered.length && filtered.length > 0}
+                      checked={selected.size === paginated.length && paginated.length > 0}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          setSelected(new Set(filtered.map((v) => v.id)));
+                          setSelected(new Set(paginated.map((v) => v.id)));
                         } else {
                           setSelected(new Set());
                         }
@@ -239,12 +295,15 @@ export default function VouchersPage() {
                     {t("status")}
                   </th>
                   <th className="p-3 text-start text-sm font-medium text-slate-500">
+                    {t("usedBy")}
+                  </th>
+                  <th className="p-3 text-start text-sm font-medium text-slate-500">
                     {t("createdAt")}
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((voucher) => (
+                {paginated.map((voucher) => (
                   <tr
                     key={voucher.id}
                     className="border-b border-gray-50 hover:bg-gray-50/50"
@@ -288,6 +347,9 @@ export default function VouchersPage() {
                       </span>
                     </td>
                     <td className="p-3 text-sm text-slate-500">
+                      {voucher.usedBy || "—"}
+                    </td>
+                    <td className="p-3 text-sm text-slate-500">
                       {new Date(voucher.createdAt).toLocaleDateString()}
                     </td>
                   </tr>
@@ -295,6 +357,30 @@ export default function VouchersPage() {
               </tbody>
             </table>
           </div>
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+              <span className="text-sm text-slate-500">
+                {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} / {filtered.length}
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50 transition-colors"
+                >
+                  ‹
+                </button>
+                <span className="text-sm text-slate-600">{currentPage} / {totalPages}</span>
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50 transition-colors"
+                >
+                  ›
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

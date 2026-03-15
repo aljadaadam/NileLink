@@ -41,6 +41,7 @@ export default function HotspotUsersPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   async function loadData() {
     try {
@@ -108,6 +109,13 @@ export default function HotspotUsersPage() {
     }
   }
 
+  const ITEMS_PER_PAGE = 20;
+  const totalPages = Math.ceil(users.length / ITEMS_PER_PAGE);
+  const paginated = users.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -158,7 +166,7 @@ export default function HotspotUsersPage() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
+                {paginated.map((user) => (
                   <tr
                     key={user.id}
                     className="border-b border-gray-50 hover:bg-gray-50/50"
@@ -223,6 +231,30 @@ export default function HotspotUsersPage() {
               </tbody>
             </table>
           </div>
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+              <span className="text-sm text-slate-500">
+                {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, users.length)} / {users.length}
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50 transition-colors"
+                >
+                  ‹
+                </button>
+                <span className="text-sm text-slate-600">{currentPage} / {totalPages}</span>
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50 transition-colors"
+                >
+                  ›
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

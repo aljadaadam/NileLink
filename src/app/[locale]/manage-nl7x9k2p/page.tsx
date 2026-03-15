@@ -23,7 +23,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/dashboard/stats")
+    fetch("/api/manage-nl7x9k2p/stats")
       .then((r) => r.json())
       .then(setStats)
       .catch(() => {})
@@ -33,25 +33,25 @@ export default function DashboardPage() {
   const quickActions = [
     {
       label: ts("routers"),
-      href: "/dashboard/routers",
+      href: "/manage-nl7x9k2p/routers",
       icon: Router,
       color: "bg-primary-50 text-primary-600",
     },
     {
       label: ts("vouchers"),
-      href: "/dashboard/vouchers",
+      href: "/manage-nl7x9k2p/vouchers",
       icon: Ticket,
       color: "bg-accent-50 text-accent-600",
     },
     {
       label: ts("packages"),
-      href: "/dashboard/packages",
+      href: "/manage-nl7x9k2p/packages",
       icon: Zap,
       color: "bg-emerald-50 text-emerald-600",
     },
     {
       label: ts("users"),
-      href: "/dashboard/users",
+      href: "/manage-nl7x9k2p/users",
       icon: Users,
       color: "bg-purple-50 text-purple-600",
     },

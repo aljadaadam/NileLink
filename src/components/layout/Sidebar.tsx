@@ -18,13 +18,13 @@ import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { key: "dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { key: "routers", href: "/dashboard/routers", icon: Router },
-  { key: "packages", href: "/dashboard/packages", icon: Package },
-  { key: "vouchers", href: "/dashboard/vouchers", icon: Ticket },
-  { key: "users", href: "/dashboard/users", icon: Users },
-  { key: "loginPages", href: "/dashboard/login-pages", icon: FileCode },
-  { key: "settings", href: "/dashboard/settings", icon: Settings },
+  { key: "dashboard", href: "/manage-nl7x9k2p", icon: LayoutDashboard },
+  { key: "routers", href: "/manage-nl7x9k2p/routers", icon: Router },
+  { key: "packages", href: "/manage-nl7x9k2p/packages", icon: Package },
+  { key: "vouchers", href: "/manage-nl7x9k2p/vouchers", icon: Ticket },
+  { key: "users", href: "/manage-nl7x9k2p/users", icon: Users },
+  { key: "loginPages", href: "/manage-nl7x9k2p/login-pages", icon: FileCode },
+  { key: "settings", href: "/manage-nl7x9k2p/settings", icon: Settings },
 ] as const;
 
 export default function Sidebar({
@@ -61,7 +61,7 @@ export default function Sidebar({
         {/* Logo */}
         <div className="h-16 flex items-center justify-between px-5 border-b border-gray-100">
           <Link
-            href="/dashboard"
+            href="/manage-nl7x9k2p"
             className="flex items-center gap-2"
           >
             <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center">
@@ -80,7 +80,7 @@ export default function Sidebar({
             {navItems.map(({ key, href, icon: Icon }) => {
               const isActive =
                 pathname === href ||
-                (href !== "/dashboard" && pathname.startsWith(href));
+                (href !== "/manage-nl7x9k2p" && pathname.startsWith(href));
               return (
                 <li key={key}>
                   <Link

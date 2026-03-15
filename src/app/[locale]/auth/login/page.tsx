@@ -33,7 +33,7 @@ export default function LoginPage() {
       setError(t("error"));
       setLoading(false);
     } else {
-      router.push("/dashboard");
+      router.push("/manage-nl7x9k2p");
     }
   }
 

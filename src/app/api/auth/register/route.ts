@@ -8,7 +8,7 @@ const registerSchema = z.object({
   email: z.string().email().max(255),
   password: z.string().min(6).max(72),
   company: z.string().max(100).optional(),
-  phone: z.string().max(20).optional(),
+  phone: z.string().min(5).max(20),
 });
 
 export async function POST(req: NextRequest) {

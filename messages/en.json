@@ -120,7 +120,7 @@
       "password": "Password",
       "confirmPassword": "Confirm Password",
       "company": "Company Name (optional)",
-      "phone": "Phone Number (optional)",
+      "phone": "Phone Number",
       "submit": "Create Account",
       "hasAccount": "Already have an account?",
       "login": "Sign In",

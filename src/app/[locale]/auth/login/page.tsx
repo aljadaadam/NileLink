@@ -5,7 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "@/i18n/navigation";
-import { Wifi, Mail, Lock } from "lucide-react";
+import { Wifi, Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const t = useTranslations("auth.login");
@@ -13,6 +13,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -87,12 +88,19 @@ export default function LoginPage() {
                 <Lock className="absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
-                  className="input-field ps-10"
+                  className="input-field ps-10 pe-10"
                   placeholder="••••••••"
                   dir="ltr"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
               </div>
             </div>
 

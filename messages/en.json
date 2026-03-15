@@ -149,6 +149,7 @@
     "vouchers": "Vouchers",
     "users": "Hotspot Users",
     "loginPages": "Login Pages",
+    "billing": "Billing",
     "settings": "Settings",
     "logout": "Sign Out"
   },
@@ -248,5 +249,50 @@
     "saved": "Settings saved successfully!",
     "apiKeys": "API Keys",
     "generateKey": "Generate New Key"
+  },
+  "plans": {
+    "chooseTitle": "Choose Your Plan",
+    "chooseSubtitle": "Start with a 5-day free trial. No credit card required.",
+    "selectPlan": "Start Free Trial",
+    "trialNote": "5-day free trial included"
+  },
+  "billing": {
+    "title": "Billing & Subscription",
+    "month": "mo",
+    "unlimited": "Unlimited",
+    "period": "Current period",
+    "planNames": {
+      "STARTER": "Starter",
+      "PRO": "Professional",
+      "ENTERPRISE": "Enterprise"
+    },
+    "status": {
+      "TRIAL": "Trial",
+      "ACTIVE": "Active",
+      "PAST_DUE": "Past Due",
+      "CANCELLED": "Cancelled",
+      "EXPIRED": "Expired"
+    },
+    "trialDaysLeft": "{days} days remaining",
+    "limits": {
+      "routers": "Max Routers",
+      "hotspotUsers": "Max Hotspot Users",
+      "vouchers": "Vouchers / Month"
+    },
+    "invoices": "Invoices",
+    "noInvoices": "No invoices yet",
+    "noInvoicesHint": "Invoices will appear here after your trial ends.",
+    "invoiceNumber": "Invoice #",
+    "plan": "Plan",
+    "amount": "Amount",
+    "statusLabel": "Status",
+    "dueDate": "Due Date",
+    "periodLabel": "Period",
+    "invoiceStatus": {
+      "PENDING": "Pending",
+      "PAID": "Paid",
+      "OVERDUE": "Overdue",
+      "CANCELLED": "Cancelled"
+    }
   }
 }

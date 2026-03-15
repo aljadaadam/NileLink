@@ -10,6 +10,7 @@ import {
   Users,
   FileCode,
   Settings,
+  CreditCard,
   LogOut,
   Wifi,
   X,
@@ -24,6 +25,7 @@ const navItems = [
   { key: "vouchers", href: "/manage-nl7x9k2p/vouchers", icon: Ticket },
   { key: "users", href: "/manage-nl7x9k2p/users", icon: Users },
   { key: "loginPages", href: "/manage-nl7x9k2p/login-pages", icon: FileCode },
+  { key: "billing", href: "/manage-nl7x9k2p/billing", icon: CreditCard },
   { key: "settings", href: "/manage-nl7x9k2p/settings", icon: Settings },
 ] as const;
 

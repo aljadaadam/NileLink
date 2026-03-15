@@ -149,6 +149,7 @@
     "vouchers": "القسائم",
     "users": "مستخدمو الهوتسبوت",
     "loginPages": "صفحات الدخول",
+    "billing": "الفوترة",
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج"
   },
@@ -248,5 +249,50 @@
     "saved": "تم حفظ الإعدادات بنجاح!",
     "apiKeys": "مفاتيح API",
     "generateKey": "توليد مفتاح جديد"
+  },
+  "plans": {
+    "chooseTitle": "اختر باقتك",
+    "chooseSubtitle": "ابدأ بتجربة مجانية لمدة 5 أيام. لا حاجة لبطاقة ائتمان.",
+    "selectPlan": "ابدأ التجربة المجانية",
+    "trialNote": "تجربة مجانية 5 أيام"
+  },
+  "billing": {
+    "title": "الفوترة والاشتراك",
+    "month": "شهرياً",
+    "unlimited": "غير محدود",
+    "period": "الفترة الحالية",
+    "planNames": {
+      "STARTER": "المبتدئ",
+      "PRO": "الاحترافي",
+      "ENTERPRISE": "المؤسسات"
+    },
+    "status": {
+      "TRIAL": "تجريبي",
+      "ACTIVE": "نشط",
+      "PAST_DUE": "متأخر",
+      "CANCELLED": "ملغى",
+      "EXPIRED": "منتهي"
+    },
+    "trialDaysLeft": "{days} أيام متبقية",
+    "limits": {
+      "routers": "أقصى عدد راوترات",
+      "hotspotUsers": "أقصى عدد مستخدمين",
+      "vouchers": "قسائم / شهرياً"
+    },
+    "invoices": "الفواتير",
+    "noInvoices": "لا توجد فواتير بعد",
+    "noInvoicesHint": "ستظهر الفواتير هنا بعد انتهاء الفترة التجريبية.",
+    "invoiceNumber": "رقم الفاتورة",
+    "plan": "الباقة",
+    "amount": "المبلغ",
+    "statusLabel": "الحالة",
+    "dueDate": "تاريخ الاستحقاق",
+    "periodLabel": "الفترة",
+    "invoiceStatus": {
+      "PENDING": "قيد الانتظار",
+      "PAID": "مدفوعة",
+      "OVERDUE": "متأخرة",
+      "CANCELLED": "ملغاة"
+    }
   }
 }

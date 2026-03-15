@@ -23,6 +23,8 @@ model User {
   phone          String?
   role           UserRole  @default(USER)
   locale         String    @default("en")
+  plan           PlanType  @default(STARTER)
+  trialEndsAt    DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -31,6 +33,8 @@ model User {
   vouchers       Voucher[]
   hotspotUsers   HotspotUser[]
   sessions       Session[]
+  subscriptions  Subscription[]
+  invoices       Invoice[]
 
   @@map("users")
 }
@@ -43,6 +47,68 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
+}
+
+// ─── Subscription & Billing ────────────────────────────────
+
+enum PlanType {
+  STARTER
+  PRO
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  TRIAL
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  EXPIRED
+}
+
+model Subscription {
+  id          String             @id @default(cuid())
+  userId      String
+  plan        PlanType
+  status      SubscriptionStatus @default(TRIAL)
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invoices    Invoice[]
+
+  @@map("subscriptions")
+}
+
+enum InvoiceStatus {
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+model Invoice {
+  id              String        @id @default(cuid())
+  invoiceNumber   String        @unique
+  userId          String
+  subscriptionId  String?
+  plan            PlanType
+  amount          Decimal       @db.Decimal(10, 2)
+  currency        String        @default("USD")
+  status          InvoiceStatus @default(PENDING)
+  dueDate         DateTime
+  paidAt          DateTime?
+  periodStart     DateTime
+  periodEnd       DateTime
+  createdAt       DateTime      @default(now())
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscription    Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([status])
+  @@map("invoices")
 }
 
 // ─── Router Models ─────────────────────────────────────────

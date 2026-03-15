@@ -17,7 +17,7 @@ const PLANS = [
     icon: Zap,
     priceUSD: 9,
     popular: false,
-    features: ["routers3", "users50", "vouchers100", "support"],
+    features: ["routers3", "users50", "vouchers5000", "support"],
   },
   {
     key: "pro",

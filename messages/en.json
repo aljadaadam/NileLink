@@ -193,6 +193,7 @@
     "empty": "No routers added yet. Click 'Add Router' to get started.",
     "setupGuide": "Setup Guide",
     "guide": {
+      "introDesc": "Follow these steps to connect your MikroTik device to the platform",
       "step1Title": "Enable API Service",
       "step1Desc": "Open Terminal in MikroTik (via Winbox or SSH) and run these commands to enable the API service:",
       "step2Title": "Setup Hotspot Server",
@@ -202,10 +203,13 @@
       "step3Desc": "Add NileLink to the Walled Garden so clients can access the login page before authentication:",
       "step4Title": "Your Connection Details",
       "step4Desc": "You need these details to link the router with the login page:",
+      "step4AddRouter": "Add Router in NileLink",
+      "step4AddDesc": "Click the button below to add your router with its connection details (IP, port, username, password). After adding, you'll get your unique API key.",
       "loginPageUrl": "Login Page URL",
       "authEndpoint": "Auth Endpoint (API)",
       "step5Title": "Download Login Page",
       "step5Desc": "Run this command in the router Terminal to download the login page from NileLink:",
+      "step5DescGeneric": "After adding the router and getting your API key, run this command in the router Terminal (replace YOUR_API_KEY with your key):",
       "step5Note": "You can customize the login page from the 'Login Pages' section in the dashboard before running this command.",
       "doneNote": "After completing all steps, click 'Test Connection' to verify the router is working. Clients can now log in using package codes."
     }

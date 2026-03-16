@@ -182,17 +182,95 @@ export default function RoutersPage() {
 
       {/* Router Cards */}
       {routers.length === 0 ? (
-        <div className="card text-center py-16">
-          <RouterIcon className="w-12 h-12 text-slate-300 mx-auto" />
-          <p className="mt-4 text-slate-500">{t("empty")}</p>
-          <button
-            onClick={() => setShowModal(true)}
-            className="btn-primary mt-4"
-          >
-            <Plus className="w-4 h-4" />
-            {t("add")}
-          </button>
-        </div>
+        <>
+          <div className="card text-center py-12">
+            <RouterIcon className="w-12 h-12 text-slate-300 mx-auto" />
+            <p className="mt-4 text-slate-500">{t("empty")}</p>
+            <button
+              onClick={() => setShowModal(true)}
+              className="btn-primary mt-4"
+            >
+              <Plus className="w-4 h-4" />
+              {t("add")}
+            </button>
+          </div>
+
+          {/* Inline Setup Guide */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
+                <BookOpen className="w-5 h-5 text-amber-600" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-slate-900">{t("setupGuide")}</h2>
+                <p className="text-sm text-slate-500">{t("guide.introDesc")}</p>
+              </div>
+            </div>
+
+            {/* Step 1 */}
+            <div className="card border-s-4 border-s-primary-500">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center shrink-0">1</span>
+                <h3 className="font-semibold text-slate-900">{t("guide.step1Title")}</h3>
+              </div>
+              <p className="text-sm text-slate-600 mb-3">{t("guide.step1Desc")}</p>
+              <CommandBlock id="s1" code={`/ip service enable api\n/ip service set api port=8728`} copiedCmd={copiedCmd} onCopy={copyCommand} />
+            </div>
+
+            {/* Step 2 */}
+            <div className="card border-s-4 border-s-primary-500">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center shrink-0">2</span>
+                <h3 className="font-semibold text-slate-900">{t("guide.step2Title")}</h3>
+              </div>
+              <p className="text-sm text-slate-600 mb-3">{t("guide.step2Desc")}</p>
+              <CommandBlock id="s2" code={`/ip hotspot setup`} copiedCmd={copiedCmd} onCopy={copyCommand} />
+              <p className="text-xs text-slate-400 mt-2">{t("guide.step2Note")}</p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="card border-s-4 border-s-primary-500">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center shrink-0">3</span>
+                <h3 className="font-semibold text-slate-900">{t("guide.step3Title")}</h3>
+              </div>
+              <p className="text-sm text-slate-600 mb-3">{t("guide.step3Desc")}</p>
+              <CommandBlock id="s3" code={`/ip hotspot walled-garden ip\nadd dst-host=nilelink.net action=accept`} copiedCmd={copiedCmd} onCopy={copyCommand} />
+            </div>
+
+            {/* Step 4 */}
+            <div className="card border-s-4 border-s-primary-500">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center shrink-0">4</span>
+                <h3 className="font-semibold text-slate-900">{t("guide.step4AddRouter")}</h3>
+              </div>
+              <p className="text-sm text-slate-600 mb-3">{t("guide.step4AddDesc")}</p>
+              <button onClick={() => setShowModal(true)} className="btn-primary">
+                <Plus className="w-4 h-4" />
+                {t("add")}
+              </button>
+            </div>
+
+            {/* Step 5 */}
+            <div className="card border-s-4 border-s-amber-500 bg-amber-50/30">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-7 h-7 rounded-full bg-amber-500 text-white text-sm font-bold flex items-center justify-center shrink-0">5</span>
+                <h3 className="font-semibold text-slate-900">{t("guide.step5Title")}</h3>
+              </div>
+              <p className="text-sm text-slate-600 mb-3">{t("guide.step5DescGeneric")}</p>
+              <CommandBlock id="s5" code={`/tool fetch url="https://nilelink.net/api/hotspot/login/YOUR_API_KEY" dst-path="hotspot/login.html"`} copiedCmd={copiedCmd} onCopy={copyCommand} />
+              <p className="text-xs text-slate-400 mt-2">{t("guide.step5Note")}</p>
+            </div>
+
+            {/* Done */}
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
+                <p className="text-sm text-emerald-800">{t("guide.doneNote")}</p>
+              </div>
+            </div>
+          </div>
+        </>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {routers.map((router) => {

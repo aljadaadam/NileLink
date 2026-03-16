@@ -137,13 +137,11 @@ export default function HeroLanding() {
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
         {/* Animated background */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-primary-950 to-slate-900" />
-          {/* Grid pattern */}
-          <div className="absolute inset-0 opacity-[0.07]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 0H0v60' fill='none' stroke='%2306b6d4' stroke-width='0.5'/%3E%3C/svg%3E\")", backgroundSize: "60px 60px" }} />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-accent-50" />
           {/* Gradient orbs */}
-          <div className="absolute top-1/4 start-1/4 w-96 h-96 bg-primary-500/20 rounded-full blur-[120px] animate-pulse" />
-          <div className="absolute bottom-1/4 end-1/3 w-80 h-80 bg-violet-500/15 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: "1s" }} />
-          <div className="absolute top-1/2 end-1/4 w-64 h-64 bg-cyan-400/10 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: "2s" }} />
+          <div className="absolute top-1/4 start-1/4 w-96 h-96 bg-primary-300/20 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-1/4 end-1/3 w-80 h-80 bg-violet-300/15 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: "1s" }} />
+          <div className="absolute top-1/2 end-1/4 w-64 h-64 bg-cyan-300/10 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: "2s" }} />
         </div>
 
         {/* Floating UI cards */}
@@ -153,24 +151,24 @@ export default function HeroLanding() {
             className="absolute top-[15%] end-[8%] w-72 opacity-80 animate-float"
             style={{ transform: `translate(${mousePos.x * 0.3}px, ${mousePos.y * 0.3}px)` }}
           >
-            <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-4 shadow-2xl">
+            <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-xl">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-3 h-3 rounded-full bg-emerald-400" />
-                <span className="text-xs text-white/70">{locale === "ar" ? "لوحة التحكم" : "Dashboard"}</span>
+                <span className="text-xs text-slate-500">{locale === "ar" ? "لوحة التحكم" : "Dashboard"}</span>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-white/50">{locale === "ar" ? "المستخدمون" : "Users"}</span>
-                  <span className="text-sm font-bold text-emerald-400">1,247</span>
+                  <span className="text-xs text-slate-400">{locale === "ar" ? "المستخدمون" : "Users"}</span>
+                  <span className="text-sm font-bold text-emerald-500">1,247</span>
                 </div>
-                <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                   <div className="h-full w-3/4 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full animate-pulse" />
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-white/50">{locale === "ar" ? "الإيرادات" : "Revenue"}</span>
-                  <span className="text-sm font-bold text-amber-400">$3,842</span>
+                  <span className="text-xs text-slate-400">{locale === "ar" ? "الإيرادات" : "Revenue"}</span>
+                  <span className="text-sm font-bold text-amber-500">$3,842</span>
                 </div>
-                <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                   <div className="h-full w-2/3 bg-gradient-to-r from-amber-400 to-orange-400 rounded-full animate-pulse" style={{ animationDelay: "0.5s" }} />
                 </div>
               </div>
@@ -182,15 +180,15 @@ export default function HeroLanding() {
             className="absolute top-[55%] end-[5%] w-56 opacity-70 animate-float-delayed"
             style={{ transform: `translate(${mousePos.x * -0.2}px, ${mousePos.y * -0.2}px)` }}
           >
-            <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-3 shadow-2xl">
+            <div className="bg-white rounded-2xl border border-gray-200 p-3 shadow-xl">
               <div className="flex items-center gap-2 mb-2">
-                <Router className="w-4 h-4 text-cyan-400" />
-                <span className="text-xs text-white/70">Router-01</span>
+                <Router className="w-4 h-4 text-cyan-500" />
+                <span className="text-xs text-slate-500">Router-01</span>
                 <span className="ms-auto w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               </div>
-              <div className="text-xs text-white/40 space-y-1">
-                <div className="flex justify-between"><span>IP</span><span className="text-white/60" dir="ltr">192.168.88.1</span></div>
-                <div className="flex justify-between"><span>{locale === "ar" ? "متصل" : "Online"}</span><span className="text-emerald-400">✓</span></div>
+              <div className="text-xs text-slate-400 space-y-1">
+                <div className="flex justify-between"><span>IP</span><span className="text-slate-600" dir="ltr">192.168.88.1</span></div>
+                <div className="flex justify-between"><span>{locale === "ar" ? "متصل" : "Online"}</span><span className="text-emerald-500">✓</span></div>
               </div>
             </div>
           </div>
@@ -200,13 +198,13 @@ export default function HeroLanding() {
             className="absolute top-[25%] start-[5%] w-48 opacity-70 animate-float-slow"
             style={{ transform: `translate(${mousePos.x * 0.15}px, ${mousePos.y * 0.15}px)` }}
           >
-            <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-3 shadow-2xl">
+            <div className="bg-white rounded-2xl border border-gray-200 p-3 shadow-xl">
               <div className="flex items-center gap-2 mb-2">
-                <Ticket className="w-4 h-4 text-violet-400" />
-                <span className="text-xs text-white/70">{locale === "ar" ? "كود جديد" : "New Code"}</span>
+                <Ticket className="w-4 h-4 text-violet-500" />
+                <span className="text-xs text-slate-500">{locale === "ar" ? "كود جديد" : "New Code"}</span>
               </div>
-              <div className="font-mono text-lg text-center text-white/90 tracking-widest py-1">XK7M-9PLQ</div>
-              <div className="text-[10px] text-center text-white/40">{locale === "ar" ? "ساعتين • 5 ميجا" : "2 hours • 5 Mbps"}</div>
+              <div className="font-mono text-lg text-center text-slate-800 tracking-widest py-1">XK7M-9PLQ</div>
+              <div className="text-[10px] text-center text-slate-400">{locale === "ar" ? "ساعتين • 5 ميجا" : "2 hours • 5 Mbps"}</div>
             </div>
           </div>
 
@@ -215,10 +213,10 @@ export default function HeroLanding() {
             className="absolute bottom-[25%] start-[8%] w-52 opacity-60 animate-float-delayed"
             style={{ transform: `translate(${mousePos.x * -0.25}px, ${mousePos.y * -0.25}px)` }}
           >
-            <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-3 shadow-2xl">
+            <div className="bg-white rounded-2xl border border-gray-200 p-3 shadow-xl">
               <div className="flex items-center gap-2 mb-2">
-                <Users className="w-4 h-4 text-pink-400" />
-                <span className="text-xs text-white/70">{locale === "ar" ? "مستخدمون متصلون" : "Connected Users"}</span>
+                <Users className="w-4 h-4 text-pink-500" />
+                <span className="text-xs text-slate-500">{locale === "ar" ? "مستخدمون متصلون" : "Connected Users"}</span>
               </div>
               <div className="flex gap-1">
                 {[...Array(8)].map((_, i) => (
@@ -234,27 +232,27 @@ export default function HeroLanding() {
         {/* Hero content */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm text-primary-300 border border-primary-500/30 mb-8 animate-fade-in">
+            <div className="inline-flex items-center gap-2 bg-primary-50 rounded-full px-4 py-1.5 text-sm text-primary-600 border border-primary-200 mb-8 animate-fade-in">
               <Zap className="w-4 h-4" />
               {locale === "ar" ? "منصة إدارة شبكات الواي فاي الأولى" : "The #1 WiFi Network Management Platform"}
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-tight animate-fade-in-up">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight animate-fade-in-up">
               {t("hero.title")}
             </h1>
-            <p className="mt-6 text-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl mx-auto animate-fade-in-up-delay">
+            <p className="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto animate-fade-in-up-delay">
               {t("hero.subtitle")}
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up-delay2">
               <Link
                 href="/auth/register"
-                className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary-500 to-cyan-400 hover:from-primary-400 hover:to-cyan-300 text-white font-semibold py-3.5 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-primary-500/40 hover:-translate-y-0.5 text-base"
+                className="btn-primary text-base py-3 px-8 group"
               >
                 {t("hero.cta")}
                 <Arrow className="w-5 h-5 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="/auth/login"
-                className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-medium py-3.5 px-8 rounded-xl border border-white/20 backdrop-blur-sm transition-all duration-300 text-base"
+                className="btn-secondary text-base py-3 px-8"
               >
                 {t("hero.login")}
               </Link>
@@ -262,7 +260,7 @@ export default function HeroLanding() {
 
             {/* Scroll indicator */}
             <div className="mt-16 animate-bounce">
-              <ChevronDown className="w-6 h-6 text-white/30 mx-auto" />
+              <ChevronDown className="w-6 h-6 text-slate-300 mx-auto" />
             </div>
           </div>
         </div>
@@ -498,28 +496,23 @@ export default function HeroLanding() {
 
       {/* ═══ CTA ═══ */}
       <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-primary-950 to-slate-900" />
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 0H0v60' fill='none' stroke='%2306b6d4' stroke-width='0.5'/%3E%3C/svg%3E\")", backgroundSize: "60px 60px" }} />
-        <div className="absolute top-1/2 start-1/4 w-80 h-80 bg-primary-500/20 rounded-full blur-[100px]" />
-        <div className="absolute top-1/2 end-1/4 w-64 h-64 bg-violet-500/15 rounded-full blur-[80px]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-600 to-primary-800" />
         <div className="relative max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white">
             {locale === "ar" ? "ابدأ بإدارة شبكاتك الآن" : "Start Managing Your Networks Today"}
           </h2>
-          <p className="mt-4 text-slate-300 text-lg max-w-2xl mx-auto">
+          <p className="mt-4 text-primary-100 text-lg">
             {locale === "ar"
-              ? "انضم لمنصة NileLink وتحكم بشبكات الواي فاي من أي مكان. تجربة مجانية بدون بطاقة ائتمان."
-              : "Join NileLink and control your WiFi networks from anywhere. Free trial, no credit card required."}
+              ? "انضم لمنصة NileLink وتحكم بشبكات الواي فاي من أي مكان"
+              : "Join NileLink and control your WiFi networks from anywhere"}
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/auth/register"
-              className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-primary-500 to-cyan-400 hover:from-primary-400 hover:to-cyan-300 text-white font-semibold py-3.5 px-10 rounded-xl transition-all duration-300 shadow-lg shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 text-lg"
-            >
-              {t("hero.cta")}
-              <Arrow className="w-5 h-5 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
-            </Link>
-          </div>
+          <Link
+            href="/auth/register"
+            className="mt-8 inline-flex items-center gap-2 bg-white text-primary-700 font-semibold py-3 px-8 rounded-xl hover:bg-primary-50 transition-colors"
+          >
+            {t("hero.cta")}
+            <Arrow className="w-5 h-5" />
+          </Link>
         </div>
       </section>
 

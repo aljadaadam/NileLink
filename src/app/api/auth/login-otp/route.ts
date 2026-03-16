@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const { email, password } = await req.json();
+  const { email, password, forceOtp } = await req.json();
 
   if (!email || !password) {
     return NextResponse.json(
@@ -57,24 +57,26 @@ export async function POST(req: Request) {
     );
   }
 
-  // Check if device is trusted
+  // Check if device is trusted (skip if forceOtp)
   const userAgent = hdrs.get("user-agent") || "unknown";
   const fingerprint = createHash("sha256")
     .update(`${ip}:${userAgent}`)
     .digest("hex");
 
-  const trusted = await prisma.trustedDevice.findUnique({
-    where: { userId_fingerprint: { userId: user.id, fingerprint } },
-  });
+  if (!forceOtp) {
+    const trusted = await prisma.trustedDevice.findUnique({
+      where: { userId_fingerprint: { userId: user.id, fingerprint } },
+    });
 
-  if (trusted && trusted.expiresAt > new Date()) {
-    // Device is trusted — allow login without OTP
-    return NextResponse.json({ status: "TRUSTED", email: user.email });
-  }
+    if (trusted && trusted.expiresAt > new Date()) {
+      // Device is trusted — allow login without OTP
+      return NextResponse.json({ status: "TRUSTED", email: user.email });
+    }
 
-  // Clean up expired trusted device if exists
-  if (trusted) {
-    await prisma.trustedDevice.delete({ where: { id: trusted.id } });
+    // Clean up expired trusted device if exists
+    if (trusted) {
+      await prisma.trustedDevice.delete({ where: { id: trusted.id } });
+    }
   }
 
   // New device — generate OTP, store on user, send email

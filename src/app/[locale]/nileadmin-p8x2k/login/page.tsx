@@ -25,11 +25,11 @@ function AdminLoginForm() {
     const password = formData.get("password") as string;
 
     try {
-      // Step 1: Check credentials + device trust
+      // Step 1: Check credentials + always require OTP for admin
       const otpRes = await fetch("/api/auth/login-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, forceOtp: true }),
       });
 
       const otpData = await otpRes.json();
@@ -40,35 +40,10 @@ function AdminLoginForm() {
         return;
       }
 
-      if (otpData.status === "OTP_REQUIRED") {
-        sessionStorage.setItem("_nl_login", JSON.stringify({ email, password, redirect: "admin" }));
-        setLoading(false);
-        router.push(`/${locale}/auth/verify-login`);
-        return;
-      }
-
-      // Trusted device — sign in directly
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError(isAr ? "بيانات الدخول غير صحيحة" : "Invalid credentials");
-        setLoading(false);
-        return;
-      }
-
-      // Verify user is admin
-      const checkRes = await fetch("/api/admin/stats");
-      if (checkRes.status === 403) {
-        setError(isAr ? "ليس لديك صلاحية الدخول" : "Access denied. Admin only.");
-        setLoading(false);
-        return;
-      }
-
-      router.push(`/${locale}/nileadmin-p8x2k`);
+      // Always redirect to OTP verification for admin login
+      sessionStorage.setItem("_nl_login", JSON.stringify({ email, password, redirect: "admin" }));
+      setLoading(false);
+      router.push(`/${locale}/auth/verify-login`);
     } catch {
       setError(isAr ? "حدث خطأ، حاول مرة أخرى" : "Something went wrong");
       setLoading(false);

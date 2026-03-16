@@ -39,6 +39,8 @@ model User {
   subscriptions  Subscription[]
   invoices       Invoice[]
   trustedDevices TrustedDevice[]
+  adminLogs      AdminLog[]      @relation("AdminLogs")
+  confirmedInvoices Invoice[]    @relation("ConfirmedBy")
 
   @@map("users")
 }
@@ -108,11 +110,14 @@ model Invoice {
   periodEnd       DateTime
   createdAt       DateTime      @default(now())
 
+  confirmedById  String?
   user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   subscription    Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  confirmedBy     User?         @relation("ConfirmedBy", fields: [confirmedById], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([status])
+  @@index([confirmedById])
   @@map("invoices")
 }
 
@@ -244,6 +249,23 @@ model HotspotSession {
   router        Router      @relation(fields: [routerId], references: [id], onDelete: Cascade)
 
   @@map("hotspot_sessions")
+}
+
+// ─── Admin Activity Log ────────────────────────────────────
+
+model AdminLog {
+  id        String   @id @default(cuid())
+  adminId   String
+  action    String   // CONFIRM_PAYMENT, CANCEL_INVOICE, DELETE_USER, TOGGLE_ROLE
+  targetId  String?
+  details   String?  @db.Text
+  createdAt DateTime @default(now())
+
+  admin     User     @relation("AdminLogs", fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId])
+  @@index([createdAt])
+  @@map("admin_logs")
 }
 
 // ─── Trusted Device (OTP bypass) ───────────────────────────

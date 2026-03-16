@@ -10,6 +10,7 @@ import {
   LogOut,
   Shield,
   X,
+  Handshake,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
@@ -18,6 +19,7 @@ const navItems = [
   { key: "dashboard", label: "Dashboard", labelAr: "لوحة التحكم", href: "/nileadmin-p8x2k", icon: LayoutDashboard },
   { key: "users", label: "Users", labelAr: "المستخدمين", href: "/nileadmin-p8x2k/users", icon: Users },
   { key: "subscriptions", label: "Subscriptions", labelAr: "الاشتراكات", href: "/nileadmin-p8x2k/subscriptions", icon: CreditCard },
+  { key: "partnership", label: "Partnership", labelAr: "الشراكة", href: "/nileadmin-p8x2k/partnership", icon: Handshake },
   { key: "settings", label: "Settings", labelAr: "الإعدادات", href: "/nileadmin-p8x2k/settings", icon: Settings },
 ] as const;
 

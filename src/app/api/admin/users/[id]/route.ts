@@ -48,6 +48,15 @@ export async function PATCH(
     data: { role: data.role },
   });
 
+  await prisma.adminLog.create({
+    data: {
+      adminId,
+      action: "TOGGLE_ROLE",
+      targetId: id,
+      details: JSON.stringify({ newRole: data.role }),
+    },
+  });
+
   return NextResponse.json({ success: true });
 }
 
@@ -71,7 +80,19 @@ export async function DELETE(
   }
 
   try {
+    const targetUser = await prisma.user.findUnique({
+      where: { id },
+      select: { name: true, email: true },
+    });
     await prisma.user.delete({ where: { id } });
+    await prisma.adminLog.create({
+      data: {
+        adminId,
+        action: "DELETE_USER",
+        targetId: id,
+        details: JSON.stringify({ name: targetUser?.name, email: targetUser?.email }),
+      },
+    });
   } catch {
     return NextResponse.json(
       { error: "Cannot delete user with existing data" },

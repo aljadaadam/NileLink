@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-async function isAdmin() {
+async function getAdminId() {
   const session = await auth();
-  if (!session?.user?.id) return false;
+  if (!session?.user?.id) return null;
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { role: true },
+    select: { id: true, role: true },
   });
-  return user?.role === "ADMIN";
+  return user?.role === "ADMIN" ? user.id : null;
 }
 
 // PATCH /api/admin/invoices/[id] — mark invoice as paid / cancelled
@@ -17,7 +17,8 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  if (!(await isAdmin())) {
+  const adminId = await getAdminId();
+  if (!adminId) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -55,7 +56,7 @@ export async function PATCH(
     // Mark invoice as paid
     await prisma.invoice.update({
       where: { id },
-      data: { status: "PAID", paidAt: now },
+      data: { status: "PAID", paidAt: now, confirmedById: adminId },
     });
 
     // Activate subscription
@@ -81,6 +82,21 @@ export async function PATCH(
       });
     }
 
+    // Log admin action
+    await prisma.adminLog.create({
+      data: {
+        adminId,
+        action: "CONFIRM_PAYMENT",
+        targetId: id,
+        details: JSON.stringify({
+          invoiceNumber: invoice.invoiceNumber,
+          amount: Number(invoice.amount),
+          plan: invoice.plan,
+          userId: invoice.user.id,
+        }),
+      },
+    });
+
     return NextResponse.json({ success: true, status: "PAID" });
   }
 
@@ -89,6 +105,20 @@ export async function PATCH(
       where: { id },
       data: { status: "CANCELLED" },
     });
+
+    await prisma.adminLog.create({
+      data: {
+        adminId,
+        action: "CANCEL_INVOICE",
+        targetId: id,
+        details: JSON.stringify({
+          invoiceNumber: invoice.invoiceNumber,
+          amount: Number(invoice.amount),
+          userId: invoice.user.id,
+        }),
+      },
+    });
+
     return NextResponse.json({ success: true, status: "CANCELLED" });
   }
 }

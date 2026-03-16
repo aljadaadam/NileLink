@@ -68,6 +68,8 @@ export default function VouchersPage() {
   const [activeVoucher, setActiveVoucher] = useState<VoucherItem | null>(null);
   const [activeQr, setActiveQr] = useState<string | null>(null);
   const [showHelp, setShowHelp] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkDeleting, setBulkDeleting] = useState(false);
 
   async function loadData() {
     try {
@@ -137,6 +139,53 @@ export default function VouchersPage() {
     } catch {
       toast.error("Failed to delete");
     }
+  }
+
+  async function handleBulkDelete() {
+    if (selectedIds.size === 0) return;
+    if (!confirm(t("deleteConfirm"))) return;
+    setBulkDeleting(true);
+    try {
+      const res = await fetch("/api/vouchers", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: Array.from(selectedIds) }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        toast.error(err?.error || "Failed to delete");
+        return;
+      }
+      setVouchers((prev) => prev.filter((v) => !selectedIds.has(v.id)));
+      setSelectedIds(new Set());
+    } catch {
+      toast.error("Failed to delete");
+    } finally {
+      setBulkDeleting(false);
+    }
+  }
+
+  function toggleSelect(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    const pageIds = paginated.map((v) => v.id);
+    const allSelected = pageIds.every((id) => selectedIds.has(id));
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (allSelected) {
+        pageIds.forEach((id) => next.delete(id));
+      } else {
+        pageIds.forEach((id) => next.add(id));
+      }
+      return next;
+    });
   }
 
   function copyCode(code: string) {
@@ -382,10 +431,43 @@ export default function VouchersPage() {
         </div>
       ) : (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          {/* Bulk Action Bar */}
+          {selectedIds.size > 0 && (
+            <div className="flex items-center justify-between px-4 py-3 bg-primary-50 border-b border-primary-100">
+              <span className="text-sm font-semibold text-primary-700">
+                {t("selected", { count: selectedIds.size })}
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setSelectedIds(new Set())}
+                  className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-white rounded-lg border border-gray-200 hover:bg-slate-50 transition-colors"
+                >
+                  <X className="w-3.5 h-3.5 inline-block me-1" />
+                  {tc("cancel")}
+                </button>
+                <button
+                  onClick={handleBulkDelete}
+                  disabled={bulkDeleting}
+                  className="px-3 py-1.5 text-xs font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center gap-1.5"
+                >
+                  {bulkDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                  {t("deleteSelected")}
+                </button>
+              </div>
+            </div>
+          )}
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-100">
+                  <th className="p-4 w-10">
+                    <input
+                      type="checkbox"
+                      checked={paginated.length > 0 && paginated.every((v) => selectedIds.has(v.id))}
+                      onChange={toggleSelectAll}
+                      className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
+                    />
+                  </th>
                   <th className="p-4 text-start text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     {t("code")}
                   </th>
@@ -410,8 +492,19 @@ export default function VouchersPage() {
                     <tr
                       key={voucher.id}
                       onClick={() => openVoucherModal(voucher)}
-                      className="group transition-colors duration-150 hover:bg-slate-50/70 cursor-pointer"
+                      className={cn(
+                        "group transition-colors duration-150 hover:bg-slate-50/70 cursor-pointer",
+                        selectedIds.has(voucher.id) && "bg-primary-50/40"
+                      )}
                     >
+                      <td className="p-4" onClick={(e) => e.stopPropagation()}>
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.has(voucher.id)}
+                          onChange={() => toggleSelect(voucher.id)}
+                          className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
+                        />
+                      </td>
                       <td className="p-4">
                         <div className="flex items-center gap-1.5 bg-slate-50 rounded-lg px-3 py-1.5 font-mono text-sm font-bold text-slate-800 tracking-wider w-fit" dir="ltr">
                           {voucher.code}

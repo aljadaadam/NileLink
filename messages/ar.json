@@ -264,6 +264,9 @@
     "usedAt": "تاريخ الاستخدام",
     "createdAt": "تاريخ الإنشاء",
     "printSelected": "طباعة المحدد",
+    "deleteSelected": "حذف المحدد",
+    "selected": "{count} محدد",
+    "selectAll": "تحديد الكل",
     "deleteConfirm": "هل أنت متأكد من حذف الأكواد المحددة؟",
     "empty": "لا توجد أكواد بعد.",
     "generated": "تم توليد {count} كود بنجاح!"

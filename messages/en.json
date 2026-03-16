@@ -264,6 +264,9 @@
     "usedAt": "Used At",
     "createdAt": "Created At",
     "printSelected": "Print Selected",
+    "deleteSelected": "Delete Selected",
+    "selected": "{count} selected",
+    "selectAll": "Select All",
     "deleteConfirm": "Are you sure you want to delete selected codes?",
     "empty": "No codes generated yet.",
     "generated": "{count} codes generated successfully!"

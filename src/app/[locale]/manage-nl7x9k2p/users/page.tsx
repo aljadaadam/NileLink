@@ -3,11 +3,9 @@
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import {
-  Plus,
   Users,
   Trash2,
   Loader2,
-  X,
   Unplug,
   Wifi,
   HelpCircle,
@@ -29,30 +27,18 @@ interface HotspotUserItem {
   createdAt: string;
 }
 
-interface RouterOption {
-  id: string;
-  name: string;
-}
-
 export default function HotspotUsersPage() {
   const t = useTranslations("hotspotUsers");
   const tc = useTranslations("common");
   const [users, setUsers] = useState<HotspotUserItem[]>([]);
-  const [routers, setRouters] = useState<RouterOption[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [showHelp, setShowHelp] = useState(false);
 
   async function loadData() {
     try {
-      const [uRes, rRes] = await Promise.all([
-        fetch("/api/hotspot/users"),
-        fetch("/api/routers"),
-      ]);
-      setUsers(await uRes.json());
-      setRouters(await rRes.json());
+      const res = await fetch("/api/hotspot/users");
+      setUsers(await res.json());
     } catch {
       toast.error("Failed to load data");
     } finally {
@@ -63,33 +49,6 @@ export default function HotspotUsersPage() {
   useEffect(() => {
     loadData();
   }, []);
-
-  async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setSaving(true);
-    const formData = new FormData(e.currentTarget);
-
-    try {
-      const res = await fetch("/api/hotspot/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: formData.get("username"),
-          password: formData.get("password"),
-          routerId: formData.get("routerId"),
-          packageName: formData.get("packageName") || undefined,
-          expiresAt: formData.get("expiresAt") || undefined,
-        }),
-      });
-      if (!res.ok) throw new Error();
-      setShowModal(false);
-      loadData();
-    } catch {
-      toast.error("Failed to create user");
-    } finally {
-      setSaving(false);
-    }
-  }
 
   async function handleDisconnect(id: string) {
     try {
@@ -135,10 +94,6 @@ export default function HotspotUsersPage() {
             <HelpCircle className="w-5 h-5" />
           </button>
         </div>
-        <button onClick={() => setShowModal(true)} className="btn-primary">
-          <Plus className="w-4 h-4" />
-          {t("add")}
-        </button>
       </div>
 
       {showHelp && (
@@ -271,73 +226,6 @@ export default function HotspotUsersPage() {
         </div>
       )}
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-900">{t("add")}</h2>
-              <button
-                onClick={() => setShowModal(false)}
-                className="text-slate-400 hover:text-slate-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <form onSubmit={handleCreate} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t("router")}
-                </label>
-                <select name="routerId" required className="input-field">
-                  <option value="">{t("router")}</option>
-                  {routers.map((r) => (
-                    <option key={r.id} value={r.id}>
-                      {r.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t("username")}
-                </label>
-                <input name="username" required className="input-field" dir="ltr" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t("password")}
-                </label>
-                <input
-                  name="password"
-                  type="text"
-                  required
-                  className="input-field"
-                  dir="ltr"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t("expiresAt")}
-                </label>
-                <input name="expiresAt" type="datetime-local" className="input-field" dir="ltr" />
-              </div>
-              <div className="flex gap-3 pt-2">
-                <button type="submit" disabled={saving} className="btn-primary flex-1">
-                  {saving ? tc("loading") : t("add")}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="btn-secondary"
-                >
-                  {tc("cancel")}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

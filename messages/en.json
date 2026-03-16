@@ -216,7 +216,7 @@
     "generate": "Generate Codes",
     "count": "Number of Codes",
     "package": "Select Package",
-    "expiry": "Expiry Date (optional)",
+    "expiry": "Validity in Days (optional)",
     "code": "Code",
     "status": "Status",
     "unused": "Unused",

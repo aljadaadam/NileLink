@@ -8,7 +8,7 @@ import { z } from "zod";
 const generateSchema = z.object({
   packageId: z.string().min(1),
   count: z.number().int().min(1).max(500),
-  expiresAt: z.string().optional(),
+  expiryDays: z.number().int().min(1).max(365).optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -63,12 +63,16 @@ export async function POST(req: NextRequest) {
 
     const codes = generateVoucherCodes(data.count);
 
+    const expiresAt = data.expiryDays
+      ? new Date(Date.now() + data.expiryDays * 24 * 60 * 60 * 1000)
+      : undefined;
+
     await prisma.voucher.createMany({
       data: codes.map((code) => ({
         code,
         packageId: data.packageId,
         userId: session.user.id,
-        expiresAt: data.expiresAt ? new Date(data.expiresAt) : undefined,
+        expiresAt,
       })),
     });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useEffect, useState, useMemo } from "react";
 import {
   Plus,
@@ -54,6 +54,8 @@ function escapeHtml(str: string) {
 export default function VouchersPage() {
   const t = useTranslations("vouchers");
   const tc = useTranslations("common");
+  const locale = useLocale();
+  const isAr = locale === "ar";
   const [vouchers, setVouchers] = useState<VoucherItem[]>([]);
   const [packages, setPackages] = useState<PackageOption[]>([]);
   const [loading, setLoading] = useState(true);
@@ -98,7 +100,7 @@ export default function VouchersPage() {
         body: JSON.stringify({
           packageId: formData.get("packageId"),
           count: parseInt(formData.get("count") as string),
-          expiresAt: formData.get("expiresAt") || undefined,
+          expiryDays: formData.get("expiryDays") ? parseInt(formData.get("expiryDays") as string) : undefined,
         }),
       });
       if (!res.ok) {
@@ -651,7 +653,7 @@ export default function VouchersPage() {
                   <Calendar className="w-4 h-4 text-primary-500" />
                   {t("expiry")}
                 </label>
-                <input name="expiresAt" type="date" className="input-field" dir="ltr" />
+                <input name="expiryDays" type="number" min="1" max="365" className="input-field" dir="ltr" placeholder={isAr ? "مثال: 30 يوم" : "e.g. 30 days"} />
               </div>
               <div className="flex gap-3 pt-3">
                 <button

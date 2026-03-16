@@ -13,6 +13,7 @@ import {
   Type,
   Image as ImageIcon,
   Code,
+  HelpCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -45,6 +46,7 @@ export default function LoginPagesPage() {
   const [customHtml, setCustomHtml] = useState("");
   const [customCss, setCustomCss] = useState("");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -181,7 +183,12 @@ export default function LoginPagesPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+            <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
+              <HelpCircle className="w-5 h-5" />
+            </button>
+          </div>
           <p className="text-sm text-slate-500 mt-1">{t("description")}</p>
         </div>
         <div className="flex gap-2">
@@ -199,6 +206,12 @@ export default function LoginPagesPage() {
           </button>
         </div>
       </div>
+
+      {showHelp && (
+        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
+          {t("helpDesc")}
+        </div>
+      )}
 
       {routers.length === 0 ? (
         <div className="card bg-amber-50 border-amber-200 py-3 px-4">

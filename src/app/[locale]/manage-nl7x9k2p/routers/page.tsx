@@ -14,6 +14,7 @@ import {
   X,
   Plug,
   Pencil,
+  HelpCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -41,6 +42,7 @@ export default function RoutersPage() {
   const [saving, setSaving] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [testingId, setTestingId] = useState<string | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
 
   async function loadRouters() {
     try {
@@ -148,12 +150,23 @@ export default function RoutersPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+          <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
+            <HelpCircle className="w-5 h-5" />
+          </button>
+        </div>
         <button onClick={() => { setEditingRouter(null); setShowModal(true); }} className="btn-primary">
           <Plus className="w-4 h-4" />
           {t("add")}
         </button>
       </div>
+
+      {showHelp && (
+        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
+          {t("helpDesc")}
+        </div>
+      )}
 
       {/* Router Cards */}
       {routers.length === 0 ? (

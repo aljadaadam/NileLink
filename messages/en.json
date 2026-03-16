@@ -143,6 +143,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "helpDesc": "A complete overview of your network: connected routers, active users, used codes, and revenue. Use the quick actions to navigate directly to any section.",
     "welcome": "Welcome back, {name}",
     "stats": {
       "totalRouters": "Total Routers",
@@ -170,6 +171,7 @@
   },
   "routers": {
     "title": "Routers",
+    "helpDesc": "Connect your MikroTik devices to the platform. Add a router by entering its IP address, API port, and login credentials, then test the connection. Each router gets a unique API key used to link the login page.",
     "add": "Add Router",
     "name": "Router Name",
     "host": "Host / IP Address",
@@ -191,6 +193,7 @@
   },
   "packages": {
     "title": "Packages",
+    "helpDesc": "Packages define what a customer gets when using a WiFi code: duration, upload/download speed, data limit, and price. Create different packages (e.g., 1 hour, 1 day, 1 week) to suit your customers' needs.",
     "add": "Add Package",
     "name": "Package Name",
     "duration": "Duration (minutes)",
@@ -209,6 +212,7 @@
   },
   "vouchers": {
     "title": "Codes",
+    "helpDesc": "Codes are WiFi access cards your customers use to connect. Select a package and quantity, then click Generate. You can print them (receipt size) or copy and share them. Click any code to view details and QR code.",
     "generate": "Generate Codes",
     "count": "Number of Codes",
     "package": "Select Package",
@@ -228,6 +232,7 @@
   },
   "hotspotUsers": {
     "title": "Hotspot Users",
+    "helpDesc": "Hotspot users are customers connected to your network. You can create manual accounts (username & password) or let them use codes. Monitor their data usage, connection time, and disconnect or delete them as needed.",
     "add": "Add User",
     "username": "Username",
     "password": "Password",
@@ -244,6 +249,7 @@
   },
   "loginPages": {
     "title": "Login Page Templates",
+    "helpDesc": "The login page is the first thing customers see when connecting to your network. Choose a ready-made template, add your business name and logo. Each router gets its own page. You can also use the advanced editor for custom HTML/CSS.",
     "description": "Choose a template, add your brand name and logo — your customers will see it when connecting to WiFi.",
     "preview": "Preview",
     "router": "Select Router",
@@ -265,6 +271,7 @@
   },
   "settings": {
     "title": "Settings",
+    "helpDesc": "Update your personal information like name, phone number, and company name. You can also change your password and switch the interface language between Arabic and English.",
     "profile": "Profile",
     "name": "Name",
     "email": "Email",
@@ -286,6 +293,7 @@
   },
   "billing": {
     "title": "Billing & Subscription",
+    "helpDesc": "View your current plan details and limits (routers, users, codes). Track your invoices and payment status. When you have a pending invoice, contact us via WhatsApp or email to complete payment and activate your subscription.",
     "month": "mo",
     "unlimited": "Unlimited",
     "period": "Current period",

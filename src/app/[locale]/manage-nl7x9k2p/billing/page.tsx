@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { CreditCard, FileText, Clock, CheckCircle, AlertCircle, Zap, Crown, Rocket, MessageCircle, Mail } from "lucide-react";
+import { CreditCard, FileText, Clock, CheckCircle, AlertCircle, Zap, Crown, Rocket, MessageCircle, Mail, HelpCircle } from "lucide-react";
 import { PLAN_LIMITS } from "@/lib/plans";
 import { toast } from "sonner";
 
@@ -86,6 +86,7 @@ export default function BillingPage() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [currency, setCurrency] = useState<CurrencyInfo>({ code: "USD", symbol: "$", rate: 1 });
+  const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -117,7 +118,17 @@ export default function BillingPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+      <div className="flex items-center gap-2">
+        <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+        <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
+          <HelpCircle className="w-5 h-5" />
+        </button>
+      </div>
+      {showHelp && (
+        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
+          {t("helpDesc")}
+        </div>
+      )}
 
       {/* Current Plan Card */}
       {sub && (

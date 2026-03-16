@@ -10,6 +10,7 @@ import {
   X,
   Unplug,
   Wifi,
+  HelpCircle,
 } from "lucide-react";
 import { cn, formatBytes, formatUptime } from "@/lib/utils";
 import { toast } from "sonner";
@@ -42,6 +43,7 @@ export default function HotspotUsersPage() {
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showHelp, setShowHelp] = useState(false);
 
   async function loadData() {
     try {
@@ -127,12 +129,23 @@ export default function HotspotUsersPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+          <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
+            <HelpCircle className="w-5 h-5" />
+          </button>
+        </div>
         <button onClick={() => setShowModal(true)} className="btn-primary">
           <Plus className="w-4 h-4" />
           {t("add")}
         </button>
       </div>
+
+      {showHelp && (
+        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
+          {t("helpDesc")}
+        </div>
+      )}
 
       {users.length === 0 ? (
         <div className="card text-center py-16">

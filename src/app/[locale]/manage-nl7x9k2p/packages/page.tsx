@@ -16,6 +16,7 @@ import {
   ArrowDown,
   ToggleLeft,
   ToggleRight,
+  HelpCircle,
 } from "lucide-react";
 import { cn, formatBytes, formatDuration } from "@/lib/utils";
 import { toast } from "sonner";
@@ -43,6 +44,7 @@ export default function PackagesPage() {
   const [editId, setEditId] = useState<string | null>(null);
   const [editingPkg, setEditingPkg] = useState<PackageItem | null>(null);
   const [saving, setSaving] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   async function loadPackages() {
     try {
@@ -156,7 +158,12 @@ export default function PackagesPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+          <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
+            <HelpCircle className="w-5 h-5" />
+          </button>
+        </div>
         <button
           onClick={() => {
             setEditId(null);
@@ -169,6 +176,12 @@ export default function PackagesPage() {
           {t("add")}
         </button>
       </div>
+
+      {showHelp && (
+        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
+          {t("helpDesc")}
+        </div>
+      )}
 
       {packages.length === 0 ? (
         <div className="card text-center py-16">

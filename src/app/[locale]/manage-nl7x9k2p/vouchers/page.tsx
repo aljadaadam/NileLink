@@ -21,6 +21,7 @@ import {
   Sparkles,
   Calendar,
   Hash,
+  HelpCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -64,6 +65,7 @@ export default function VouchersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeVoucher, setActiveVoucher] = useState<VoucherItem | null>(null);
   const [activeQr, setActiveQr] = useState<string | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
 
   async function loadData() {
     try {
@@ -266,6 +268,9 @@ export default function VouchersPage() {
               <Ticket className="w-5 h-5" />
             </div>
             {t("title")}
+            <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
+              <HelpCircle className="w-5 h-5" />
+            </button>
           </h1>
           <p className="text-sm text-slate-500 mt-1">
             {stats.total} {t("title")}
@@ -281,6 +286,12 @@ export default function VouchersPage() {
           </button>
         </div>
       </div>
+
+      {showHelp && (
+        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
+          {t("helpDesc")}
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

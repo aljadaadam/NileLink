@@ -12,6 +12,7 @@ import {
   DollarSign,
   Plus,
   Zap,
+  HelpCircle,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { StatsData } from "@/types";
@@ -22,6 +23,7 @@ export default function DashboardPage() {
   const ts = useTranslations("sidebar");
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
     fetch("/api/manage-nl7x9k2p/stats")
@@ -60,6 +62,19 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      {/* Help */}
+      <div className="flex items-center gap-2">
+        <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+        <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
+          <HelpCircle className="w-5 h-5" />
+        </button>
+      </div>
+      {showHelp && (
+        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
+          {t("helpDesc")}
+        </div>
+      )}
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <StatsCard

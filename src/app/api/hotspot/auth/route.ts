@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
+import { MikroTikClient } from "@/lib/mikrotik";
 
 // This endpoint is called by the MikroTik router to authenticate hotspot users
 export async function POST(req: NextRequest) {
@@ -53,6 +54,18 @@ export async function POST(req: NextRequest) {
     });
 
     if (voucher) {
+      // Check voucher expiry
+      if (voucher.expiresAt && voucher.expiresAt < new Date()) {
+        await prisma.voucher.update({
+          where: { id: voucher.id },
+          data: { status: "EXPIRED" },
+        });
+        return NextResponse.json(
+          { error: "Voucher expired" },
+          { status: 401 }
+        );
+      }
+
       // Mark voucher as used
       await prisma.voucher.update({
         where: { id: voucher.id },
@@ -76,6 +89,37 @@ export async function POST(req: NextRequest) {
             : undefined,
         },
       });
+
+      // Create user on MikroTik with proper limits
+      try {
+        const client = new MikroTikClient({
+          host: router.host,
+          port: router.port,
+          username: router.username,
+          password: router.password,
+        });
+
+        const pkg = voucher.package;
+
+        // Create profile on MikroTik for speed limits (if speeds defined)
+        if (pkg.uploadSpeed || pkg.downloadSpeed) {
+          try {
+            const rateLimit = `${pkg.uploadSpeed || 0}k/${pkg.downloadSpeed || 0}k`;
+            const sessionTimeout = pkg.duration ? `${pkg.duration}m` : undefined;
+            await client.createHotspotProfile(pkg.name, rateLimit, sessionTimeout, 1);
+          } catch {
+            // Profile might already exist — ignore
+          }
+        }
+
+        // Add user to MikroTik with limits
+        const profile = (pkg.uploadSpeed || pkg.downloadSpeed) ? pkg.name : undefined;
+        const limitUptime = pkg.duration ? `${pkg.duration * 60}` : undefined;
+        const limitBytes = pkg.dataLimit ? pkg.dataLimit.toString() : undefined;
+        await client.addHotspotUser(voucher.code, "", profile, limitUptime, limitBytes);
+      } catch {
+        // Router might be offline — user created in DB, will sync later
+      }
 
       // Create session
       await prisma.hotspotSession.create({

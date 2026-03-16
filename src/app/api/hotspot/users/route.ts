@@ -66,7 +66,33 @@ export async function POST(req: NextRequest) {
         username: router.username,
         password: router.password,
       });
-      await client.addHotspotUser(data.username, data.password);
+
+      // If package specified, look up limits
+      let profile: string | undefined;
+      let limitUptime: string | undefined;
+      let limitBytes: string | undefined;
+
+      if (data.packageName) {
+        const pkg = await prisma.package.findFirst({
+          where: { name: data.packageName, userId: session.user.id },
+        });
+        if (pkg) {
+          if (pkg.uploadSpeed || pkg.downloadSpeed) {
+            try {
+              const rateLimit = `${pkg.uploadSpeed || 0}k/${pkg.downloadSpeed || 0}k`;
+              const sessionTimeout = pkg.duration ? `${pkg.duration}m` : undefined;
+              await client.createHotspotProfile(pkg.name, rateLimit, sessionTimeout, 1);
+            } catch {
+              // Profile might already exist
+            }
+            profile = pkg.name;
+          }
+          if (pkg.duration) limitUptime = `${pkg.duration * 60}`;
+          if (pkg.dataLimit) limitBytes = pkg.dataLimit.toString();
+        }
+      }
+
+      await client.addHotspotUser(data.username, data.password, profile, limitUptime, limitBytes);
     } catch {
       // Router might be offline, still create in DB
     }

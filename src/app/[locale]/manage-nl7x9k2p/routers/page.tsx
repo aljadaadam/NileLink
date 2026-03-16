@@ -291,14 +291,14 @@ export default function RoutersPage() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">
                   {t("name")}
                 </label>
-                <input name="name" required className="input-field" defaultValue={editingRouter?.name || ""} />
+                <input name="name" required className="input-field" placeholder="Router-Main" defaultValue={editingRouter?.name || ""} />
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div className="col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     {t("host")}
                   </label>
-                  <input name="host" required className="input-field" dir="ltr" defaultValue={editingRouter?.host || ""} />
+                  <input name="host" required className="input-field" dir="ltr" placeholder="192.168.88.1" defaultValue={editingRouter?.host || ""} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -317,7 +317,7 @@ export default function RoutersPage() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">
                   {t("username")}
                 </label>
-                <input name="username" required className="input-field" dir="ltr" defaultValue={editingRouter?.username || ""} />
+                <input name="username" required className="input-field" dir="ltr" placeholder="admin" defaultValue={editingRouter?.username || ""} />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -327,7 +327,7 @@ export default function RoutersPage() {
                   name="password"
                   type="password"
                   required={!editingRouter}
-                  placeholder={editingRouter ? t("passwordPlaceholder") : ""}
+                  placeholder={editingRouter ? t("passwordPlaceholder") : "••••••••"}
                   className="input-field"
                   dir="ltr"
                 />

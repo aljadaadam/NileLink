@@ -12,14 +12,16 @@ function VerifyLoginContent() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [redirectTarget, setRedirectTarget] = useState("");
 
   useEffect(() => {
     const stored = sessionStorage.getItem("_nl_login");
     if (stored) {
       try {
-        const { email: e, password: p } = JSON.parse(stored);
+        const { email: e, password: p, redirect: r } = JSON.parse(stored);
         setEmail(e || "");
         setPassword(p || "");
+        setRedirectTarget(r || "");
       } catch { /* ignore */ }
     }
   }, []);
@@ -118,7 +120,8 @@ function VerifyLoginContent() {
 
       setSuccess(true);
       sessionStorage.removeItem("_nl_login");
-      setTimeout(() => router.push("/manage-nl7x9k2p"), 1500);
+      const dest = redirectTarget === "admin" ? "/nileadmin-p8x2k" : "/manage-nl7x9k2p";
+      setTimeout(() => router.push(dest), 1500);
     } catch {
       setError(t("invalidCode"));
       setLoading(false);

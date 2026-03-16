@@ -2,21 +2,27 @@
 
 import { useState, useEffect } from "react";
 import { SessionProvider, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import Header from "@/components/layout/Header";
 
 function AdminGuard({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+
+  const isLoginPage = pathname.includes("/nileadmin-p8x2k/login");
 
   useEffect(() => {
+    if (isLoginPage) return;
     if (status === "unauthenticated") {
-      router.push("/auth/login");
+      router.push(pathname.replace(/\/nileadmin-p8x2k.*/, "/nileadmin-p8x2k/login"));
     } else if (status === "authenticated" && (session?.user as any)?.role !== "ADMIN") {
       router.push("/manage-nl7x9k2p");
     }
-  }, [status, session, router]);
+  }, [status, session, router, isLoginPage, pathname]);
+
+  if (isLoginPage) return <>{children}</>;
 
   if (status === "loading") {
     return (
@@ -37,6 +43,16 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathname = usePathname();
+  const isLoginPage = pathname.includes("/nileadmin-p8x2k/login");
+
+  if (isLoginPage) {
+    return (
+      <SessionProvider>
+        <AdminGuard>{children}</AdminGuard>
+      </SessionProvider>
+    );
+  }
 
   return (
     <SessionProvider>

@@ -1,8 +1,49 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
+import { NextResponse } from "next/server";
 import { prisma } from "./prisma";
 import { rateLimit } from "./rate-limit";
+
+/**
+ * Check if user has an active subscription/trial.
+ * Returns null if active, or a 403 NextResponse if expired.
+ */
+export async function requireActiveSubscription(userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { trialEndsAt: true },
+  });
+
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
+  const now = new Date();
+  const planChosen = user.trialEndsAt !== null;
+
+  if (!planChosen) return null; // hasn't chosen plan yet, allow
+
+  const isTrialActive = user.trialEndsAt && user.trialEndsAt > now;
+  if (isTrialActive) return null;
+
+  const subscription = await prisma.subscription.findFirst({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+  });
+
+  const isSubActive =
+    subscription &&
+    (subscription.status === "ACTIVE" || subscription.status === "TRIAL") &&
+    subscription.currentPeriodEnd > now;
+
+  if (isSubActive) return null;
+
+  return NextResponse.json(
+    { error: "Subscription expired. Please renew your plan." },
+    { status: 403 }
+  );
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt", maxAge: 8 * 60 * 60 },

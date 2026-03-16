@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { auth, requireActiveSubscription } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
@@ -32,6 +32,9 @@ export async function DELETE(req: NextRequest) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const subError = await requireActiveSubscription(session.user.id);
+  if (subError) return subError;
 
   const { ids } = await req.json();
 

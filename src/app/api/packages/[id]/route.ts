@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { auth, requireActiveSubscription } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
@@ -23,6 +23,9 @@ export async function PUT(
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const subError = await requireActiveSubscription(session.user.id);
+  if (subError) return subError;
 
   const { id } = await params;
 
@@ -75,6 +78,9 @@ export async function DELETE(
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const subError = await requireActiveSubscription(session.user.id);
+  if (subError) return subError;
 
   const { id } = await params;
 

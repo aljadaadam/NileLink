@@ -58,11 +58,11 @@ export default function VouchersPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [selected, setSelected] = useState<Set<string>>(new Set());
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeVoucher, setActiveVoucher] = useState<VoucherItem | null>(null);
 
   async function loadData() {
     try {
@@ -114,21 +114,21 @@ export default function VouchersPage() {
     }
   }
 
-  async function handleDeleteSelected() {
+  async function handleDeleteVoucher(voucher: VoucherItem) {
     if (!confirm(t("deleteConfirm"))) return;
     try {
       const res = await fetch("/api/vouchers", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ids: Array.from(selected) }),
+        body: JSON.stringify({ ids: [voucher.id] }),
       });
       if (!res.ok) {
         const err = await res.json().catch(() => null);
         toast.error(err?.error || "Failed to delete");
         return;
       }
-      setVouchers((prev) => prev.filter((v) => !selected.has(v.id)));
-      setSelected(new Set());
+      setVouchers((prev) => prev.filter((v) => v.id !== voucher.id));
+      setActiveVoucher(null);
     } catch {
       toast.error("Failed to delete");
     }
@@ -141,12 +141,9 @@ export default function VouchersPage() {
     setTimeout(() => setCopiedCode(null), 2000);
   }
 
-  async function printSelected() {
-    const selectedVouchers = vouchers.filter((v) => selected.has(v.id));
-    if (selectedVouchers.length === 0) return;
-
+  async function printVoucher(voucher: VoucherItem) {
     const voucherData = await Promise.all(
-      selectedVouchers.map(async (v) => {
+      [voucher].map(async (v) => {
         const qrDataUrl = await QRCode.toDataURL(v.code, {
           width: 120,
           margin: 1,
@@ -257,21 +254,6 @@ export default function VouchersPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {selected.size > 0 && (
-            <>
-              <button onClick={printSelected} className="btn-secondary text-sm group">
-                <Printer className="w-4 h-4 group-hover:text-primary-600 transition-colors" />
-                {t("printSelected")} ({selected.size})
-              </button>
-              <button
-                onClick={handleDeleteSelected}
-                className="btn-danger text-sm"
-              >
-                <Trash2 className="w-4 h-4" />
-                {tc("delete")} ({selected.size})
-              </button>
-            </>
-          )}
           <button
             onClick={() => setShowModal(true)}
             className="btn-primary group shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 transition-all"
@@ -373,20 +355,6 @@ export default function VouchersPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-100">
-                  <th className="p-4 text-start w-10">
-                    <input
-                      type="checkbox"
-                      checked={selected.size === paginated.length && paginated.length > 0}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelected(new Set(paginated.map((v) => v.id)));
-                        } else {
-                          setSelected(new Set());
-                        }
-                      }}
-                      className="rounded-md border-gray-300 text-primary-600 focus:ring-primary-500 transition-colors"
-                    />
-                  </th>
                   <th className="p-4 text-start text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     {t("code")}
                   </th>
@@ -410,41 +378,12 @@ export default function VouchersPage() {
                   return (
                     <tr
                       key={voucher.id}
-                      className={cn(
-                        "group transition-colors duration-150",
-                        selected.has(voucher.id)
-                          ? "bg-primary-50/40"
-                          : "hover:bg-slate-50/70"
-                      )}
+                      onClick={() => setActiveVoucher(voucher)}
+                      className="group transition-colors duration-150 hover:bg-slate-50/70 cursor-pointer"
                     >
                       <td className="p-4">
-                        <input
-                          type="checkbox"
-                          checked={selected.has(voucher.id)}
-                          onChange={(e) => {
-                            const next = new Set(selected);
-                            if (e.target.checked) next.add(voucher.id);
-                            else next.delete(voucher.id);
-                            setSelected(next);
-                          }}
-                          className="rounded-md border-gray-300 text-primary-600 focus:ring-primary-500 transition-colors"
-                        />
-                      </td>
-                      <td className="p-4">
-                        <div className="flex items-center gap-2.5">
-                          <div className="flex items-center gap-1.5 bg-slate-50 rounded-lg px-3 py-1.5 font-mono text-sm font-bold text-slate-800 tracking-wider" dir="ltr">
-                            {voucher.code}
-                          </div>
-                          <button
-                            onClick={() => copyCode(voucher.code)}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-md hover:bg-gray-100"
-                          >
-                            {copiedCode === voucher.code ? (
-                              <CheckCircle className="w-4 h-4 text-emerald-500" />
-                            ) : (
-                              <Copy className="w-4 h-4 text-slate-400" />
-                            )}
-                          </button>
+                        <div className="flex items-center gap-1.5 bg-slate-50 rounded-lg px-3 py-1.5 font-mono text-sm font-bold text-slate-800 tracking-wider w-fit" dir="ltr">
+                          {voucher.code}
                         </div>
                       </td>
                       <td className="p-4">
@@ -531,6 +470,88 @@ export default function VouchersPage() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Voucher Detail Modal */}
+      {activeVoucher && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setActiveVoucher(null)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-5 text-white text-center">
+              <div className="mx-auto w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3">
+                <Ticket className="w-6 h-6" />
+              </div>
+              <p className="font-mono text-xl font-bold tracking-widest" dir="ltr">{activeVoucher.code}</p>
+              <span className={cn(
+                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold mt-3",
+                "bg-white/20 text-white"
+              )}>
+                {(() => { const Ic = statusConfig[activeVoucher.status].icon; return <Ic className="w-3 h-3" />; })()}
+                {statusConfig[activeVoucher.status].label}
+              </span>
+            </div>
+
+            {/* Info */}
+            <div className="p-5 space-y-3">
+              <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                <span className="text-sm text-slate-500 flex items-center gap-2">
+                  <Package className="w-4 h-4" /> {t("package")}
+                </span>
+                <span className="text-sm font-semibold text-slate-800">{activeVoucher.package.name}</span>
+              </div>
+              <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                <span className="text-sm text-slate-500 flex items-center gap-2">
+                  <Clock className="w-4 h-4" /> {t("createdAt")}
+                </span>
+                <span className="text-sm font-medium text-slate-700">{new Date(activeVoucher.createdAt).toLocaleDateString()}</span>
+              </div>
+              {activeVoucher.usedBy && (
+                <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span className="text-sm text-slate-500">{t("usedBy")}</span>
+                  <span className="text-sm font-medium text-slate-700">{activeVoucher.usedBy}</span>
+                </div>
+              )}
+              {activeVoucher.expiresAt && (
+                <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span className="text-sm text-slate-500 flex items-center gap-2">
+                    <Calendar className="w-4 h-4" /> {t("expiry")}
+                  </span>
+                  <span className="text-sm font-medium text-slate-700">{new Date(activeVoucher.expiresAt).toLocaleDateString()}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className="p-5 pt-0 grid grid-cols-3 gap-2">
+              <button
+                onClick={() => { copyCode(activeVoucher.code); }}
+                className="flex flex-col items-center gap-1.5 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors group"
+              >
+                {copiedCode === activeVoucher.code ? (
+                  <CheckCircle className="w-5 h-5 text-emerald-500" />
+                ) : (
+                  <Copy className="w-5 h-5 text-slate-500 group-hover:text-primary-600 transition-colors" />
+                )}
+                <span className="text-xs font-medium text-slate-600">{tc("copy")}</span>
+              </button>
+              <button
+                onClick={() => printVoucher(activeVoucher)}
+                className="flex flex-col items-center gap-1.5 py-3 rounded-xl bg-primary-50 hover:bg-primary-100 transition-colors group"
+              >
+                <Printer className="w-5 h-5 text-primary-600 group-hover:text-primary-700 transition-colors" />
+                <span className="text-xs font-medium text-primary-700">{tc("print")}</span>
+              </button>
+              <button
+                onClick={() => handleDeleteVoucher(activeVoucher)}
+                className="flex flex-col items-center gap-1.5 py-3 rounded-xl bg-red-50 hover:bg-red-100 transition-colors group"
+              >
+                <Trash2 className="w-5 h-5 text-red-500 group-hover:text-red-600 transition-colors" />
+                <span className="text-xs font-medium text-red-600">{tc("delete")}</span>
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

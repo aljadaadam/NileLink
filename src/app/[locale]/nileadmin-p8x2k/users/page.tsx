@@ -129,7 +129,7 @@ export default function AdminUsersPage() {
                   {isAr ? "الراوترات" : "Routers"}
                 </th>
                 <th className="text-start py-3 px-4 font-medium text-slate-500">
-                  {isAr ? "القسائم" : "Vouchers"}
+                  {isAr ? "الأكواد" : "Codes"}
                 </th>
                 <th className="text-start py-3 px-4 font-medium text-slate-500">
                   {isAr ? "التسجيل" : "Joined"}

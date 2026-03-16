@@ -321,6 +321,10 @@
       "PAID": "Paid",
       "OVERDUE": "Overdue",
       "CANCELLED": "Cancelled"
-    }
+    },
+    "paymentInstructions": "How to Pay",
+    "paymentDesc": "To activate your subscription, please make a payment via one of the methods below. Your account will be activated immediately after confirmation.",
+    "contactWhatsApp": "Pay via WhatsApp",
+    "contactEmail": "Contact Support"
   }
 }

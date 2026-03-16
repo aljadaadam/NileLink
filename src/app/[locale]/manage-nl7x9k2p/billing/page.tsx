@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { CreditCard, FileText, Clock, CheckCircle, AlertCircle, Zap, Crown, Rocket } from "lucide-react";
+import { CreditCard, FileText, Clock, CheckCircle, AlertCircle, Zap, Crown, Rocket, MessageCircle, Mail } from "lucide-react";
 import { PLAN_LIMITS } from "@/lib/plans";
 import { toast } from "sonner";
 
@@ -227,6 +227,35 @@ export default function BillingPage() {
           </div>
         )}
       </div>
+
+      {/* Payment Instructions */}
+      {invoices.some((inv) => inv.status === "PENDING" || inv.status === "OVERDUE") && (
+        <div className="card border-2 border-primary-100 bg-gradient-to-br from-primary-50/30 to-transparent">
+          <div className="flex items-center gap-2 mb-4">
+            <CreditCard className="w-5 h-5 text-primary-600" />
+            <h2 className="text-lg font-bold text-slate-900">{t("paymentInstructions")}</h2>
+          </div>
+          <p className="text-sm text-slate-600 mb-4">{t("paymentDesc")}</p>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="https://wa.me/249123456789"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
+            >
+              <MessageCircle className="w-4 h-4" />
+              {t("contactWhatsApp")}
+            </a>
+            <a
+              href="mailto:support@nilelink.net"
+              className="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
+            >
+              <Mail className="w-4 h-4" />
+              {t("contactEmail")}
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

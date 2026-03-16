@@ -28,7 +28,11 @@ export async function GET() {
     totalVouchers,
     usedVouchers,
     activeHotspotUsers,
-    revenueResult,
+    paidInvoices,
+    pendingInvoices,
+    activeSubscriptions,
+    trialSubscriptions,
+    expiredSubscriptions,
     recentUsers,
   ] = await Promise.all([
     prisma.user.count(),
@@ -38,10 +42,14 @@ export async function GET() {
     prisma.voucher.count(),
     prisma.voucher.count({ where: { status: "USED" } }),
     prisma.hotspotUser.count({ where: { isActive: true } }),
-    prisma.voucher.findMany({
-      where: { status: "USED" },
-      include: { package: { select: { price: true } } },
+    prisma.invoice.findMany({
+      where: { status: "PAID" },
+      select: { amount: true },
     }),
+    prisma.invoice.count({ where: { status: { in: ["PENDING", "OVERDUE"] } } }),
+    prisma.subscription.count({ where: { status: "ACTIVE" } }),
+    prisma.subscription.count({ where: { status: "TRIAL" } }),
+    prisma.subscription.count({ where: { status: { in: ["EXPIRED", "PAST_DUE", "CANCELLED"] } } }),
     prisma.user.findMany({
       take: 10,
       orderBy: { createdAt: "desc" },
@@ -50,14 +58,15 @@ export async function GET() {
         name: true,
         email: true,
         company: true,
+        plan: true,
         createdAt: true,
         _count: { select: { routers: true, vouchers: true } },
       },
     }),
   ]);
 
-  const totalRevenue = revenueResult.reduce(
-    (sum, v) => sum + Number(v.package.price),
+  const totalRevenue = paidInvoices.reduce(
+    (sum, inv) => sum + Number(inv.amount),
     0
   );
 
@@ -70,6 +79,10 @@ export async function GET() {
     usedVouchers,
     activeHotspotUsers,
     totalRevenue,
+    pendingInvoices,
+    activeSubscriptions,
+    trialSubscriptions,
+    expiredSubscriptions,
     recentUsers,
   });
 }

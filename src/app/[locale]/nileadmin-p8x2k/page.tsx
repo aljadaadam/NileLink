@@ -10,6 +10,10 @@ import {
   DollarSign,
   UserPlus,
   Activity,
+  CreditCard,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
 } from "lucide-react";
 
 interface PlatformStats {
@@ -21,11 +25,16 @@ interface PlatformStats {
   usedVouchers: number;
   totalRevenue: number;
   activeHotspotUsers: number;
+  pendingInvoices: number;
+  activeSubscriptions: number;
+  trialSubscriptions: number;
+  expiredSubscriptions: number;
   recentUsers: {
     id: string;
     name: string;
     email: string;
     company: string | null;
+    plan: string;
     createdAt: string;
     _count: { routers: number; vouchers: number };
   }[];
@@ -83,16 +92,40 @@ export default function AdminDashboardPage() {
           color="emerald"
         />
         <StatsCard
-          title={isAr ? "إجمالي القسائم" : "Total Vouchers"}
+          title={isAr ? "الاشتراكات النشطة" : "Active Subscriptions"}
+          value={loading ? "–" : stats?.activeSubscriptions ?? 0}
+          icon={CheckCircle}
+          color="emerald"
+        />
+        <StatsCard
+          title={isAr ? "اشتراكات تجريبية" : "Trial Subscriptions"}
+          value={loading ? "–" : stats?.trialSubscriptions ?? 0}
+          icon={CreditCard}
+          color="primary"
+        />
+        <StatsCard
+          title={isAr ? "اشتراكات منتهية" : "Expired Subscriptions"}
+          value={loading ? "–" : stats?.expiredSubscriptions ?? 0}
+          icon={AlertTriangle}
+          color="red"
+        />
+        <StatsCard
+          title={isAr ? "فواتير معلقة" : "Pending Invoices"}
+          value={loading ? "–" : stats?.pendingInvoices ?? 0}
+          icon={Clock}
+          color="red"
+        />
+        <StatsCard
+          title={isAr ? "إجمالي الأكواد" : "Total Codes"}
           value={loading ? "–" : stats?.totalVouchers ?? 0}
           icon={Ticket}
           color="primary"
         />
         <StatsCard
-          title={isAr ? "قسائم مستخدمة" : "Used Vouchers"}
+          title={isAr ? "أكواد مستخدمة" : "Used Codes"}
           value={loading ? "–" : stats?.usedVouchers ?? 0}
           icon={Ticket}
-          color="red"
+          color="accent"
         />
         <StatsCard
           title={isAr ? "مستخدمو الهوتسبوت النشطون" : "Active Hotspot Users"}
@@ -124,13 +157,13 @@ export default function AdminDashboardPage() {
                   {isAr ? "البريد" : "Email"}
                 </th>
                 <th className="text-start py-3 px-4 font-medium text-slate-500">
-                  {isAr ? "الشركة" : "Company"}
+                  {isAr ? "الباقة" : "Plan"}
                 </th>
                 <th className="text-start py-3 px-4 font-medium text-slate-500">
                   {isAr ? "الراوترات" : "Routers"}
                 </th>
                 <th className="text-start py-3 px-4 font-medium text-slate-500">
-                  {isAr ? "القسائم" : "Vouchers"}
+                  {isAr ? "الأكواد" : "Codes"}
                 </th>
                 <th className="text-start py-3 px-4 font-medium text-slate-500">
                   {isAr ? "تاريخ التسجيل" : "Joined"}
@@ -149,7 +182,11 @@ export default function AdminDashboardPage() {
                   <tr key={user.id} className="border-b border-gray-50 hover:bg-slate-50/50">
                     <td className="py-3 px-4 font-medium text-slate-900">{user.name}</td>
                     <td className="py-3 px-4 text-slate-600" dir="ltr">{user.email}</td>
-                    <td className="py-3 px-4 text-slate-600">{user.company || "—"}</td>
+                    <td className="py-3 px-4">
+                      <span className="text-xs font-medium bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full">
+                        {user.plan}
+                      </span>
+                    </td>
                     <td className="py-3 px-4 text-slate-600">{user._count.routers}</td>
                     <td className="py-3 px-4 text-slate-600">{user._count.vouchers}</td>
                     <td className="py-3 px-4 text-slate-500 text-xs">

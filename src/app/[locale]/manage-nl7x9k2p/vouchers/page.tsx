@@ -63,6 +63,7 @@ export default function VouchersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [activeVoucher, setActiveVoucher] = useState<VoucherItem | null>(null);
+  const [activeQr, setActiveQr] = useState<string | null>(null);
 
   async function loadData() {
     try {
@@ -141,47 +142,62 @@ export default function VouchersPage() {
     setTimeout(() => setCopiedCode(null), 2000);
   }
 
+  async function generateQr(code: string): Promise<string> {
+    return QRCode.toDataURL(code, {
+      width: 200,
+      margin: 1,
+      color: { dark: "#0e7490", light: "#ffffff" },
+    });
+  }
+
+  async function openVoucherModal(voucher: VoucherItem) {
+    setActiveVoucher(voucher);
+    setActiveQr(null);
+    const qr = await generateQr(voucher.code);
+    setActiveQr(qr);
+  }
+
   async function printVoucher(voucher: VoucherItem) {
-    const voucherData = await Promise.all(
-      [voucher].map(async (v) => {
-        const qrDataUrl = await QRCode.toDataURL(v.code, {
-          width: 120,
-          margin: 1,
-          color: { dark: "#0e7490", light: "#ffffff" },
-        });
-        return { code: v.code, qr: qrDataUrl, pkg: v.package };
-      })
-    );
+    const qr = activeQr || await generateQr(voucher.code);
 
     const win = window.open("", "_blank");
     if (!win) return;
     win.document.write(`
-      <html><head><title>NileLink Vouchers</title>
+      <html><head><title>NileLink Voucher</title>
       <style>
-        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #fff; }
-        .grid { display: flex; flex-wrap: wrap; gap: 12px; }
-        .voucher { border: 2px dashed #0891b2; padding: 16px; width: 260px;
-          text-align: center; border-radius: 12px; background: #f0fdfa; }
-        .qr { margin: 8px auto; }
-        .code { font-size: 22px; font-weight: bold; letter-spacing: 3px; color: #0e7490;
-          font-family: 'Courier New', monospace; margin: 8px 0; }
-        .pkg { font-size: 13px; color: #334155; font-weight: 600; margin-top: 4px; }
-        .price { font-size: 12px; color: #64748b; margin-top: 2px; }
-        .label { font-size: 11px; color: #94a3b8; margin-top: 6px; }
-        @media print { body { padding: 0; } .voucher { break-inside: avoid; } }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center;
+          align-items: center; min-height: 100vh; background: #fff; padding: 20px; }
+        .voucher { border: 2.5px dashed #0891b2; padding: 28px 32px; width: 300px;
+          text-align: center; border-radius: 16px; background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%); }
+        .brand { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 4px;
+          margin-bottom: 12px; font-weight: 600; }
+        .qr { margin: 12px auto; display: block; }
+        .divider { border: none; border-top: 1px dashed #cbd5e1; margin: 14px 0; }
+        .code { font-size: 24px; font-weight: 800; letter-spacing: 4px; color: #0e7490;
+          font-family: 'Courier New', monospace; margin: 10px 0; }
+        .pkg { font-size: 14px; color: #334155; font-weight: 700; margin-top: 6px; }
+        .price { font-size: 13px; color: #64748b; margin-top: 4px; }
+        .footer { font-size: 10px; color: #94a3b8; margin-top: 14px; }
+        @media print {
+          body { padding: 0; }
+          .voucher { break-inside: avoid; box-shadow: none; }
+        }
       </style></head><body>
-      <div class="grid">
-      ${voucherData.map((v) => `
-        <div class="voucher">
-          <img class="qr" src="${v.qr}" width="120" height="120" />
-          <div class="code">${escapeHtml(v.code)}</div>
-          <div class="pkg">${escapeHtml(v.pkg.name)}</div>
-          <div class="price">${escapeHtml(v.pkg.price)} ${escapeHtml(v.pkg.currency)}</div>
-          <div class="label">NileLink WiFi Voucher</div>
-        </div>
-      `).join("")}
+      <div class="voucher">
+        <div class="brand">NileLink WiFi</div>
+        <img class="qr" src="${qr}" width="160" height="160" />
+        <hr class="divider" />
+        <div class="code">${escapeHtml(voucher.code)}</div>
+        <div class="pkg">${escapeHtml(voucher.package.name)}</div>
+        <div class="price">${escapeHtml(voucher.package.price)} ${escapeHtml(voucher.package.currency)}</div>
+        <div class="footer">Scan QR or enter code to connect</div>
       </div>
-      <script>window.print();<\/script>
+      <script>
+        var img = document.querySelector('.qr');
+        if (img.complete) { window.print(); }
+        else { img.onload = function() { window.print(); }; }
+      <\/script>
       </body></html>
     `);
     win.document.close();
@@ -378,7 +394,7 @@ export default function VouchersPage() {
                   return (
                     <tr
                       key={voucher.id}
-                      onClick={() => setActiveVoucher(voucher)}
+                      onClick={() => openVoucherModal(voucher)}
                       className="group transition-colors duration-150 hover:bg-slate-50/70 cursor-pointer"
                     >
                       <td className="p-4">
@@ -478,15 +494,21 @@ export default function VouchersPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setActiveVoucher(null)} />
           <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-5 text-white text-center">
-              <div className="mx-auto w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3">
-                <Ticket className="w-6 h-6" />
-              </div>
-              <p className="font-mono text-xl font-bold tracking-widest" dir="ltr">{activeVoucher.code}</p>
+            {/* Header with QR */}
+            <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 p-6 text-white text-center">
+              {activeQr ? (
+                <div className="mx-auto w-40 h-40 rounded-2xl bg-white p-2 shadow-lg mb-4">
+                  <img src={activeQr} alt="QR" className="w-full h-full rounded-xl" />
+                </div>
+              ) : (
+                <div className="mx-auto w-40 h-40 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center mb-4">
+                  <Loader2 className="w-8 h-8 animate-spin text-white/60" />
+                </div>
+              )}
+              <p className="font-mono text-xl font-bold tracking-[0.25em]" dir="ltr">{activeVoucher.code}</p>
               <span className={cn(
-                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold mt-3",
-                "bg-white/20 text-white"
+                "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold mt-3",
+                "bg-white/20 text-white backdrop-blur-sm"
               )}>
                 {(() => { const Ic = statusConfig[activeVoucher.status].icon; return <Ic className="w-3 h-3" />; })()}
                 {statusConfig[activeVoucher.status].label}

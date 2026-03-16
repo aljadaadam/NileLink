@@ -21,7 +21,6 @@ interface PlatformStats {
   totalRouters: number;
   onlineRouters: number;
   totalRevenue: number;
-  activeHotspotUsers: number;
   pendingInvoices: number;
   activeSubscriptions: number;
   trialSubscriptions: number;
@@ -111,12 +110,6 @@ export default function AdminDashboardPage() {
           value={loading ? "–" : stats?.pendingInvoices ?? 0}
           icon={Clock}
           color="red"
-        />
-        <StatsCard
-          title={isAr ? "مستخدمو الهوتسبوت النشطون" : "Active Hotspot Users"}
-          value={loading ? "–" : stats?.activeHotspotUsers ?? 0}
-          icon={Users}
-          color="accent"
         />
         <StatsCard
           title={isAr ? "إجمالي الإيرادات" : "Total Revenue"}

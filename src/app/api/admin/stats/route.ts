@@ -25,7 +25,6 @@ export async function GET() {
     newUsersThisMonth,
     totalRouters,
     onlineRouters,
-    activeHotspotUsers,
     paidInvoices,
     pendingInvoices,
     activeSubscriptions,
@@ -37,7 +36,6 @@ export async function GET() {
     prisma.user.count({ where: { createdAt: { gte: startOfMonth } } }),
     prisma.router.count(),
     prisma.router.count({ where: { status: "ONLINE" } }),
-    prisma.hotspotUser.count({ where: { isActive: true } }),
     prisma.invoice.findMany({
       where: { status: "PAID" },
       select: { amount: true },
@@ -71,7 +69,6 @@ export async function GET() {
     newUsersThisMonth,
     totalRouters,
     onlineRouters,
-    activeHotspotUsers,
     totalRevenue,
     pendingInvoices,
     activeSubscriptions,

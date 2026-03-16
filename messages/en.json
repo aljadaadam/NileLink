@@ -153,7 +153,9 @@
       "revenue": "Revenue"
     },
     "recentActivity": "Recent Activity",
-    "quickActions": "Quick Actions"
+    "quickActions": "Quick Actions",
+    "trialExpiredBanner": "Your free trial has ended. Please renew your subscription to continue using all features.",
+    "goToBilling": "Go to Billing"
   },
   "sidebar": {
     "dashboard": "Dashboard",

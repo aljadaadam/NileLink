@@ -2,13 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { SessionProvider, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { AlertTriangle, CreditCard } from "lucide-react";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+  const t = useTranslations("dashboard");
   const [subChecked, setSubChecked] = useState(false);
   const [subActive, setSubActive] = useState(true);
 
@@ -44,29 +48,32 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (status === "unauthenticated") return null;
 
-  if (!subActive) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 p-4">
-        <div className="max-w-md text-center bg-white rounded-2xl shadow-lg p-8">
-          <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-            </svg>
-          </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Trial Expired</h2>
-          <p className="text-slate-500 mb-6">Your free trial has ended. Please contact support to activate your subscription.</p>
-          <button
-            onClick={() => router.push("/")}
-            className="btn-primary px-6"
-          >
-            Go to Homepage
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const isBillingPage = pathname?.includes("/billing");
 
-  return <>{children}</>;
+  return (
+    <>
+      {!subActive && (
+        <div className="bg-gradient-to-r from-red-500 to-rose-600 text-white px-4 py-3">
+          <div className="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2.5">
+              <AlertTriangle className="w-5 h-5 shrink-0" />
+              <p className="text-sm font-medium">{t("trialExpiredBanner")}</p>
+            </div>
+            {!isBillingPage && (
+              <button
+                onClick={() => router.push(pathname?.replace(/\/manage-nl7x9k2p.*/, "/manage-nl7x9k2p/billing") || "/manage-nl7x9k2p/billing")}
+                className="inline-flex items-center gap-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white text-xs font-semibold px-4 py-1.5 rounded-lg transition-colors"
+              >
+                <CreditCard className="w-3.5 h-3.5" />
+                {t("goToBilling")}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+      {children}
+    </>
+  );
 }
 
 export default function DashboardLayout({

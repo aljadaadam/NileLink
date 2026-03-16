@@ -153,7 +153,9 @@
       "revenue": "الإيرادات"
     },
     "recentActivity": "النشاط الأخير",
-    "quickActions": "إجراءات سريعة"
+    "quickActions": "إجراءات سريعة",
+    "trialExpiredBanner": "انتهت الفترة التجريبية المجانية. يرجى تجديد اشتراكك لمتابعة استخدام جميع الميزات.",
+    "goToBilling": "الذهاب للفوترة"
   },
   "sidebar": {
     "dashboard": "لوحة التحكم",

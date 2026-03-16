@@ -15,6 +15,9 @@ import {
   Plug,
   Pencil,
   HelpCircle,
+  BookOpen,
+  Terminal,
+  ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -43,6 +46,8 @@ export default function RoutersPage() {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [testingId, setTestingId] = useState<string | null>(null);
   const [showHelp, setShowHelp] = useState(false);
+  const [guideRouter, setGuideRouter] = useState<RouterItem | null>(null);
+  const [copiedCmd, setCopiedCmd] = useState<string | null>(null);
 
   async function loadRouters() {
     try {
@@ -130,6 +135,13 @@ export default function RoutersPage() {
     setCopiedKey(key);
     toast.success(tc("copied"));
     setTimeout(() => setCopiedKey(null), 2000);
+  }
+
+  function copyCommand(id: string, text: string) {
+    navigator.clipboard.writeText(text);
+    setCopiedCmd(id);
+    toast.success(tc("copied"));
+    setTimeout(() => setCopiedCmd(null), 2000);
   }
 
   const statusConfig = {
@@ -250,6 +262,13 @@ export default function RoutersPage() {
                     {t("testConnection")}
                   </button>
                   <button
+                    onClick={() => setGuideRouter(router)}
+                    className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                    title={t("setupGuide")}
+                  >
+                    <BookOpen className="w-4 h-4" />
+                  </button>
+                  <button
                     onClick={() => {
                       setEditingRouter(router);
                       setShowModal(true);
@@ -348,6 +367,171 @@ export default function RoutersPage() {
           </div>
         </div>
       )}
+
+      {/* Setup Guide Modal */}
+      {guideRouter && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
+                  <BookOpen className="w-5 h-5 text-amber-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-slate-900">{t("setupGuide")}</h2>
+                  <p className="text-sm text-slate-500">{guideRouter.name}</p>
+                </div>
+              </div>
+              <button onClick={() => setGuideRouter(null)} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {/* Step 1 */}
+              <div className="border border-slate-200 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center">1</span>
+                  <h3 className="font-semibold text-slate-900">{t("guide.step1Title")}</h3>
+                </div>
+                <p className="text-sm text-slate-600 mb-3">{t("guide.step1Desc")}</p>
+                <CommandBlock
+                  id="step1"
+                  code={`/ip service enable api\n/ip service set api port=8728`}
+                  copiedCmd={copiedCmd}
+                  onCopy={copyCommand}
+                />
+              </div>
+
+              {/* Step 2 */}
+              <div className="border border-slate-200 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center">2</span>
+                  <h3 className="font-semibold text-slate-900">{t("guide.step2Title")}</h3>
+                </div>
+                <p className="text-sm text-slate-600 mb-3">{t("guide.step2Desc")}</p>
+                <CommandBlock
+                  id="step2"
+                  code={`/ip hotspot setup`}
+                  copiedCmd={copiedCmd}
+                  onCopy={copyCommand}
+                />
+                <p className="text-xs text-slate-400 mt-2">{t("guide.step2Note")}</p>
+              </div>
+
+              {/* Step 3 */}
+              <div className="border border-slate-200 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center">3</span>
+                  <h3 className="font-semibold text-slate-900">{t("guide.step3Title")}</h3>
+                </div>
+                <p className="text-sm text-slate-600 mb-3">{t("guide.step3Desc")}</p>
+                <CommandBlock
+                  id="step3"
+                  code={`/ip hotspot walled-garden ip\nadd dst-host=nilelink.net action=accept`}
+                  copiedCmd={copiedCmd}
+                  onCopy={copyCommand}
+                />
+              </div>
+
+              {/* Step 4 */}
+              <div className="border border-slate-200 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center">4</span>
+                  <h3 className="font-semibold text-slate-900">{t("guide.step4Title")}</h3>
+                </div>
+                <p className="text-sm text-slate-600 mb-3">{t("guide.step4Desc")}</p>
+
+                <div className="space-y-3">
+                  <div className="bg-slate-50 rounded-lg p-3">
+                    <p className="text-xs text-slate-500 mb-1">{t("apiKey")}</p>
+                    <div className="flex items-center gap-2">
+                      <code className="text-xs text-slate-700 flex-1 truncate" dir="ltr">{guideRouter.apiKey}</code>
+                      <button onClick={() => copyCommand("apikey", guideRouter.apiKey)} className="text-slate-400 hover:text-primary-600">
+                        {copiedCmd === "apikey" ? <CheckCircle className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 rounded-lg p-3">
+                    <p className="text-xs text-slate-500 mb-1">{t("guide.loginPageUrl")}</p>
+                    <div className="flex items-center gap-2">
+                      <code className="text-xs text-primary-600 flex-1 truncate" dir="ltr">
+                        https://nilelink.net/api/hotspot/login/{guideRouter.apiKey}
+                      </code>
+                      <button onClick={() => copyCommand("loginurl", `https://nilelink.net/api/hotspot/login/${guideRouter.apiKey}`)} className="text-slate-400 hover:text-primary-600">
+                        {copiedCmd === "loginurl" ? <CheckCircle className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 rounded-lg p-3">
+                    <p className="text-xs text-slate-500 mb-1">{t("guide.authEndpoint")}</p>
+                    <div className="flex items-center gap-2">
+                      <code className="text-xs text-primary-600 flex-1 truncate" dir="ltr">
+                        https://nilelink.net/api/hotspot/auth
+                      </code>
+                      <button onClick={() => copyCommand("authurl", "https://nilelink.net/api/hotspot/auth")} className="text-slate-400 hover:text-primary-600">
+                        {copiedCmd === "authurl" ? <CheckCircle className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 5 - Login page script */}
+              <div className="border border-amber-200 bg-amber-50/50 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-7 h-7 rounded-full bg-amber-500 text-white text-sm font-bold flex items-center justify-center">5</span>
+                  <h3 className="font-semibold text-slate-900">{t("guide.step5Title")}</h3>
+                </div>
+                <p className="text-sm text-slate-600 mb-3">{t("guide.step5Desc")}</p>
+                <CommandBlock
+                  id="step5"
+                  code={`/tool fetch url="https://nilelink.net/api/hotspot/login/${guideRouter.apiKey}" dst-path="hotspot/login.html"`}
+                  copiedCmd={copiedCmd}
+                  onCopy={copyCommand}
+                />
+                <p className="text-xs text-slate-400 mt-2">{t("guide.step5Note")}</p>
+              </div>
+
+              {/* Final note */}
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
+                  <p className="text-sm text-emerald-800">{t("guide.doneNote")}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-4 mt-4 border-t border-slate-100">
+              <button onClick={() => setGuideRouter(null)} className="btn-secondary">
+                {tc("close")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Command Block Component ────────────────────────────────
+function CommandBlock({ id, code, copiedCmd, onCopy }: {
+  id: string;
+  code: string;
+  copiedCmd: string | null;
+  onCopy: (id: string, text: string) => void;
+}) {
+  return (
+    <div className="bg-slate-900 rounded-lg p-3 relative group">
+      <pre className="text-xs text-emerald-400 font-mono whitespace-pre-wrap" dir="ltr">{code}</pre>
+      <button
+        onClick={() => onCopy(id, code)}
+        className="absolute top-2 end-2 p-1.5 rounded-md bg-slate-700 text-slate-300 hover:text-white hover:bg-slate-600 opacity-0 group-hover:opacity-100 transition-all"
+      >
+        {copiedCmd === id ? <CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+      </button>
     </div>
   );
 }

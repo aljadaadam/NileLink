@@ -4,6 +4,7 @@
     "loading": "Loading...",
     "save": "Save",
     "cancel": "Cancel",
+    "close": "Close",
     "delete": "Delete",
     "edit": "Edit",
     "create": "Create",
@@ -189,7 +190,25 @@
     "connectionFailed": "Connection failed",
     "deleteConfirm": "Are you sure you want to remove this router?",
     "passwordPlaceholder": "Leave empty to keep current",
-    "empty": "No routers added yet. Click 'Add Router' to get started."
+    "empty": "No routers added yet. Click 'Add Router' to get started.",
+    "setupGuide": "Setup Guide",
+    "guide": {
+      "step1Title": "Enable API Service",
+      "step1Desc": "Open Terminal in MikroTik (via Winbox or SSH) and run these commands to enable the API service:",
+      "step2Title": "Setup Hotspot Server",
+      "step2Desc": "Run the hotspot setup command and follow the steps (choose the interface connected to clients):",
+      "step2Note": "It will ask about: Interface, IP range, DNS name. Choose settings that match your network.",
+      "step3Title": "Allow Access to NileLink",
+      "step3Desc": "Add NileLink to the Walled Garden so clients can access the login page before authentication:",
+      "step4Title": "Your Connection Details",
+      "step4Desc": "You need these details to link the router with the login page:",
+      "loginPageUrl": "Login Page URL",
+      "authEndpoint": "Auth Endpoint (API)",
+      "step5Title": "Download Login Page",
+      "step5Desc": "Run this command in the router Terminal to download the login page from NileLink:",
+      "step5Note": "You can customize the login page from the 'Login Pages' section in the dashboard before running this command.",
+      "doneNote": "After completing all steps, click 'Test Connection' to verify the router is working. Clients can now log in using package codes."
+    }
   },
   "packages": {
     "title": "Packages",

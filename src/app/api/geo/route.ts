@@ -19,7 +19,7 @@ const CURRENCY_MAP: Record<string, { code: string; symbol: string; rate: number 
   TN: { code: "TND", symbol: "د.ت", rate: 3.12 },
   DZ: { code: "DZD", symbol: "د.ج", rate: 135 },
   MA: { code: "MAD", symbol: "د.م", rate: 10.0 },
-  SD: { code: "SDG", symbol: "ج.س", rate: 601 },
+  SD: { code: "SDG", symbol: "ج.س", rate: 3600 },
   PS: { code: "ILS", symbol: "₪", rate: 3.6 },
   // Turkey
   TR: { code: "TRY", symbol: "₺", rate: 38.5 },

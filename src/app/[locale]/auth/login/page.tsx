@@ -43,10 +43,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 flex items-center justify-center px-3 py-6 sm:p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center">
               <Wifi className="w-6 h-6 text-white" />
@@ -56,7 +56,7 @@ export default function LoginPage() {
         </div>
 
         {/* Card */}
-        <div className="card">
+        <div className="card !p-4 sm:!p-6">
           <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
           <p className="mt-1 text-slate-500">{t("subtitle")}</p>
 

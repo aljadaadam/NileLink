@@ -17,11 +17,12 @@ export default function LanguageSwitcher() {
   return (
     <button
       onClick={switchLocale}
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm
+      className="inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-sm
         text-slate-600 hover:text-slate-900 hover:bg-gray-100 transition-colors"
     >
       <Globe className="w-4 h-4" />
-      <span>{locale === "en" ? "العربية" : "English"}</span>
+      <span className="hidden sm:inline">{locale === "en" ? "العربية" : "English"}</span>
+      <span className="sm:hidden text-xs">{locale === "en" ? "AR" : "EN"}</span>
     </button>
   );
 }

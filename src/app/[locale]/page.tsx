@@ -44,12 +44,12 @@ export default async function HomePage({
             </div>
             <span className="text-xl font-bold text-slate-900">NileLink</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <LanguageSwitcher />
-            <Link href="/auth/login" className="btn-secondary text-sm py-2 px-4">
+            <Link href="/auth/login" className="btn-secondary text-xs sm:text-sm py-1.5 sm:py-2 px-3 sm:px-4">
               {t("hero.login")}
             </Link>
-            <Link href="/auth/register" className="btn-primary text-sm py-2 px-4">
+            <Link href="/auth/register" className="btn-primary text-xs sm:text-sm py-1.5 sm:py-2 px-3 sm:px-4">
               {t("hero.cta")}
             </Link>
           </div>

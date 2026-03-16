@@ -268,10 +268,10 @@ export default function RegisterPage() {
   const selectedCountry = COUNTRY_CODES.find((c) => c.code === countryCode);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 flex items-center justify-center px-3 py-6 sm:p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <Link href="/" className="inline-flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center">
               <Wifi className="w-6 h-6 text-white" />
@@ -281,7 +281,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Card */}
-        <div className="card">
+        <div className="card !p-4 sm:!p-6">
           <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
           <p className="mt-1 text-slate-500">{t("subtitle")}</p>
 
@@ -391,14 +391,14 @@ export default function RegisterPage() {
                   <button
                     type="button"
                     onClick={() => { setShowDropdown(!showDropdown); setSearchQuery(""); }}
-                    className="input-field flex items-center gap-1.5 px-3 min-w-[110px] h-full"
+                    className="input-field flex items-center gap-1.5 px-2 sm:px-3 min-w-[100px] sm:min-w-[110px] h-full text-sm"
                   >
-                    <span className="text-lg">{selectedCountry?.flag}</span>
-                    <span className="text-sm font-medium text-slate-700">{countryCode}</span>
-                    <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="text-base sm:text-lg">{selectedCountry?.flag}</span>
+                    <span className="text-xs sm:text-sm font-medium text-slate-700">{countryCode}</span>
+                    <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400" />
                   </button>
                   {showDropdown && (
-                    <div className="absolute top-full mt-1 start-0 w-64 max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-xl shadow-lg z-50">
+                    <div className="absolute top-full mt-1 start-0 w-[calc(100vw-2rem)] sm:w-64 max-w-[280px] max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-xl shadow-lg z-50">
                       <div className="sticky top-0 bg-white p-2 border-b border-gray-100">
                         <input
                           type="text"

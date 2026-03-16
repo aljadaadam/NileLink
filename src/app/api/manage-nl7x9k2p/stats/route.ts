@@ -23,15 +23,16 @@ export async function GET() {
     prisma.hotspotUser.count({ where: { userId, isActive: true } }),
     prisma.voucher.count({ where: { userId } }),
     prisma.voucher.count({ where: { userId, status: "USED" } }),
-    prisma.$queryRaw<[{ revenue: number }]>`
-      SELECT COALESCE(SUM(p.price::numeric), 0)::float as revenue
+    prisma.$queryRaw<{ currency: string; revenue: number }[]>`
+      SELECT p.currency, COALESCE(SUM(p.price::numeric), 0)::float as revenue
       FROM vouchers v
       JOIN packages p ON v."packageId" = p.id
       WHERE v."userId" = ${userId} AND v.status::text = 'USED'
+      GROUP BY p.currency
     `,
   ]);
 
-  const revenue = revenueResult[0]?.revenue ?? 0;
+  const revenueByCurrency = revenueResult.map(r => ({ currency: r.currency, amount: r.revenue }));
 
   return NextResponse.json({
     totalRouters,
@@ -39,6 +40,6 @@ export async function GET() {
     activeUsers,
     totalVouchers,
     usedVouchers,
-    revenue,
+    revenueByCurrency,
   });
 }

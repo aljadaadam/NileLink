@@ -151,9 +151,19 @@ export default function DashboardPage() {
             </h3>
             <DollarSign className="w-5 h-5 text-accent-500" />
           </div>
-          <p className="text-3xl font-bold text-slate-900">
-            ${loading ? "–" : stats?.revenue?.toFixed(2) ?? "0.00"}
-          </p>
+          {loading ? (
+            <p className="text-3xl font-bold text-slate-900">–</p>
+          ) : !stats?.revenueByCurrency?.length ? (
+            <p className="text-3xl font-bold text-slate-900">0</p>
+          ) : (
+            <div className="space-y-1">
+              {stats.revenueByCurrency.map((r) => (
+                <p key={r.currency} className="text-2xl font-bold text-slate-900">
+                  {r.amount.toFixed(2)} <span className="text-base font-medium text-slate-500">{r.currency}</span>
+                </p>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

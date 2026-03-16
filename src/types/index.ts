@@ -17,7 +17,7 @@ export interface StatsData {
   activeUsers: number;
   totalVouchers: number;
   usedVouchers: number;
-  revenue: number;
+  revenueByCurrency: { currency: string; amount: number }[];
 }
 
 export interface RouterFormData {

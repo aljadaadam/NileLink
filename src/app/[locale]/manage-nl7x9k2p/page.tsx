@@ -27,7 +27,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetch("/api/manage-nl7x9k2p/stats")
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      })
       .then(setStats)
       .catch(() => toast.error("Failed to load stats"))
       .finally(() => setLoading(false));

@@ -31,6 +31,7 @@ export default function LoginPage() {
 
     if (result?.error) {
       if (result.error.includes("EMAIL_NOT_VERIFIED") || result.code === "EMAIL_NOT_VERIFIED") {
+        setLoading(false);
         router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
         return;
       }

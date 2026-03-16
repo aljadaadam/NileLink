@@ -81,6 +81,7 @@ model Subscription {
   user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   invoices    Invoice[]
 
+  @@index([userId, status])
   @@map("subscriptions")
 }
 
@@ -139,6 +140,7 @@ model Router {
   hotspotUsers  HotspotUser[]
   activeSessions HotspotSession[]
 
+  @@index([userId])
   @@map("routers")
 }
 
@@ -168,6 +170,7 @@ model Package {
   user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   vouchers     Voucher[]
 
+  @@index([userId])
   @@map("packages")
 }
 
@@ -221,6 +224,7 @@ model HotspotUser {
   sessions      HotspotSession[]
 
   @@unique([username, routerId])
+  @@index([userId, isActive])
   @@map("hotspot_users")
 }
 

@@ -22,7 +22,17 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  const { action } = await req.json();
+  let body;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  }
+  const { action } = body;
+
+  if (action !== "pay" && action !== "cancel") {
+    return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+  }
 
   const invoice = await prisma.invoice.findUnique({
     where: { id },
@@ -81,6 +91,4 @@ export async function PATCH(
     });
     return NextResponse.json({ success: true, status: "CANCELLED" });
   }
-
-  return NextResponse.json({ error: "Invalid action" }, { status: 400 });
 }

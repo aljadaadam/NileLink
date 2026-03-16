@@ -70,7 +70,14 @@ export async function DELETE(
     );
   }
 
-  await prisma.user.delete({ where: { id } });
+  try {
+    await prisma.user.delete({ where: { id } });
+  } catch {
+    return NextResponse.json(
+      { error: "Cannot delete user with existing data" },
+      { status: 400 }
+    );
+  }
 
   return NextResponse.json({ success: true });
 }

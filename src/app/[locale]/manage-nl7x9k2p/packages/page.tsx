@@ -90,7 +90,7 @@ export default function PackagesPage() {
         ? parseInt(formData.get("downloadSpeed") as string)
         : editId ? null : undefined,
       price: parseFloat(formData.get("price") as string),
-      currency: currency.code,
+      currency: formData.get("currency") as string,
     };
 
     try {
@@ -383,9 +383,23 @@ export default function PackagesPage() {
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     {t("currency")}
                   </label>
-                  <div className="input-field bg-slate-50 text-slate-600 flex items-center">
-                    {currency.code} ({currency.symbol})
-                  </div>
+                  <select name="currency" className="input-field" defaultValue={editingPkg?.currency || currency.code}>
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="EGP">EGP (ج.م)</option>
+                    <option value="SAR">SAR (ر.س)</option>
+                    <option value="AED">AED (د.إ)</option>
+                    <option value="SDG">SDG (ج.س)</option>
+                    <option value="IQD">IQD (د.ع)</option>
+                    <option value="JOD">JOD (د.أ)</option>
+                    <option value="KWD">KWD (د.ك)</option>
+                    <option value="QAR">QAR (ر.ق)</option>
+                    <option value="OMR">OMR (ر.ع)</option>
+                    <option value="BHD">BHD (د.ب)</option>
+                    <option value="TRY">TRY (₺)</option>
+                    <option value="MAD">MAD (د.م)</option>
+                  </select>
                 </div>
               </div>
               <div className="flex gap-3 pt-2">

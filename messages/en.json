@@ -28,7 +28,7 @@
   "landing": {
     "hero": {
       "title": "Manage Your MikroTik Hotspots from Anywhere",
-      "subtitle": "A powerful SaaS platform to control your WiFi networks, generate vouchers, and manage users — all from one place.",
+      "subtitle": "A powerful SaaS platform to control your WiFi networks, generate codes, and manage users — all from one place.",
       "cta": "Get Started Free",
       "login": "Sign In"
     },
@@ -39,8 +39,8 @@
         "desc": "Connect and manage multiple MikroTik routers from a single dashboard."
       },
       "voucher": {
-        "title": "Voucher System",
-        "desc": "Generate WiFi vouchers with custom time limits, data caps, and speeds."
+        "title": "Code System",
+        "desc": "Generate WiFi codes with custom time limits, data caps, and speeds."
       },
       "users": {
         "title": "User Management",
@@ -83,11 +83,11 @@
       "features": {
         "routers3": "Up to 3 routers",
         "users50": "50 hotspot users",
-        "vouchers5000": "5,000 vouchers/month",
+        "vouchers5000": "5,000 codes/month",
         "support": "Email support",
         "routers10": "Up to 10 routers",
         "usersUnlimited": "Unlimited hotspot users",
-        "vouchersUnlimited": "Unlimited vouchers",
+        "vouchersUnlimited": "Unlimited codes",
         "customLogin": "Custom login pages",
         "analytics": "Advanced analytics",
         "priority": "Priority support",
@@ -148,8 +148,8 @@
       "totalRouters": "Total Routers",
       "onlineRouters": "Online Routers",
       "activeUsers": "Active Users",
-      "totalVouchers": "Total Vouchers",
-      "usedVouchers": "Used Vouchers",
+      "totalVouchers": "Total Codes",
+      "usedVouchers": "Used Codes",
       "revenue": "Revenue"
     },
     "recentActivity": "Recent Activity",
@@ -159,7 +159,7 @@
     "dashboard": "Dashboard",
     "routers": "Routers",
     "packages": "Packages",
-    "vouchers": "Vouchers",
+    "vouchers": "Codes",
     "users": "Hotspot Users",
     "loginPages": "Login Pages",
     "billing": "Billing",
@@ -206,12 +206,12 @@
     "minutes": "{count} min"
   },
   "vouchers": {
-    "title": "Vouchers",
-    "generate": "Generate Vouchers",
-    "count": "Number of Vouchers",
+    "title": "Codes",
+    "generate": "Generate Codes",
+    "count": "Number of Codes",
     "package": "Select Package",
     "expiry": "Expiry Date (optional)",
-    "code": "Voucher Code",
+    "code": "Code",
     "status": "Status",
     "unused": "Unused",
     "used": "Used",
@@ -220,9 +220,9 @@
     "usedAt": "Used At",
     "createdAt": "Created At",
     "printSelected": "Print Selected",
-    "deleteConfirm": "Are you sure you want to delete selected vouchers?",
-    "empty": "No vouchers generated yet.",
-    "generated": "{count} vouchers generated successfully!"
+    "deleteConfirm": "Are you sure you want to delete selected codes?",
+    "empty": "No codes generated yet.",
+    "generated": "{count} codes generated successfully!"
   },
   "hotspotUsers": {
     "title": "Hotspot Users",
@@ -303,7 +303,7 @@
     "limits": {
       "routers": "Max Routers",
       "hotspotUsers": "Max Hotspot Users",
-      "vouchers": "Vouchers / Month"
+      "vouchers": "Codes / Month"
     },
     "invoices": "Invoices",
     "noInvoices": "No invoices yet",

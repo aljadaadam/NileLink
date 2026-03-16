@@ -1,7 +1,7 @@
 export const PLAN_LIMITS = {
   STARTER: {
     maxRouters: 3,
-    maxHotspotUsers: 50,
+    maxHotspotUsers: 70,
     maxVouchersPerMonth: 5000,
     priceUSD: 9,
   },

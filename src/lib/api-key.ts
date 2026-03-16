@@ -8,7 +8,7 @@ export function generateApiKey(): string {
 }
 
 export function generateVoucherCode(): string {
-  const generate = customAlphabet(alphabet, 8);
+  const generate = customAlphabet("0123456789", 8);
   return generate();
 }
 

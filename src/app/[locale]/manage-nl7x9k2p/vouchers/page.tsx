@@ -165,28 +165,30 @@ export default function VouchersPage() {
     win.document.write(`
       <html><head><title>NileLink Voucher</title>
       <style>
+        @page { size: 80mm 120mm; margin: 0; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center;
-          align-items: center; min-height: 100vh; background: #fff; padding: 20px; }
-        .voucher { border: 2.5px dashed #0891b2; padding: 28px 32px; width: 300px;
-          text-align: center; border-radius: 16px; background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%); }
-        .brand { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 4px;
-          margin-bottom: 12px; font-weight: 600; }
-        .qr { margin: 12px auto; display: block; }
-        .divider { border: none; border-top: 1px dashed #cbd5e1; margin: 14px 0; }
-        .code { font-size: 24px; font-weight: 800; letter-spacing: 4px; color: #0e7490;
-          font-family: 'Courier New', monospace; margin: 10px 0; }
-        .pkg { font-size: 14px; color: #334155; font-weight: 700; margin-top: 6px; }
-        .price { font-size: 13px; color: #64748b; margin-top: 4px; }
-        .footer { font-size: 10px; color: #94a3b8; margin-top: 14px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #fff;
+          width: 80mm; margin: 0 auto; }
+        .voucher { border: 2px dashed #0891b2; padding: 16px 20px; margin: 8px;
+          text-align: center; border-radius: 12px;
+          background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%); }
+        .brand { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 5px;
+          margin-bottom: 10px; font-weight: 700; }
+        .qr { margin: 8px auto; display: block; }
+        .divider { border: none; border-top: 1.5px dashed #94a3b8; margin: 12px 0; }
+        .code { font-size: 22px; font-weight: 900; letter-spacing: 5px; color: #0e7490;
+          font-family: 'Courier New', monospace; margin: 8px 0; }
+        .pkg { font-size: 13px; color: #334155; font-weight: 700; margin-top: 4px; }
+        .price { font-size: 12px; color: #64748b; margin-top: 3px; font-weight: 600; }
+        .footer { font-size: 9px; color: #94a3b8; margin-top: 10px; letter-spacing: 0.5px; }
         @media print {
-          body { padding: 0; }
+          body { width: 80mm; }
           .voucher { break-inside: avoid; box-shadow: none; }
         }
       </style></head><body>
       <div class="voucher">
         <div class="brand">NileLink WiFi</div>
-        <img class="qr" src="${qr}" width="160" height="160" />
+        <img class="qr" src="${qr}" width="140" height="140" />
         <hr class="divider" />
         <div class="code">${escapeHtml(voucher.code)}</div>
         <div class="pkg">${escapeHtml(voucher.package.name)}</div>

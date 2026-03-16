@@ -38,7 +38,7 @@ export async function GET() {
     prisma.router.count({ where: { status: "ONLINE" } }),
     prisma.invoice.findMany({
       where: { status: "PAID" },
-      select: { amount: true },
+      select: { amount: true, confirmedById: true },
     }),
     prisma.invoice.count({ where: { status: { in: ["PENDING", "OVERDUE"] } } }),
     prisma.subscription.count({ where: { status: "ACTIVE" } }),
@@ -64,6 +64,23 @@ export async function GET() {
     0
   );
 
+  // Per-admin payment stats
+  const admins = await prisma.user.findMany({
+    where: { role: "ADMIN" },
+    select: { id: true, name: true, email: true },
+  });
+
+  const adminPaymentStats = admins.map((admin) => {
+    const confirmed = paidInvoices.filter((i) => i.confirmedById === admin.id);
+    return {
+      id: admin.id,
+      name: admin.name,
+      email: admin.email,
+      invoiceCount: confirmed.length,
+      totalAmount: confirmed.reduce((s, i) => s + Number(i.amount), 0),
+    };
+  });
+
   return NextResponse.json({
     totalUsers,
     newUsersThisMonth,
@@ -75,5 +92,6 @@ export async function GET() {
     trialSubscriptions,
     expiredSubscriptions,
     recentUsers,
+    adminPaymentStats,
   });
 }

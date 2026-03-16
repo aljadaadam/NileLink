@@ -25,6 +25,13 @@ interface PlatformStats {
   activeSubscriptions: number;
   trialSubscriptions: number;
   expiredSubscriptions: number;
+  adminPaymentStats: {
+    id: string;
+    name: string;
+    email: string;
+    invoiceCount: number;
+    totalAmount: number;
+  }[];
   recentUsers: {
     id: string;
     name: string;
@@ -118,6 +125,40 @@ export default function AdminDashboardPage() {
           color="emerald"
         />
       </div>
+
+      {/* Admin Payment Stats */}
+      {!loading && stats?.adminPaymentStats && stats.adminPaymentStats.length > 0 && (
+        <div>
+          <h2 className="text-lg font-semibold text-slate-900 mb-3">
+            {isAr ? "تحصيل المدفوعات حسب المشرف" : "Payment Collection by Admin"}
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {stats.adminPaymentStats.map((admin) => (
+              <div key={admin.id} className="card !p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-lg">
+                    {admin.name.charAt(0)}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-sm text-slate-900 truncate">{admin.name}</p>
+                    <p className="text-[11px] text-slate-400 truncate" dir="ltr">{admin.email}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-emerald-50 rounded-xl p-3 text-center">
+                    <p className="text-lg font-bold text-emerald-600">${admin.totalAmount.toFixed(2)}</p>
+                    <p className="text-[10px] text-emerald-600/70">{isAr ? "إجمالي المحصّل" : "Total Collected"}</p>
+                  </div>
+                  <div className="bg-blue-50 rounded-xl p-3 text-center">
+                    <p className="text-lg font-bold text-blue-600">{admin.invoiceCount}</p>
+                    <p className="text-[10px] text-blue-600/70">{isAr ? "فاتورة تم تسديدها" : "Invoices Confirmed"}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Recent Users */}
       <div className="card">

@@ -10,6 +10,20 @@ const profileSchema = z.object({
   phone: z.string().max(20).optional(),
 });
 
+export async function GET() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { name: true, email: true, company: true, phone: true },
+  });
+
+  return NextResponse.json(user);
+}
+
 export async function PUT(req: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) {

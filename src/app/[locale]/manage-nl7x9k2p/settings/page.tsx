@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Save, Loader2, HelpCircle } from "lucide-react";
 import { toast } from "sonner";
@@ -14,6 +14,14 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [savingPassword, setSavingPassword] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [profile, setProfile] = useState<{ name: string; email: string; company: string | null; phone: string | null } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/settings/profile")
+      .then((r) => r.json())
+      .then(setProfile)
+      .catch(() => {});
+  }, []);
 
   async function handleProfileSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -86,14 +94,14 @@ export default function SettingsPage() {
         <h2 className="text-lg font-semibold text-slate-900 mb-4">
           {t("profile")}
         </h2>
-        <form onSubmit={handleProfileSubmit} className="space-y-4">
+        <form onSubmit={handleProfileSubmit} className="space-y-4" key={profile ? "loaded" : "loading"}>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
               {t("name")}
             </label>
             <input
               name="name"
-              defaultValue={session?.user?.name || ""}
+              defaultValue={profile?.name || session?.user?.name || ""}
               required
               className="input-field"
             />
@@ -103,7 +111,7 @@ export default function SettingsPage() {
               {t("email")}
             </label>
             <input
-              value={session?.user?.email || ""}
+              value={profile?.email || session?.user?.email || ""}
               disabled
               className="input-field bg-gray-50 text-slate-400"
               dir="ltr"
@@ -113,13 +121,13 @@ export default function SettingsPage() {
             <label className="block text-sm font-medium text-slate-700 mb-1">
               {t("company")}
             </label>
-            <input name="company" className="input-field" />
+            <input name="company" defaultValue={profile?.company || ""} className="input-field" />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
               {t("phone")}
             </label>
-            <input name="phone" type="tel" className="input-field" dir="ltr" />
+            <input name="phone" type="tel" defaultValue={profile?.phone || ""} className="input-field" dir="ltr" />
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">

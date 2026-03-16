@@ -123,13 +123,7 @@ export default function AdminUsersPage() {
                   {isAr ? "البريد" : "Email"}
                 </th>
                 <th className="text-start py-3 px-4 font-medium text-slate-500">
-                  {isAr ? "الدور" : "Role"}
-                </th>
-                <th className="text-start py-3 px-4 font-medium text-slate-500">
                   {isAr ? "الراوترات" : "Routers"}
-                </th>
-                <th className="text-start py-3 px-4 font-medium text-slate-500">
-                  {isAr ? "الأكواد" : "Codes"}
                 </th>
                 <th className="text-start py-3 px-4 font-medium text-slate-500">
                   {isAr ? "التسجيل" : "Joined"}
@@ -142,7 +136,7 @@ export default function AdminUsersPage() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-slate-400">
+                  <td colSpan={5} className="py-12 text-center text-slate-400">
                     <div className="flex items-center justify-center gap-2">
                       <div className="w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full animate-spin" />
                       {isAr ? "جارٍ التحميل..." : "Loading..."}
@@ -151,7 +145,7 @@ export default function AdminUsersPage() {
                 </tr>
               ) : filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-slate-400">
+                  <td colSpan={5} className="py-12 text-center text-slate-400">
                     {isAr ? "لا يوجد مستخدمين" : "No users found"}
                   </td>
                 </tr>
@@ -174,24 +168,7 @@ export default function AdminUsersPage() {
                       </div>
                     </td>
                     <td className="py-3 px-4 text-slate-600" dir="ltr">{user.email}</td>
-                    <td className="py-3 px-4">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
-                          user.role === "ADMIN"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-slate-100 text-slate-600"
-                        }`}
-                      >
-                        {user.role === "ADMIN" ? (
-                          <Shield className="w-3 h-3" />
-                        ) : (
-                          <User className="w-3 h-3" />
-                        )}
-                        {user.role === "ADMIN" ? "Admin" : "User"}
-                      </span>
-                    </td>
                     <td className="py-3 px-4 text-slate-600">{user._count.routers}</td>
-                    <td className="py-3 px-4 text-slate-600">{user._count.vouchers}</td>
                     <td className="py-3 px-4 text-slate-500 text-xs">
                       {new Date(user.createdAt).toLocaleDateString()}
                     </td>

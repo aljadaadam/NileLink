@@ -6,7 +6,6 @@ import StatsCard from "@/components/dashboard/StatsCard";
 import {
   Users,
   Router,
-  Ticket,
   DollarSign,
   UserPlus,
   Activity,
@@ -21,8 +20,6 @@ interface PlatformStats {
   newUsersThisMonth: number;
   totalRouters: number;
   onlineRouters: number;
-  totalVouchers: number;
-  usedVouchers: number;
   totalRevenue: number;
   activeHotspotUsers: number;
   pendingInvoices: number;
@@ -36,7 +33,7 @@ interface PlatformStats {
     company: string | null;
     plan: string;
     createdAt: string;
-    _count: { routers: number; vouchers: number };
+    _count: { routers: number };
   }[];
 }
 
@@ -116,18 +113,6 @@ export default function AdminDashboardPage() {
           color="red"
         />
         <StatsCard
-          title={isAr ? "إجمالي الأكواد" : "Total Codes"}
-          value={loading ? "–" : stats?.totalVouchers ?? 0}
-          icon={Ticket}
-          color="primary"
-        />
-        <StatsCard
-          title={isAr ? "أكواد مستخدمة" : "Used Codes"}
-          value={loading ? "–" : stats?.usedVouchers ?? 0}
-          icon={Ticket}
-          color="accent"
-        />
-        <StatsCard
           title={isAr ? "مستخدمو الهوتسبوت النشطون" : "Active Hotspot Users"}
           value={loading ? "–" : stats?.activeHotspotUsers ?? 0}
           icon={Users}
@@ -163,9 +148,6 @@ export default function AdminDashboardPage() {
                   {isAr ? "الراوترات" : "Routers"}
                 </th>
                 <th className="text-start py-3 px-4 font-medium text-slate-500">
-                  {isAr ? "الأكواد" : "Codes"}
-                </th>
-                <th className="text-start py-3 px-4 font-medium text-slate-500">
                   {isAr ? "تاريخ التسجيل" : "Joined"}
                 </th>
               </tr>
@@ -173,7 +155,7 @@ export default function AdminDashboardPage() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-slate-400">
+                  <td colSpan={5} className="py-8 text-center text-slate-400">
                     {isAr ? "جارٍ التحميل..." : "Loading..."}
                   </td>
                 </tr>
@@ -188,7 +170,6 @@ export default function AdminDashboardPage() {
                       </span>
                     </td>
                     <td className="py-3 px-4 text-slate-600">{user._count.routers}</td>
-                    <td className="py-3 px-4 text-slate-600">{user._count.vouchers}</td>
                     <td className="py-3 px-4 text-slate-500 text-xs">
                       {new Date(user.createdAt).toLocaleDateString()}
                     </td>
@@ -196,7 +177,7 @@ export default function AdminDashboardPage() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-slate-400">
+                  <td colSpan={5} className="py-8 text-center text-slate-400">
                     {isAr ? "لا يوجد مستخدمين" : "No users yet"}
                   </td>
                 </tr>

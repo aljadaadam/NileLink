@@ -200,84 +200,123 @@ export default function PackagesPage() {
           <p className="mt-4 text-slate-500">{t("empty")}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {packages.map((pkg) => (
-            <div key={pkg.id} className="card space-y-4">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h3 className="font-semibold text-slate-900">{pkg.name}</h3>
+            <div key={pkg.id} className="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 bg-white">
+              {/* Header with gradient + pattern */}
+              <div className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 px-5 pt-5 pb-8 overflow-hidden">
+                {/* Decorative SVG pattern */}
+                <svg className="absolute inset-0 w-full h-full opacity-[0.07]" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id={`dots-${pkg.id}`} x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                      <circle cx="2" cy="2" r="1.5" fill="white" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill={`url(#dots-${pkg.id})`} />
+                </svg>
+                {/* Decorative circle */}
+                <div className="absolute -top-6 -end-6 w-24 h-24 rounded-full bg-white/10" />
+                <div className="absolute -bottom-4 -start-4 w-16 h-16 rounded-full bg-white/5" />
+
+                <div className="relative flex items-start justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                      <Package className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="font-bold text-lg text-white">{pkg.name}</h3>
+                  </div>
+                  <span className={cn(
+                    "text-xs font-semibold px-2.5 py-1 rounded-full",
+                    pkg.isActive
+                      ? "bg-emerald-400/20 text-emerald-100 ring-1 ring-emerald-400/30"
+                      : "bg-white/10 text-white/60 ring-1 ring-white/20"
+                  )}>
+                    {pkg.isActive ? tc("active") : tc("inactive")}
+                  </span>
                 </div>
-                <span
-                  className={cn(
-                    pkg.isActive ? "badge-success" : "badge-gray"
-                  )}
+
+                {/* Price overlay */}
+                <div className="relative mt-3">
+                  <span className="text-3xl font-extrabold text-white tracking-tight">{pkg.price}</span>
+                  <span className="text-sm font-medium text-primary-200 ms-1.5">{pkg.currency}</span>
+                </div>
+              </div>
+
+              {/* Body - specs grid */}
+              <div className="px-5 -mt-3 relative z-10">
+                <div className="bg-white rounded-xl border border-gray-100 shadow-sm divide-y divide-gray-50">
+                  <div className="flex items-center justify-between px-4 py-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center">
+                        <Clock className="w-4 h-4 text-primary-600" />
+                      </div>
+                      <span className="text-xs font-medium text-slate-400">{t("duration")}</span>
+                    </div>
+                    <span className="text-sm font-semibold text-slate-800">
+                      {pkg.duration ? formatDuration(pkg.duration) : t("unlimited")}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between px-4 py-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center">
+                        <HardDrive className="w-4 h-4 text-violet-600" />
+                      </div>
+                      <span className="text-xs font-medium text-slate-400">{t("dataLimit")}</span>
+                    </div>
+                    <span className="text-sm font-semibold text-slate-800">
+                      {pkg.dataLimit ? formatBytes(BigInt(pkg.dataLimit)) : t("unlimited")}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between px-4 py-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                        <ArrowDown className="w-4 h-4 text-emerald-600" />
+                      </div>
+                      <span className="text-xs font-medium text-slate-400">{t("downloadSpeed")}</span>
+                    </div>
+                    <span className="text-sm font-semibold text-slate-800">
+                      {pkg.downloadSpeed ? `${pkg.downloadSpeed} Kbps` : t("unlimited")}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between px-4 py-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
+                        <ArrowUp className="w-4 h-4 text-amber-600" />
+                      </div>
+                      <span className="text-xs font-medium text-slate-400">{t("uploadSpeed")}</span>
+                    </div>
+                    <span className="text-sm font-semibold text-slate-800">
+                      {pkg.uploadSpeed ? `${pkg.uploadSpeed} Kbps` : t("unlimited")}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer actions */}
+              <div className="px-5 py-4 flex items-center justify-end gap-1">
+                <button
+                  onClick={() => handleToggleActive(pkg)}
+                  className="p-2 rounded-lg text-slate-400 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                  title={pkg.isActive ? tc("inactive") : tc("active")}
                 >
-                  {pkg.isActive ? tc("active") : tc("inactive")}
-                </span>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-slate-600">
-                  <Clock className="w-4 h-4 text-slate-400" />
-                  <span>
-                    {pkg.duration ? formatDuration(pkg.duration) : t("unlimited")}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-slate-600">
-                  <HardDrive className="w-4 h-4 text-slate-400" />
-                  <span>
-                    {pkg.dataLimit
-                      ? formatBytes(BigInt(pkg.dataLimit))
-                      : t("unlimited")}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-slate-600">
-                  <ArrowDown className="w-4 h-4 text-slate-400" />
-                  <span>
-                    {pkg.downloadSpeed
-                      ? `${pkg.downloadSpeed} Kbps`
-                      : t("unlimited")}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-slate-600">
-                  <ArrowUp className="w-4 h-4 text-slate-400" />
-                  <span>
-                    {pkg.uploadSpeed
-                      ? `${pkg.uploadSpeed} Kbps`
-                      : t("unlimited")}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                <span className="text-lg font-bold text-primary-700">
-                  {pkg.price} {pkg.currency}
-                </span>
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => handleToggleActive(pkg)}
-                    className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
-                    title={pkg.isActive ? tc("inactive") : tc("active")}
-                  >
-                    {pkg.isActive ? (
-                      <ToggleRight className="w-5 h-5 text-emerald-500" />
-                    ) : (
-                      <ToggleLeft className="w-5 h-5 text-slate-400" />
-                    )}
-                  </button>
-                  <button
-                    onClick={() => openEdit(pkg)}
-                    className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(pkg.id)}
-                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+                  {pkg.isActive ? (
+                    <ToggleRight className="w-5 h-5 text-emerald-500" />
+                  ) : (
+                    <ToggleLeft className="w-5 h-5 text-slate-400" />
+                  )}
+                </button>
+                <button
+                  onClick={() => openEdit(pkg)}
+                  className="p-2 rounded-lg text-slate-400 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                >
+                  <Pencil className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => handleDelete(pkg.id)}
+                  className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
           ))}

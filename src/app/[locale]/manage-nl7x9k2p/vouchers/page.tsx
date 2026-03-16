@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   Plus,
   Ticket,
@@ -11,7 +11,16 @@ import {
   Printer,
   Copy,
   CheckCircle,
-  QrCode,
+  Search,
+  Package,
+  Clock,
+  Ban,
+  Zap,
+  ChevronLeft,
+  ChevronRight,
+  Sparkles,
+  Calendar,
+  Hash,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -52,6 +61,7 @@ export default function VouchersPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>("ALL");
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
   async function loadData() {
@@ -135,7 +145,6 @@ export default function VouchersPage() {
     const selectedVouchers = vouchers.filter((v) => selected.has(v.id));
     if (selectedVouchers.length === 0) return;
 
-    // Generate QR codes for each voucher
     const voucherData = await Promise.all(
       selectedVouchers.map(async (v) => {
         const qrDataUrl = await QRCode.toDataURL(v.code, {
@@ -181,24 +190,37 @@ export default function VouchersPage() {
     win.document.close();
   }
 
-  const statusBadge = {
-    UNUSED: "badge-info",
-    ACTIVE: "badge-success",
-    USED: "badge-gray",
-    EXPIRED: "badge-danger",
+  const statusConfig = {
+    UNUSED: { label: t("unused"), badge: "bg-sky-50 text-sky-700 ring-sky-600/20", icon: Ticket, color: "text-sky-600" },
+    ACTIVE: { label: tc("active"), badge: "bg-emerald-50 text-emerald-700 ring-emerald-600/20", icon: Zap, color: "text-emerald-600" },
+    USED: { label: t("used"), badge: "bg-slate-100 text-slate-600 ring-slate-500/20", icon: CheckCircle, color: "text-slate-500" },
+    EXPIRED: { label: t("expired"), badge: "bg-red-50 text-red-700 ring-red-600/20", icon: Ban, color: "text-red-600" },
   };
 
-  const statusLabel = {
-    UNUSED: t("unused"),
-    ACTIVE: tc("active"),
-    USED: t("used"),
-    EXPIRED: t("expired"),
-  };
+  // Stats
+  const stats = useMemo(() => ({
+    total: vouchers.length,
+    unused: vouchers.filter((v) => v.status === "UNUSED").length,
+    active: vouchers.filter((v) => v.status === "ACTIVE").length,
+    used: vouchers.filter((v) => v.status === "USED").length,
+    expired: vouchers.filter((v) => v.status === "EXPIRED").length,
+  }), [vouchers]);
 
-  const filtered =
-    filterStatus === "ALL"
+  const filtered = useMemo(() => {
+    let result = filterStatus === "ALL"
       ? vouchers
       : vouchers.filter((v) => v.status === filterStatus);
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (v) =>
+          v.code.toLowerCase().includes(q) ||
+          v.package.name.toLowerCase().includes(q) ||
+          (v.usedBy && v.usedBy.toLowerCase().includes(q))
+      );
+    }
+    return result;
+  }, [vouchers, filterStatus, searchQuery]);
 
   const ITEMS_PER_PAGE = 20;
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
@@ -209,21 +231,36 @@ export default function VouchersPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-primary-500" />
+      <div className="flex flex-col items-center justify-center h-80 gap-3">
+        <div className="relative">
+          <div className="w-12 h-12 rounded-full border-[3px] border-primary-100" />
+          <div className="absolute inset-0 w-12 h-12 rounded-full border-[3px] border-primary-500 border-t-transparent animate-spin" />
+        </div>
+        <p className="text-sm text-slate-400 animate-pulse">{tc("loading")}</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+      {/* Header */}
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
+            <div className="p-2 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl text-white shadow-lg shadow-primary-500/25">
+              <Ticket className="w-5 h-5" />
+            </div>
+            {t("title")}
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            {stats.total} {t("title")}
+          </p>
+        </div>
         <div className="flex items-center gap-2">
           {selected.size > 0 && (
             <>
-              <button onClick={printSelected} className="btn-secondary text-sm">
-                <Printer className="w-4 h-4" />
+              <button onClick={printSelected} className="btn-secondary text-sm group">
+                <Printer className="w-4 h-4 group-hover:text-primary-600 transition-colors" />
                 {t("printSelected")} ({selected.size})
               </button>
               <button
@@ -235,43 +272,108 @@ export default function VouchersPage() {
               </button>
             </>
           )}
-          <button onClick={() => setShowModal(true)} className="btn-primary">
-            <Plus className="w-4 h-4" />
+          <button
+            onClick={() => setShowModal(true)}
+            className="btn-primary group shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 transition-all"
+          >
+            <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
             {t("generate")}
           </button>
         </div>
       </div>
 
-      {/* Filter */}
-      <div className="flex gap-2">
-        {["ALL", "UNUSED", "ACTIVE", "USED", "EXPIRED"].map((s) => (
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {([
+          { key: "UNUSED", count: stats.unused, icon: Ticket, gradient: "from-sky-500 to-cyan-600", bg: "bg-sky-50", ring: "ring-sky-100" },
+          { key: "ACTIVE", count: stats.active, icon: Zap, gradient: "from-emerald-500 to-teal-600", bg: "bg-emerald-50", ring: "ring-emerald-100" },
+          { key: "USED", count: stats.used, icon: CheckCircle, gradient: "from-slate-400 to-slate-500", bg: "bg-slate-50", ring: "ring-slate-100" },
+          { key: "EXPIRED", count: stats.expired, icon: Ban, gradient: "from-red-500 to-rose-600", bg: "bg-red-50", ring: "ring-red-100" },
+        ] as const).map(({ key, count, icon: Icon, gradient, bg, ring }) => (
           <button
-            key={s}
-            onClick={() => { setFilterStatus(s); setCurrentPage(1); }}
+            key={key}
+            onClick={() => { setFilterStatus(filterStatus === key ? "ALL" : key); setCurrentPage(1); }}
             className={cn(
-              "px-3 py-1.5 text-sm rounded-lg transition-colors",
-              filterStatus === s
-                ? "bg-primary-600 text-white"
-                : "bg-white text-slate-600 hover:bg-gray-50 border border-gray-200"
+              "relative overflow-hidden rounded-2xl p-4 text-start transition-all duration-200 ring-1 ring-inset",
+              ring,
+              filterStatus === key
+                ? "bg-white shadow-md scale-[1.02]"
+                : "bg-white/60 hover:bg-white hover:shadow-sm"
             )}
           >
-            {s === "ALL" ? tc("all") : statusLabel[s as keyof typeof statusLabel]}
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-2xl font-bold text-slate-900">{count}</p>
+                <p className="text-xs font-medium text-slate-500 mt-0.5">
+                  {statusConfig[key].label}
+                </p>
+              </div>
+              <div className={cn("p-2.5 rounded-xl", bg)}>
+                <Icon className={cn("w-5 h-5 bg-gradient-to-br bg-clip-text", statusConfig[key].color)} />
+              </div>
+            </div>
+            {filterStatus === key && (
+              <div className={cn("absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r", gradient)} />
+            )}
           </button>
         ))}
       </div>
 
+      {/* Search & Filter Bar */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute start-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+            placeholder={tc("search")}
+            className="input-field ps-10"
+          />
+        </div>
+        <div className="flex gap-1.5 p-1 bg-white rounded-xl border border-gray-200 shadow-sm">
+          {(["ALL", "UNUSED", "ACTIVE", "USED", "EXPIRED"] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => { setFilterStatus(s); setCurrentPage(1); }}
+              className={cn(
+                "px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200",
+                filterStatus === s
+                  ? "bg-primary-600 text-white shadow-sm"
+                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
+              )}
+            >
+              {s === "ALL" ? tc("all") : statusConfig[s as keyof typeof statusConfig]?.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Content */}
       {filtered.length === 0 ? (
-        <div className="card text-center py-16">
-          <Ticket className="w-12 h-12 text-slate-300 mx-auto" />
-          <p className="mt-4 text-slate-500">{t("empty")}</p>
+        <div className="relative overflow-hidden rounded-2xl border border-dashed border-gray-200 bg-white/50 text-center py-20">
+          <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px] opacity-50" />
+          <div className="relative">
+            <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center mb-4">
+              <Ticket className="w-8 h-8 text-primary-600" />
+            </div>
+            <p className="text-slate-500 font-medium">{t("empty")}</p>
+            <button
+              onClick={() => setShowModal(true)}
+              className="mt-4 text-sm text-primary-600 hover:text-primary-700 font-medium inline-flex items-center gap-1.5 transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              {t("generate")}
+            </button>
+          </div>
         </div>
       ) : (
-        <div className="table-container">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-100 bg-slate-50/50">
-                  <th className="p-3 text-start">
+                <tr className="border-b border-gray-100">
+                  <th className="p-4 text-start w-10">
                     <input
                       type="checkbox"
                       checked={selected.size === paginated.length && paginated.length > 0}
@@ -282,101 +384,149 @@ export default function VouchersPage() {
                           setSelected(new Set());
                         }
                       }}
-                      className="rounded border-gray-300"
+                      className="rounded-md border-gray-300 text-primary-600 focus:ring-primary-500 transition-colors"
                     />
                   </th>
-                  <th className="p-3 text-start text-sm font-medium text-slate-500">
+                  <th className="p-4 text-start text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     {t("code")}
                   </th>
-                  <th className="p-3 text-start text-sm font-medium text-slate-500">
+                  <th className="p-4 text-start text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     {t("package")}
                   </th>
-                  <th className="p-3 text-start text-sm font-medium text-slate-500">
+                  <th className="p-4 text-start text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     {t("status")}
                   </th>
-                  <th className="p-3 text-start text-sm font-medium text-slate-500">
+                  <th className="p-4 text-start text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     {t("usedBy")}
                   </th>
-                  <th className="p-3 text-start text-sm font-medium text-slate-500">
+                  <th className="p-4 text-start text-xs font-semibold text-slate-400 uppercase tracking-wider">
                     {t("createdAt")}
                   </th>
                 </tr>
               </thead>
-              <tbody>
-                {paginated.map((voucher) => (
-                  <tr
-                    key={voucher.id}
-                    className="border-b border-gray-50 hover:bg-gray-50/50"
-                  >
-                    <td className="p-3">
-                      <input
-                        type="checkbox"
-                        checked={selected.has(voucher.id)}
-                        onChange={(e) => {
-                          const next = new Set(selected);
-                          if (e.target.checked) next.add(voucher.id);
-                          else next.delete(voucher.id);
-                          setSelected(next);
-                        }}
-                        className="rounded border-gray-300"
-                      />
-                    </td>
-                    <td className="p-3">
-                      <div className="flex items-center gap-2">
-                        <code className="text-sm font-mono font-semibold text-slate-900" dir="ltr">
-                          {voucher.code}
-                        </code>
-                        <button
-                          onClick={() => copyCode(voucher.code)}
-                          className="text-slate-300 hover:text-primary-600"
-                        >
-                          {copiedCode === voucher.code ? (
-                            <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-                          ) : (
-                            <Copy className="w-3.5 h-3.5" />
-                          )}
-                        </button>
-                      </div>
-                    </td>
-                    <td className="p-3 text-sm text-slate-600">
-                      {voucher.package.name}
-                    </td>
-                    <td className="p-3">
-                      <span className={statusBadge[voucher.status]}>
-                        {statusLabel[voucher.status]}
-                      </span>
-                    </td>
-                    <td className="p-3 text-sm text-slate-500">
-                      {voucher.usedBy || "—"}
-                    </td>
-                    <td className="p-3 text-sm text-slate-500">
-                      {new Date(voucher.createdAt).toLocaleDateString()}
-                    </td>
-                  </tr>
-                ))}
+              <tbody className="divide-y divide-gray-50">
+                {paginated.map((voucher) => {
+                  const cfg = statusConfig[voucher.status];
+                  return (
+                    <tr
+                      key={voucher.id}
+                      className={cn(
+                        "group transition-colors duration-150",
+                        selected.has(voucher.id)
+                          ? "bg-primary-50/40"
+                          : "hover:bg-slate-50/70"
+                      )}
+                    >
+                      <td className="p-4">
+                        <input
+                          type="checkbox"
+                          checked={selected.has(voucher.id)}
+                          onChange={(e) => {
+                            const next = new Set(selected);
+                            if (e.target.checked) next.add(voucher.id);
+                            else next.delete(voucher.id);
+                            setSelected(next);
+                          }}
+                          className="rounded-md border-gray-300 text-primary-600 focus:ring-primary-500 transition-colors"
+                        />
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="flex items-center gap-1.5 bg-slate-50 rounded-lg px-3 py-1.5 font-mono text-sm font-bold text-slate-800 tracking-wider" dir="ltr">
+                            {voucher.code}
+                          </div>
+                          <button
+                            onClick={() => copyCode(voucher.code)}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-md hover:bg-gray-100"
+                          >
+                            {copiedCode === voucher.code ? (
+                              <CheckCircle className="w-4 h-4 text-emerald-500" />
+                            ) : (
+                              <Copy className="w-4 h-4 text-slate-400" />
+                            )}
+                          </button>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-2">
+                          <Package className="w-4 h-4 text-slate-400" />
+                          <span className="text-sm font-medium text-slate-700">{voucher.package.name}</span>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <span className={cn(
+                          "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold ring-1 ring-inset",
+                          cfg.badge
+                        )}>
+                          <cfg.icon className="w-3 h-3" />
+                          {cfg.label}
+                        </span>
+                      </td>
+                      <td className="p-4 text-sm text-slate-500">
+                        {voucher.usedBy || (
+                          <span className="text-slate-300">—</span>
+                        )}
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center gap-1.5 text-sm text-slate-500">
+                          <Clock className="w-3.5 h-3.5 text-slate-300" />
+                          {new Date(voucher.createdAt).toLocaleDateString()}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
+
+          {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 bg-slate-50/30">
               <span className="text-sm text-slate-500">
-                {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} / {filtered.length}
+                {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}{" "}
+                <span className="text-slate-400">/ {filtered.length}</span>
               </span>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50 transition-colors"
+                  className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-white hover:shadow-sm transition-all"
                 >
-                  ‹
+                  <ChevronLeft className="w-4 h-4 text-slate-600" />
                 </button>
-                <span className="text-sm text-slate-600">{currentPage} / {totalPages}</span>
+                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                  let pageNum: number;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={cn(
+                        "w-8 h-8 text-sm rounded-lg transition-all font-medium",
+                        currentPage === pageNum
+                          ? "bg-primary-600 text-white shadow-sm"
+                          : "text-slate-500 hover:bg-white hover:shadow-sm"
+                      )}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
                 <button
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-50 hover:bg-gray-50 transition-colors"
+                  className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-white hover:shadow-sm transition-all"
                 >
-                  ›
+                  <ChevronRight className="w-4 h-4 text-slate-600" />
                 </button>
               </div>
             </div>
@@ -386,35 +536,47 @@ export default function VouchersPage() {
 
       {/* Generate Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-900">
-                {t("generate")}
-              </h2>
-              <button
-                onClick={() => setShowModal(false)}
-                className="text-slate-400 hover:text-slate-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowModal(false)} />
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-5 text-white">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                    <Sparkles className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold">{t("generate")}</h2>
+                    <p className="text-primary-100 text-xs mt-0.5">{t("title")}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="p-1.5 rounded-lg hover:bg-white/20 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
-            <form onSubmit={handleGenerate} className="space-y-4">
+
+            {/* Modal Body */}
+            <form onSubmit={handleGenerate} className="p-5 space-y-5">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
+                  <Package className="w-4 h-4 text-primary-500" />
                   {t("package")}
                 </label>
                 <select name="packageId" required className="input-field">
                   <option value="">{t("package")}</option>
                   {packages.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
+                    <option key={p.id} value={p.id}>{p.name}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
+                  <Hash className="w-4 h-4 text-primary-500" />
                   {t("count")}
                 </label>
                 <input
@@ -429,13 +591,23 @@ export default function VouchersPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
+                  <Calendar className="w-4 h-4 text-primary-500" />
                   {t("expiry")}
                 </label>
                 <input name="expiresAt" type="date" className="input-field" dir="ltr" />
               </div>
-              <div className="flex gap-3 pt-2">
-                <button type="submit" disabled={saving} className="btn-primary flex-1">
+              <div className="flex gap-3 pt-3">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="btn-primary flex-1 shadow-lg shadow-primary-500/25"
+                >
+                  {saving ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-4 h-4" />
+                  )}
                   {saving ? tc("loading") : t("generate")}
                 </button>
                 <button

@@ -23,22 +23,52 @@ export default function LoginPage() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    try {
+      // Step 1: Check credentials + device trust
+      const otpRes = await fetch("/api/auth/login-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (result?.error) {
-      if (result.error.includes("EMAIL_NOT_VERIFIED") || result.code === "EMAIL_NOT_VERIFIED") {
+      const otpData = await otpRes.json();
+
+      if (!otpRes.ok) {
+        if (otpData.error === "EMAIL_NOT_VERIFIED") {
+          setLoading(false);
+          router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
+          return;
+        }
+        setError(t("error"));
         setLoading(false);
-        router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
         return;
       }
+
+      if (otpData.status === "OTP_REQUIRED") {
+        // New device — redirect to OTP verification
+        setLoading(false);
+        router.push(
+          `/auth/verify-login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+        );
+        return;
+      }
+
+      // Trusted device — sign in directly
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError(t("error"));
+        setLoading(false);
+      } else {
+        router.push("/manage-nl7x9k2p");
+      }
+    } catch {
       setError(t("error"));
       setLoading(false);
-    } else {
-      router.push("/manage-nl7x9k2p");
     }
   }
 

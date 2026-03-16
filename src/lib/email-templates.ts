@@ -75,6 +75,43 @@ export function verificationCodeEmail(code: string, name: string): string {
   `);
 }
 
+// ─── Login OTP Email (new device detection) ─────────────────
+
+export function loginOtpEmail(code: string, name: string, ip: string, userAgent: string): string {
+  const shortUA = userAgent.length > 80 ? userAgent.substring(0, 80) + "..." : userAgent;
+  return baseLayout(`
+    <h2 style="margin:0 0 8px;color:#1e293b;font-size:20px;font-weight:700;">
+      New Login Detected
+    </h2>
+    <p style="margin:0 0 16px;color:#64748b;font-size:14px;line-height:1.6;">
+      Hi ${name}, someone is trying to sign in to your ${BRAND_NAME} account from a new device. If this is you, use the code below to continue.
+    </p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px;">
+      <tr>
+        <td style="padding:12px 16px;background:#fef3c7;border-radius:8px;border-left:4px solid #f59e0b;">
+          <p style="margin:0 0 4px;color:#1e293b;font-size:13px;font-weight:600;">🔍 Login Details:</p>
+          <p style="margin:0;color:#64748b;font-size:12px;">IP: ${ip}</p>
+          <p style="margin:0;color:#64748b;font-size:12px;">Device: ${shortUA}</p>
+        </td>
+      </tr>
+    </table>
+    <div style="background:#f8fafc;border:2px dashed ${BRAND_COLOR};border-radius:12px;padding:24px;text-align:center;margin:0 0 24px;">
+      <p style="margin:0 0 8px;color:#64748b;font-size:12px;text-transform:uppercase;letter-spacing:1px;">
+        Your login verification code
+      </p>
+      <p style="margin:0;color:${BRAND_COLOR};font-size:36px;font-weight:800;letter-spacing:8px;font-family:monospace;">
+        ${code}
+      </p>
+    </div>
+    <p style="margin:0 0 4px;color:#94a3b8;font-size:13px;">
+      ⏱ This code expires in <strong style="color:#1e293b;">10 minutes</strong>.
+    </p>
+    <p style="margin:0;color:#ef4444;font-size:13px;font-weight:500;">
+      ⚠️ If you did NOT try to sign in, someone may have your password. Change it immediately.
+    </p>
+  `);
+}
+
 // ─── Welcome Email (after verification) ─────────────────────
 
 export function welcomeEmail(name: string): string {

@@ -38,6 +38,7 @@ model User {
   sessions       Session[]
   subscriptions  Subscription[]
   invoices       Invoice[]
+  trustedDevices TrustedDevice[]
 
   @@map("users")
 }
@@ -243,4 +244,22 @@ model HotspotSession {
   router        Router      @relation(fields: [routerId], references: [id], onDelete: Cascade)
 
   @@map("hotspot_sessions")
+}
+
+// ─── Trusted Device (OTP bypass) ───────────────────────────
+
+model TrustedDevice {
+  id            String   @id @default(cuid())
+  userId        String
+  fingerprint   String   // hash of IP + User-Agent
+  ipAddress     String?
+  userAgent     String?
+  expiresAt     DateTime
+  createdAt     DateTime @default(now())
+
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, fingerprint])
+  @@index([userId])
+  @@map("trusted_devices")
 }

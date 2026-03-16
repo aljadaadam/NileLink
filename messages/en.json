@@ -140,6 +140,21 @@
       "successMessage": "Redirecting you to sign in...",
       "noEmail": "No email address provided.",
       "goRegister": "Go to Registration"
+    },
+    "verifyLogin": {
+      "title": "New Device Detected",
+      "subtitle": "We sent a verification code to your email for security",
+      "verify": "Verify & Sign In",
+      "verifying": "Verifying...",
+      "resend": "Resend Code",
+      "resendCooldown": "Resend in {seconds}s",
+      "invalidCode": "Invalid or expired code",
+      "loginFailed": "Login failed. Please try again.",
+      "successTitle": "Device Verified!",
+      "successMessage": "This device is now trusted. Redirecting...",
+      "noData": "No login session found.",
+      "goLogin": "Go to Login",
+      "trustNote": "This device will be trusted for 30 days."
     }
   },
   "dashboard": {

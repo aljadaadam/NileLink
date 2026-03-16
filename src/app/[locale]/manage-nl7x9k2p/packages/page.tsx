@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { useLocale } from "next-intl";
 import {
   Plus,
   Package,
@@ -43,6 +44,8 @@ interface CurrencyInfo {
 export default function PackagesPage() {
   const t = useTranslations("packages");
   const tc = useTranslations("common");
+  const locale = useLocale();
+  const isAr = locale === "ar";
   const [packages, setPackages] = useState<PackageItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -305,7 +308,7 @@ export default function PackagesPage() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">
                   {t("name")}
                 </label>
-                <input name="name" required className="input-field" placeholder="مثال: باقة ساعة" defaultValue={editingPkg?.name || ""} />
+                <input name="name" required className="input-field" placeholder={isAr ? "مثال: باقة ساعة" : "e.g. 1 Hour Package"} defaultValue={editingPkg?.name || ""} />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -318,7 +321,7 @@ export default function PackagesPage() {
                     min="0"
                     className="input-field"
                     dir="ltr"
-                    placeholder="60"
+                    placeholder={isAr ? "مثال: 60 دقيقة" : "e.g. 60 min"}
                     defaultValue={editingPkg?.duration ?? ""}
                   />
                 </div>
@@ -332,7 +335,7 @@ export default function PackagesPage() {
                     min="0"
                     className="input-field"
                     dir="ltr"
-                    placeholder="500"
+                    placeholder={isAr ? "مثال: 500 ميجا" : "e.g. 500 MB"}
                     defaultValue={editingPkg?.dataLimit ? Math.round(Number(editingPkg.dataLimit) / (1024 * 1024)) : ""}
                   />
                 </div>
@@ -348,7 +351,7 @@ export default function PackagesPage() {
                     min="0"
                     className="input-field"
                     dir="ltr"
-                    placeholder="2048"
+                    placeholder={isAr ? "مثال: 2048 Kbps" : "e.g. 2048 Kbps"}
                     defaultValue={editingPkg?.downloadSpeed ?? ""}
                   />
                 </div>
@@ -362,7 +365,7 @@ export default function PackagesPage() {
                     min="0"
                     className="input-field"
                     dir="ltr"
-                    placeholder="1024"
+                    placeholder={isAr ? "مثال: 1024 Kbps" : "e.g. 1024 Kbps"}
                     defaultValue={editingPkg?.uploadSpeed ?? ""}
                   />
                 </div>
@@ -380,7 +383,7 @@ export default function PackagesPage() {
                     required
                     className="input-field"
                     dir="ltr"
-                    placeholder="10"
+                    placeholder={isAr ? "مثال: 10" : "e.g. 10"}
                     defaultValue={editingPkg?.price || ""}
                   />
                 </div>

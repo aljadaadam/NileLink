@@ -45,11 +45,10 @@ export default function LoginPage() {
       }
 
       if (otpData.status === "OTP_REQUIRED") {
-        // New device — redirect to OTP verification
+        // New device — store credentials temporarily, redirect to OTP verification
+        sessionStorage.setItem("_nl_login", JSON.stringify({ email, password }));
         setLoading(false);
-        router.push(
-          `/auth/verify-login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
-        );
+        router.push("/auth/verify-login");
         return;
       }
 

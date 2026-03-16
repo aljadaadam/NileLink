@@ -2,17 +2,27 @@
 
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Wifi, Loader2, ShieldCheck, RefreshCw } from "lucide-react";
 import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
 
 function VerifyLoginContent() {
   const t = useTranslations("auth.verifyLogin");
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email") || "";
-  const password = searchParams.get("password") || "";
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem("_nl_login");
+    if (stored) {
+      try {
+        const { email: e, password: p } = JSON.parse(stored);
+        setEmail(e || "");
+        setPassword(p || "");
+      } catch { /* ignore */ }
+    }
+  }, []);
 
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
@@ -107,6 +117,7 @@ function VerifyLoginContent() {
       }
 
       setSuccess(true);
+      sessionStorage.removeItem("_nl_login");
       setTimeout(() => router.push("/manage-nl7x9k2p"), 1500);
     } catch {
       setError(t("invalidCode"));
@@ -239,13 +250,5 @@ function maskEmail(email: string): string {
 }
 
 export default function VerifyLoginPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary-500" />
-      </div>
-    }>
-      <VerifyLoginContent />
-    </Suspense>
-  );
+  return <VerifyLoginContent />;
 }

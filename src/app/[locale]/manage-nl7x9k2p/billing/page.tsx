@@ -210,7 +210,7 @@ export default function BillingPage() {
                   <tr key={inv.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                     <td className="py-3 px-2 font-mono text-xs">{inv.invoiceNumber}</td>
                     <td className="py-3 px-2">{t(`planNames.${inv.plan}`)}</td>
-                    <td className="py-3 px-2 font-semibold">${inv.amount.toFixed(2)}</td>
+                    <td className="py-3 px-2 font-semibold">{formatPrice(inv.amount * currency.rate, currency)}</td>
                     <td className="py-3 px-2">
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColors[inv.status] || "bg-gray-100"}`}>
                         {t(`invoiceStatus.${inv.status}`)}

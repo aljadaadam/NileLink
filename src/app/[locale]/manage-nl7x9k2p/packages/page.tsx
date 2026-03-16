@@ -24,7 +24,6 @@ import { toast } from "sonner";
 interface PackageItem {
   id: string;
   name: string;
-  nameAr: string | null;
   duration: number | null;
   dataLimit: string | null;
   uploadSpeed: number | null;
@@ -33,6 +32,12 @@ interface PackageItem {
   currency: string;
   isActive: boolean;
   createdAt: string;
+}
+
+interface CurrencyInfo {
+  code: string;
+  symbol: string;
+  rate: number;
 }
 
 export default function PackagesPage() {
@@ -45,6 +50,7 @@ export default function PackagesPage() {
   const [editingPkg, setEditingPkg] = useState<PackageItem | null>(null);
   const [saving, setSaving] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [currency, setCurrency] = useState<CurrencyInfo>({ code: "USD", symbol: "$", rate: 1 });
 
   async function loadPackages() {
     try {
@@ -60,6 +66,9 @@ export default function PackagesPage() {
 
   useEffect(() => {
     loadPackages();
+    fetch("/api/geo").then(r => r.json()).then(data => {
+      if (data.currency) setCurrency(data.currency);
+    }).catch(() => {});
   }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -68,7 +77,6 @@ export default function PackagesPage() {
     const formData = new FormData(e.currentTarget);
     const body = {
       name: formData.get("name"),
-      nameAr: formData.get("nameAr") || undefined,
       duration: formData.get("duration")
         ? parseInt(formData.get("duration") as string)
         : editId ? null : undefined,
@@ -82,7 +90,7 @@ export default function PackagesPage() {
         ? parseInt(formData.get("downloadSpeed") as string)
         : editId ? null : undefined,
       price: parseFloat(formData.get("price") as string),
-      currency: formData.get("currency") || "USD",
+      currency: currency.code,
     };
 
     try {
@@ -195,9 +203,6 @@ export default function PackagesPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <h3 className="font-semibold text-slate-900">{pkg.name}</h3>
-                  {pkg.nameAr && (
-                    <p className="text-sm text-slate-500">{pkg.nameAr}</p>
-                  )}
                 </div>
                 <span
                   className={cn(
@@ -298,15 +303,9 @@ export default function PackagesPage() {
             <form onSubmit={handleSubmit} className="space-y-4" key={editId || "new"}>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t("name")} (EN)
+                  {t("name")}
                 </label>
                 <input name="name" required className="input-field" defaultValue={editingPkg?.name || ""} />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t("name")} (AR)
-                </label>
-                <input name="nameAr" className="input-field" defaultValue={editingPkg?.nameAr || ""} />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -384,22 +383,9 @@ export default function PackagesPage() {
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     {t("currency")}
                   </label>
-                  <select name="currency" className="input-field" defaultValue={editingPkg?.currency || "USD"}>
-                    <option value="USD">USD ($)</option>
-                    <option value="EUR">EUR (€)</option>
-                    <option value="GBP">GBP (£)</option>
-                    <option value="EGP">EGP (ج.م)</option>
-                    <option value="SAR">SAR (ر.س)</option>
-                    <option value="AED">AED (د.إ)</option>
-                    <option value="IQD">IQD (د.ع)</option>
-                    <option value="JOD">JOD (د.أ)</option>
-                    <option value="KWD">KWD (د.ك)</option>
-                    <option value="QAR">QAR (ر.ق)</option>
-                    <option value="OMR">OMR (ر.ع)</option>
-                    <option value="BHD">BHD (د.ب)</option>
-                    <option value="TRY">TRY (₺)</option>
-                    <option value="MAD">MAD (د.م)</option>
-                  </select>
+                  <div className="input-field bg-slate-50 text-slate-600 flex items-center">
+                    {currency.code} ({currency.symbol})
+                  </div>
                 </div>
               </div>
               <div className="flex gap-3 pt-2">

@@ -305,7 +305,7 @@ export default function PackagesPage() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">
                   {t("name")}
                 </label>
-                <input name="name" required className="input-field" defaultValue={editingPkg?.name || ""} />
+                <input name="name" required className="input-field" placeholder="مثال: باقة ساعة" defaultValue={editingPkg?.name || ""} />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -318,6 +318,7 @@ export default function PackagesPage() {
                     min="0"
                     className="input-field"
                     dir="ltr"
+                    placeholder="60"
                     defaultValue={editingPkg?.duration ?? ""}
                   />
                 </div>
@@ -331,6 +332,7 @@ export default function PackagesPage() {
                     min="0"
                     className="input-field"
                     dir="ltr"
+                    placeholder="500"
                     defaultValue={editingPkg?.dataLimit ? Math.round(Number(editingPkg.dataLimit) / (1024 * 1024)) : ""}
                   />
                 </div>
@@ -346,6 +348,7 @@ export default function PackagesPage() {
                     min="0"
                     className="input-field"
                     dir="ltr"
+                    placeholder="2048"
                     defaultValue={editingPkg?.downloadSpeed ?? ""}
                   />
                 </div>
@@ -359,6 +362,7 @@ export default function PackagesPage() {
                     min="0"
                     className="input-field"
                     dir="ltr"
+                    placeholder="1024"
                     defaultValue={editingPkg?.uploadSpeed ?? ""}
                   />
                 </div>
@@ -376,6 +380,7 @@ export default function PackagesPage() {
                     required
                     className="input-field"
                     dir="ltr"
+                    placeholder="10"
                     defaultValue={editingPkg?.price || ""}
                   />
                 </div>

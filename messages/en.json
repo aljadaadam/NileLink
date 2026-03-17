@@ -111,7 +111,8 @@
       "submit": "Sign In",
       "noAccount": "Don't have an account?",
       "register": "Create Account",
-      "error": "Invalid email or password"
+      "error": "Invalid email or password",
+      "forgotPassword": "Forgot your password?"
     },
     "register": {
       "title": "Create Account",
@@ -155,6 +156,29 @@
       "noData": "No login session found.",
       "goLogin": "Go to Login",
       "trustNote": "This device will be trusted for 30 days."
+    },
+    "forgot": {
+      "title": "Forgot Password",
+      "subtitle": "Enter your email to receive a reset code",
+      "email": "Email Address",
+      "sendCode": "Send Reset Code",
+      "sending": "Sending...",
+      "backToLogin": "Back to Login",
+      "resetTitle": "Reset Password",
+      "resetSubtitle": "Enter the code and your new password",
+      "codeLabel": "Reset Code",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "resetPassword": "Reset Password",
+      "resetting": "Resetting...",
+      "resend": "Resend Code",
+      "resendCooldown": "Resend in {seconds}s",
+      "invalidCode": "Invalid or expired code",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "error": "Something went wrong. Please try again.",
+      "successTitle": "Password Reset!",
+      "successMessage": "Your password has been changed. Redirecting to login..."
     }
   },
   "dashboard": {

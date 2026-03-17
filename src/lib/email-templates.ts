@@ -281,3 +281,58 @@ export function routerOfflineEmail(
     </div>
   `);
 }
+
+// ─── Traffic / Load Alert Email ─────────────────────────────
+
+export function trafficAlertEmail(
+  name: string,
+  routerName: string,
+  activeUsers: number,
+  maxUsers: number,
+  loadPercent: number,
+  totalTrafficMB: number
+): string {
+  return baseLayout(`
+    <div style="text-align:center;margin:0 0 24px;">
+      <div style="display:inline-block;width:64px;height:64px;background:#fffbeb;border-radius:50%;line-height:64px;font-size:28px;">
+        ⚡
+      </div>
+    </div>
+    <h2 style="margin:0 0 8px;color:#1e293b;font-size:20px;font-weight:700;text-align:center;">
+      High Traffic Alert
+    </h2>
+    <p style="margin:0 0 24px;color:#64748b;font-size:14px;line-height:1.6;text-align:center;">
+      Hi ${name}, your router <strong>${routerName}</strong> is at <strong style="color:#f59e0b;">${loadPercent}%</strong> capacity. Consider reducing package speeds temporarily.
+    </p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border:1px solid #fde68a;border-radius:12px;overflow:hidden;">
+      <tr style="background:#fffbeb;">
+        <td style="padding:12px 16px;color:#64748b;font-size:13px;">Router</td>
+        <td style="padding:12px 16px;color:#1e293b;font-size:13px;font-weight:600;text-align:right;">${routerName}</td>
+      </tr>
+      <tr>
+        <td style="padding:12px 16px;color:#64748b;font-size:13px;border-top:1px solid #fef3c7;">Active Users</td>
+        <td style="padding:12px 16px;color:#1e293b;font-size:13px;font-weight:600;text-align:right;">${activeUsers} / ${maxUsers}</td>
+      </tr>
+      <tr style="background:#fffbeb;">
+        <td style="padding:12px 16px;color:#64748b;font-size:13px;">Load</td>
+        <td style="padding:12px 16px;color:#f59e0b;font-size:16px;font-weight:700;text-align:right;">${loadPercent}%</td>
+      </tr>
+      <tr>
+        <td style="padding:12px 16px;color:#64748b;font-size:13px;border-top:1px solid #fef3c7;">Total Traffic</td>
+        <td style="padding:12px 16px;color:#1e293b;font-size:13px;font-weight:600;text-align:right;">${totalTrafficMB > 1024 ? (totalTrafficMB / 1024).toFixed(1) + ' GB' : totalTrafficMB + ' MB'}</td>
+      </tr>
+    </table>
+    <div style="background:#fffbeb;border-radius:10px;padding:16px;margin:0 0 24px;">
+      <p style="margin:0;color:#92400e;font-size:13px;font-weight:600;">💡 Suggestion:</p>
+      <p style="margin:6px 0 0;color:#78350f;font-size:13px;line-height:1.5;">
+        Temporarily reduce Download/Upload speed in your packages to balance the load, or disconnect idle users from the Hotspot Users page.
+      </p>
+    </div>
+    <div style="text-align:center;">
+      <a href="${process.env.NEXT_PUBLIC_APP_URL || "https://nilelink.net"}/en/manage-nl7x9k2p/packages"
+         style="display:inline-block;padding:12px 32px;background:#f59e0b;color:#ffffff;text-decoration:none;border-radius:10px;font-size:14px;font-weight:600;">
+        Manage Packages
+      </a>
+    </div>
+  `);
+}

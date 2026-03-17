@@ -278,7 +278,10 @@
     "selectAll": "Select All",
     "deleteConfirm": "Are you sure you want to delete selected codes?",
     "empty": "No codes generated yet.",
-    "generated": "{count} codes generated successfully!"
+    "generated": "{count} codes generated successfully!",
+    "qrRouter": "Link QR to Router",
+    "qrCodeOnly": "Code only (no auto-login)",
+    "qrSmart": "Smart QR"
   },
   "hotspotUsers": {
     "title": "Hotspot Users",
@@ -384,5 +387,27 @@
     "paymentDesc": "To activate your subscription, please make a payment via one of the methods below. Your account will be activated immediately after confirmation.",
     "contactWhatsApp": "Pay via WhatsApp",
     "contactEmail": "Contact Support"
+  },
+  "statusPortal": {
+    "title": "Check Your Connection",
+    "subtitle": "Enter your voucher code to view your usage and remaining time.",
+    "enterCode": "Voucher Code",
+    "codePlaceholder": "Enter your code here",
+    "check": "Check",
+    "notFound": "Code Not Found",
+    "notFoundHint": "Please check your code and try again.",
+    "readyToUse": "Ready to Use",
+    "codeExpired": "Code Expired",
+    "connected": "Connected",
+    "sessionEnded": "Session Ended",
+    "connectedSince": "Connected since",
+    "package": "Package",
+    "duration": "Duration",
+    "dataLimit": "Data Limit",
+    "speed": "Speed",
+    "validUntil": "Valid Until",
+    "dataUsage": "Data Usage",
+    "timeRemaining": "Time Remaining",
+    "expiresAt": "Expires At"
   }
 }

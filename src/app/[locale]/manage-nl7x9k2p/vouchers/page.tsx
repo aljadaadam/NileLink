@@ -26,6 +26,13 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import QRCode from "qrcode";
+import { Wifi } from "lucide-react";
+
+interface RouterOption {
+  id: string;
+  name: string;
+  apiKey: string;
+}
 
 interface VoucherItem {
   id: string;
@@ -70,15 +77,26 @@ export default function VouchersPage() {
   const [showHelp, setShowHelp] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkDeleting, setBulkDeleting] = useState(false);
+  const [routers, setRouters] = useState<RouterOption[]>([]);
+  const [selectedRouter, setSelectedRouter] = useState<string>("");
 
   async function loadData() {
     try {
-      const [vRes, pRes] = await Promise.all([
+      const [vRes, pRes, rRes] = await Promise.all([
         fetch("/api/vouchers"),
         fetch("/api/packages"),
+        fetch("/api/routers"),
       ]);
       setVouchers(await vRes.json());
       setPackages(await pRes.json());
+      const routerData = await rRes.json();
+      const mapped = routerData.map((r: { id: string; name: string; apiKey: string }) => ({
+        id: r.id,
+        name: r.name,
+        apiKey: r.apiKey,
+      }));
+      setRouters(mapped);
+      if (mapped.length === 1) setSelectedRouter(mapped[0].apiKey);
     } catch {
       toast.error("Failed to load data");
     } finally {
@@ -203,7 +221,7 @@ export default function VouchersPage() {
         <div class="code">${escapeHtml(v.code)}</div>
         <div class="pkg">${escapeHtml(v.package.name)}</div>
         <div class="price">${escapeHtml(v.package.price)} ${escapeHtml(v.package.currency)}</div>
-        <div class="footer">Scan QR or enter code to connect</div>
+        <div class="footer">${selectedRouter ? 'Scan QR to auto-connect' : 'Scan QR or enter code to connect'}</div>
       </div>
     `).join("");
 
@@ -252,8 +270,16 @@ export default function VouchersPage() {
     setTimeout(() => setCopiedCode(null), 2000);
   }
 
+  function getQrContent(code: string): string {
+    if (selectedRouter) {
+      const base = typeof window !== "undefined" ? window.location.origin : "https://nilelink.net";
+      return `${base}/api/hotspot/login/${selectedRouter}?code=${encodeURIComponent(code)}`;
+    }
+    return code;
+  }
+
   async function generateQr(code: string): Promise<string> {
-    return QRCode.toDataURL(code, {
+    return QRCode.toDataURL(getQrContent(code), {
       width: 200,
       margin: 1,
       color: { dark: "#0e7490", light: "#ffffff" },
@@ -303,7 +329,7 @@ export default function VouchersPage() {
         <div class="code">${escapeHtml(voucher.code)}</div>
         <div class="pkg">${escapeHtml(voucher.package.name)}</div>
         <div class="price">${escapeHtml(voucher.package.price)} ${escapeHtml(voucher.package.currency)}</div>
-        <div class="footer">Scan QR or enter code to connect</div>
+        <div class="footer">${selectedRouter ? 'Scan QR to auto-connect' : 'Scan QR or enter code to connect'}</div>
       </div>
       <script>
         var img = document.querySelector('.qr');
@@ -398,6 +424,33 @@ export default function VouchersPage() {
       {showHelp && (
         <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
           {t("helpDesc")}
+        </div>
+      )}
+
+      {/* Router Selector for Smart QR */}
+      {routers.length > 0 && (
+        <div className="flex items-center gap-3 bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3">
+          <div className="p-2 bg-primary-50 rounded-lg">
+            <Wifi className="w-4 h-4 text-primary-600" />
+          </div>
+          <div className="flex-1">
+            <p className="text-xs font-semibold text-slate-500">{t("qrRouter")}</p>
+            <select
+              value={selectedRouter}
+              onChange={(e) => setSelectedRouter(e.target.value)}
+              className="mt-0.5 text-sm font-medium text-slate-800 bg-transparent border-none p-0 focus:ring-0 cursor-pointer w-full"
+            >
+              <option value="">{t("qrCodeOnly")}</option>
+              {routers.map((r) => (
+                <option key={r.id} value={r.apiKey}>{r.name}</option>
+              ))}
+            </select>
+          </div>
+          {selectedRouter && (
+            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full whitespace-nowrap">
+              {t("qrSmart")}
+            </span>
+          )}
         </div>
       )}
 

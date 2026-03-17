@@ -278,7 +278,10 @@
     "selectAll": "تحديد الكل",
     "deleteConfirm": "هل أنت متأكد من حذف الأكواد المحددة؟",
     "empty": "لا توجد أكواد بعد.",
-    "generated": "تم توليد {count} كود بنجاح!"
+    "generated": "تم توليد {count} كود بنجاح!",
+    "qrRouter": "ربط QR بالراوتر",
+    "qrCodeOnly": "كود فقط (بدون دخول تلقائي)",
+    "qrSmart": "QR ذكي"
   },
   "hotspotUsers": {
     "title": "مستخدمو الهوتسبوت",
@@ -384,5 +387,27 @@
     "paymentDesc": "لتفعيل اشتراكك، يرجى إجراء الدفع عبر إحدى الطرق أدناه. سيتم تفعيل حسابك فوراً بعد تأكيد الدفع.",
     "contactWhatsApp": "الدفع عبر واتساب",
     "contactEmail": "تواصل مع الدعم"
+  },
+  "statusPortal": {
+    "title": "تحقق من اتصالك",
+    "subtitle": "أدخل كود الكرت لمعرفة استهلاكك والوقت المتبقي.",
+    "enterCode": "كود الكرت",
+    "codePlaceholder": "أدخل الكود هنا",
+    "check": "تحقق",
+    "notFound": "الكود غير موجود",
+    "notFoundHint": "يرجى التحقق من الكود والمحاولة مرة أخرى.",
+    "readyToUse": "جاهز للاستخدام",
+    "codeExpired": "الكود منتهي الصلاحية",
+    "connected": "متصل",
+    "sessionEnded": "انتهت الجلسة",
+    "connectedSince": "متصل منذ",
+    "package": "الباقة",
+    "duration": "المدة",
+    "dataLimit": "حد البيانات",
+    "speed": "السرعة",
+    "validUntil": "صالح حتى",
+    "dataUsage": "استهلاك البيانات",
+    "timeRemaining": "الوقت المتبقي",
+    "expiresAt": "ينتهي في"
   }
 }

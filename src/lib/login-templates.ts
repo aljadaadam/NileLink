@@ -97,6 +97,22 @@ function wrapHTML(body: string): string {
 </head>
 <body>
 ${body}
+<script>
+(function(){
+  try {
+    var p = new URLSearchParams(window.location.search);
+    var code = p.get('code');
+    if (code) {
+      var inp = document.querySelector('input[name="username"]');
+      if (inp) { inp.value = code; inp.readOnly = true; inp.style.opacity = '0.8'; }
+      var form = document.querySelector('form');
+      if (form && form.action && form.action.indexOf('$(') === -1) {
+        setTimeout(function(){ form.submit(); }, 500);
+      }
+    }
+  } catch(e){}
+})();
+</script>
 </body>
 </html>`;
 }

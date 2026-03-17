@@ -13,10 +13,24 @@ import {
   Plus,
   Zap,
   HelpCircle,
+  TrendingUp,
+  Clock,
+  AlertTriangle,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { StatsData } from "@/types";
 import { toast } from "sonner";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  CartesianGrid,
+} from "recharts";
 
 export default function DashboardPage() {
   const t = useTranslations("dashboard");
@@ -169,6 +183,123 @@ export default function DashboardPage() {
           )}
         </div>
       </div>
+
+      {/* Analytics Charts */}
+      {!loading && stats && (
+        <>
+          {/* Peak Hours Chart */}
+          <div className="card">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+                <Clock className="w-5 h-5 text-primary-500" />
+                {t("stats.peakHours")}
+              </h3>
+            </div>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats.peakHours}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <XAxis
+                    dataKey="hour"
+                    tickFormatter={(h) => `${h}:00`}
+                    tick={{ fontSize: 11, fill: "#94a3b8" }}
+                    interval={2}
+                  />
+                  <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} allowDecimals={false} />
+                  <Tooltip
+                    labelFormatter={(h) => `${h}:00 - ${h}:59`}
+                    formatter={(value: number) => [value, t("stats.sessions")]}
+                    contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0", fontSize: 13 }}
+                  />
+                  <Bar dataKey="sessions" fill="#0891b2" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Daily Usage + Prediction */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-2 card">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-emerald-500" />
+                  {t("stats.dailyUsage")}
+                </h3>
+              </div>
+              {stats.dailyUsage.length > 0 ? (
+                <div className="h-56">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={stats.dailyUsage}>
+                      <defs>
+                        <linearGradient id="colorUsage" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#0891b2" stopOpacity={0.2} />
+                          <stop offset="95%" stopColor="#0891b2" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <XAxis
+                        dataKey="day"
+                        tickFormatter={(d) => d.slice(5)}
+                        tick={{ fontSize: 11, fill: "#94a3b8" }}
+                      />
+                      <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} allowDecimals={false} />
+                      <Tooltip
+                        formatter={(value: number) => [value, t("stats.usedVouchers")]}
+                        contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0", fontSize: 13 }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="count"
+                        stroke="#0891b2"
+                        strokeWidth={2}
+                        fill="url(#colorUsage)"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <p className="text-sm text-slate-400 text-center py-12">{t("stats.noData")}</p>
+              )}
+            </div>
+
+            {/* Prediction Card */}
+            <div className="card flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-amber-500" />
+                    {t("stats.prediction")}
+                  </h3>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{t("stats.unusedCodes")}</p>
+                    <p className="text-3xl font-bold text-slate-900 mt-1">{stats.unusedVouchers}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{t("stats.avgPerDay")}</p>
+                    <p className="text-3xl font-bold text-primary-600 mt-1">{stats.avgVouchersPerDay}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                {stats.daysUntilEmpty !== null ? (
+                  <div className={`rounded-xl p-3 text-center ${stats.daysUntilEmpty <= 3 ? "bg-red-50" : stats.daysUntilEmpty <= 7 ? "bg-amber-50" : "bg-emerald-50"}`}>
+                    <p className={`text-2xl font-bold ${stats.daysUntilEmpty <= 3 ? "text-red-600" : stats.daysUntilEmpty <= 7 ? "text-amber-600" : "text-emerald-600"}`}>
+                      ~{stats.daysUntilEmpty} {t("stats.days")}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-1">{t("stats.untilEmpty")}</p>
+                  </div>
+                ) : (
+                  <div className="rounded-xl p-3 bg-slate-50 text-center">
+                    <p className="text-sm text-slate-400">{t("stats.noData")}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

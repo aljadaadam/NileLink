@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth, requireActiveSubscription } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { MikroTikClient } from "@/lib/mikrotik";
+import { decrypt, isEncrypted } from "@/lib/encryption";
 
 export async function DELETE(
   _req: NextRequest,
@@ -32,7 +33,7 @@ export async function DELETE(
       host: user.router.host,
       port: user.router.port,
       username: user.router.username,
-      password: user.router.password,
+      password: isEncrypted(user.router.password) ? decrypt(user.router.password) : user.router.password,
     });
     await client.removeHotspotUser(user.username);
   } catch {

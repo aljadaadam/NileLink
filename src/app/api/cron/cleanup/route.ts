@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { MikroTikClient } from "@/lib/mikrotik";
+import { decrypt, isEncrypted } from "@/lib/encryption";
 
 // This endpoint should be called periodically (e.g., every 5 minutes via cron)
 // It handles: 1) Auto-disconnect expired hotspot users  2) Expire old vouchers
@@ -40,7 +41,7 @@ export async function POST(req: NextRequest) {
           host: router.host,
           port: router.port,
           username: router.username,
-          password: router.password,
+          password: isEncrypted(router.password) ? decrypt(router.password) : router.password,
         });
 
         const activeSessions = await client.getActiveSessions();

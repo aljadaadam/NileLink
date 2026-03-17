@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth, requireActiveSubscription } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { encrypt } from "@/lib/encryption";
 import { z } from "zod";
 
 const PRIVATE_IP_REGEX = /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|0\.|169\.254\.|localhost|::1|fc|fd|fe80)/i;
@@ -49,7 +50,7 @@ export async function PUT(
       username: data.username,
     };
     if (data.password) {
-      updateData.password = data.password;
+      updateData.password = encrypt(data.password);
     }
 
     const updated = await prisma.router.update({

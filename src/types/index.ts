@@ -18,6 +18,11 @@ export interface StatsData {
   totalVouchers: number;
   usedVouchers: number;
   revenueByCurrency: { currency: string; amount: number }[];
+  peakHours: { hour: number; sessions: number }[];
+  dailyUsage: { day: string; count: number }[];
+  unusedVouchers: number;
+  avgVouchersPerDay: number;
+  daysUntilEmpty: number | null;
 }
 
 export interface RouterFormData {

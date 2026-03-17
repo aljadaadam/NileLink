@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth, requireActiveSubscription } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { MikroTikClient } from "@/lib/mikrotik";
+import { decrypt, isEncrypted } from "@/lib/encryption";
 
 export async function POST(
   _req: NextRequest,
@@ -29,7 +30,7 @@ export async function POST(
     host: router.host,
     port: router.port,
     username: router.username,
-    password: router.password,
+    password: isEncrypted(router.password) ? decrypt(router.password) : router.password,
   });
 
   const success = await client.testConnection();

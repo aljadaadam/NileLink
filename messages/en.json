@@ -167,7 +167,16 @@
       "activeUsers": "Active Users",
       "totalVouchers": "Total Codes",
       "usedVouchers": "Used Codes",
-      "revenue": "Revenue"
+      "revenue": "Revenue",
+      "peakHours": "Peak Hours (Last 30 Days)",
+      "sessions": "Sessions",
+      "dailyUsage": "Daily Code Usage (Last 14 Days)",
+      "prediction": "Code Forecast",
+      "unusedCodes": "Unused Codes",
+      "avgPerDay": "Average per Day",
+      "days": "days",
+      "untilEmpty": "until codes run out",
+      "noData": "No data yet"
     },
     "recentActivity": "Recent Activity",
     "quickActions": "Quick Actions",

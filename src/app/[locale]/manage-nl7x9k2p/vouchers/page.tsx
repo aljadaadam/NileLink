@@ -188,6 +188,63 @@ export default function VouchersPage() {
     });
   }
 
+  async function handleBulkPrint() {
+    const selected = vouchers.filter((v) => selectedIds.has(v.id));
+    if (selected.length === 0) return;
+
+    const qrPromises = selected.map((v) => generateQr(v.code));
+    const qrs = await Promise.all(qrPromises);
+
+    const cards = selected.map((v, i) => `
+      <div class="voucher">
+        <div class="brand">NileLink WiFi</div>
+        <img class="qr" src="${qrs[i]}" width="140" height="140" />
+        <hr class="divider" />
+        <div class="code">${escapeHtml(v.code)}</div>
+        <div class="pkg">${escapeHtml(v.package.name)}</div>
+        <div class="price">${escapeHtml(v.package.price)} ${escapeHtml(v.package.currency)}</div>
+        <div class="footer">Scan QR or enter code to connect</div>
+      </div>
+    `).join("");
+
+    const win = window.open("", "_blank");
+    if (!win) return;
+    win.document.write(`
+      <html><head><title>NileLink Vouchers</title>
+      <style>
+        @page { size: 80mm auto; margin: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #fff; width: 80mm; margin: 0 auto; }
+        .voucher { border: 2px dashed #0891b2; padding: 16px 20px; margin: 8px;
+          text-align: center; border-radius: 12px;
+          background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%);
+          break-inside: avoid; page-break-inside: avoid; }
+        .brand { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 5px;
+          margin-bottom: 10px; font-weight: 700; }
+        .qr { margin: 8px auto; display: block; }
+        .divider { border: none; border-top: 1.5px dashed #94a3b8; margin: 12px 0; }
+        .code { font-size: 22px; font-weight: 900; letter-spacing: 5px; color: #0e7490;
+          font-family: 'Courier New', monospace; margin: 8px 0; }
+        .pkg { font-size: 13px; color: #334155; font-weight: 700; margin-top: 4px; }
+        .price { font-size: 12px; color: #64748b; margin-top: 3px; font-weight: 600; }
+        .footer { font-size: 9px; color: #94a3b8; margin-top: 10px; letter-spacing: 0.5px; }
+        @media print { body { width: 80mm; } .voucher { box-shadow: none; } }
+      </style></head><body>
+      ${cards}
+      <script>
+        var imgs = document.querySelectorAll('.qr');
+        var loaded = 0;
+        function checkPrint() { loaded++; if (loaded >= imgs.length) window.print(); }
+        imgs.forEach(function(img) {
+          if (img.complete) checkPrint();
+          else img.onload = checkPrint;
+        });
+      <\/script>
+      </body></html>
+    `);
+    win.document.close();
+  }
+
   function copyCode(code: string) {
     navigator.clipboard.writeText(code);
     setCopiedCode(code);
@@ -444,6 +501,13 @@ export default function VouchersPage() {
                 >
                   <X className="w-3.5 h-3.5 inline-block me-1" />
                   {tc("cancel")}
+                </button>
+                <button
+                  onClick={handleBulkPrint}
+                  className="px-3 py-1.5 text-xs font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors flex items-center gap-1.5"
+                >
+                  <Printer className="w-3.5 h-3.5" />
+                  {t("printSelected")}
                 </button>
                 <button
                   onClick={handleBulkDelete}

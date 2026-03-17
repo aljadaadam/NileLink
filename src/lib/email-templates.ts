@@ -238,3 +238,46 @@ export function invoiceEmail(
     </div>
   `);
 }
+
+// ─── Router Offline Alert Email ─────────────────────────────
+
+export function routerOfflineEmail(
+  name: string,
+  routerName: string,
+  routerHost: string,
+  lastSeen: string
+): string {
+  return baseLayout(`
+    <div style="text-align:center;margin:0 0 24px;">
+      <div style="display:inline-block;width:64px;height:64px;background:#fef2f2;border-radius:50%;line-height:64px;font-size:28px;">
+        🔴
+      </div>
+    </div>
+    <h2 style="margin:0 0 8px;color:#1e293b;font-size:20px;font-weight:700;text-align:center;">
+      Router Offline Alert
+    </h2>
+    <p style="margin:0 0 24px;color:#64748b;font-size:14px;line-height:1.6;text-align:center;">
+      Hi ${name}, one of your routers appears to be offline. Please check its connection.
+    </p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border:1px solid #fecaca;border-radius:12px;overflow:hidden;">
+      <tr style="background:#fef2f2;">
+        <td style="padding:12px 16px;color:#64748b;font-size:13px;">Router</td>
+        <td style="padding:12px 16px;color:#1e293b;font-size:13px;font-weight:600;text-align:right;">${routerName}</td>
+      </tr>
+      <tr>
+        <td style="padding:12px 16px;color:#64748b;font-size:13px;border-top:1px solid #fef2f2;">Host</td>
+        <td style="padding:12px 16px;color:#1e293b;font-size:13px;font-weight:600;text-align:right;">${routerHost}</td>
+      </tr>
+      <tr style="background:#fef2f2;">
+        <td style="padding:12px 16px;color:#64748b;font-size:13px;">Last Online</td>
+        <td style="padding:12px 16px;color:#ef4444;font-size:13px;font-weight:600;text-align:right;">${lastSeen}</td>
+      </tr>
+    </table>
+    <div style="text-align:center;">
+      <a href="${process.env.NEXT_PUBLIC_APP_URL || "https://nilelink.net"}/en/manage-nl7x9k2p/routers"
+         style="display:inline-block;padding:12px 32px;background:#ef4444;color:#ffffff;text-decoration:none;border-radius:10px;font-size:14px;font-weight:600;">
+        Check Routers
+      </a>
+    </div>
+  `);
+}

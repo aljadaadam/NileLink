@@ -3,6 +3,7 @@ import { auth, requireActiveSubscription } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateApiKey } from "@/lib/api-key";
 import { PLAN_LIMITS } from "@/lib/plans";
+import { encrypt } from "@/lib/encryption";
 import { z } from "zod";
 
 const PRIVATE_IP_REGEX = /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|0\.|169\.254\.|localhost|::1|fc|fd|fe80)/i;
@@ -82,6 +83,7 @@ export async function POST(req: NextRequest) {
     const router = await prisma.router.create({
       data: {
         ...data,
+        password: encrypt(data.password),
         apiKey: generateApiKey(),
         userId: session.user.id,
       },

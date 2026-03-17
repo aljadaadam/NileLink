@@ -167,7 +167,16 @@
       "activeUsers": "المستخدمون النشطون",
       "totalVouchers": "إجمالي الأكواد",
       "usedVouchers": "الأكواد المستخدمة",
-      "revenue": "الإيرادات"
+      "revenue": "الإيرادات",
+      "peakHours": "ساعات الذروة (آخر 30 يوم)",
+      "sessions": "جلسات",
+      "dailyUsage": "استخدام الأكواد اليومي (آخر 14 يوم)",
+      "prediction": "توقع الأكواد",
+      "unusedCodes": "أكواد غير مستخدمة",
+      "avgPerDay": "معدل يومي",
+      "days": "يوم",
+      "untilEmpty": "حتى نفاد الأكواد",
+      "noData": "لا توجد بيانات بعد"
     },
     "recentActivity": "النشاط الأخير",
     "quickActions": "إجراءات سريعة",

@@ -13,6 +13,7 @@ function generateInvoiceNumber(): string {
 // POST /api/admin/generate-invoices — generate invoices for expired trials
 // Called by cron or admin manually
 export async function POST(req: Request) {
+  try {
   const authHeader = req.headers.get("authorization");
   const cronSecret = process.env.CRON_SECRET;
   if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
@@ -81,4 +82,7 @@ export async function POST(req: Request) {
   }
 
   return NextResponse.json({ success: true, generated });
+  } catch {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }

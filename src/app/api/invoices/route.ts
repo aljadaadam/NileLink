@@ -4,29 +4,37 @@ import { prisma } from "@/lib/prisma";
 
 // GET /api/invoices — get user's invoices
 export async function GET() {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const invoices = await prisma.invoice.findMany({
+      where: { userId: session.user.id },
+      select: {
+        id: true,
+        invoiceNumber: true,
+        plan: true,
+        amount: true,
+        currency: true,
+        status: true,
+        dueDate: true,
+        paidAt: true,
+        periodStart: true,
+        periodEnd: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json(
+      invoices.map((inv) => ({
+        ...inv,
+        amount: Number(inv.amount),
+      }))
+    );
+  } catch {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
-
-  const invoices = await prisma.invoice.findMany({
-    where: { userId: session.user.id },
-    orderBy: { createdAt: "desc" },
-  });
-
-  return NextResponse.json(
-    invoices.map((inv) => ({
-      id: inv.id,
-      invoiceNumber: inv.invoiceNumber,
-      plan: inv.plan,
-      amount: Number(inv.amount),
-      currency: inv.currency,
-      status: inv.status,
-      dueDate: inv.dueDate,
-      paidAt: inv.paidAt,
-      periodStart: inv.periodStart,
-      periodEnd: inv.periodEnd,
-      createdAt: inv.createdAt,
-    }))
-  );
 }

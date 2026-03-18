@@ -31,6 +31,7 @@ export async function PUT(
 
   const existing = await prisma.package.findFirst({
     where: { id, userId: session.user.id },
+    select: { id: true },
   });
 
   if (!existing) {
@@ -86,6 +87,7 @@ export async function DELETE(
 
   const existing = await prisma.package.findFirst({
     where: { id, userId: session.user.id },
+    select: { id: true },
   });
 
   if (!existing) {

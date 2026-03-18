@@ -433,5 +433,25 @@
     "dataUsage": "Data Usage",
     "timeRemaining": "Time Remaining",
     "expiresAt": "Expires At"
+  },
+  "onboarding": {
+    "welcome": "Welcome to NileLink!",
+    "welcomeDesc": "Let us show you around. This quick tour will help you get started in minutes.",
+    "step1Title": "Add Your Router",
+    "step1Desc": "Start by connecting your MikroTik router. Enter its IP, API port, and credentials.",
+    "step2Title": "Create Packages",
+    "step2Desc": "Set up internet packages with speed limits, duration, and pricing for your customers.",
+    "step3Title": "Generate Voucher Codes",
+    "step3Desc": "Generate voucher codes tied to your packages. Print them or share QR codes with customers.",
+    "step4Title": "Customize Login Page",
+    "step4Desc": "Design the WiFi login page your customers see when they connect to your hotspot.",
+    "step5Title": "Monitor & Manage",
+    "step5Desc": "Track active users, revenue, and router status from your dashboard. You're all set!",
+    "startTour": "Start Tour",
+    "nextStep": "Next",
+    "prevStep": "Back",
+    "finish": "Get Started!",
+    "skipTour": "Skip Tour",
+    "stepOf": "Step {current} of {total}"
   }
 }

@@ -3,6 +3,15 @@ import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
 import { MikroTikClient } from "@/lib/mikrotik";
 import { decrypt, isEncrypted } from "@/lib/encryption";
+import { z } from "zod";
+
+const hotspotAuthSchema = z.object({
+  apiKey: z.string().min(1),
+  username: z.string().min(1).max(100),
+  password: z.string().max(100).default(""),
+  mac: z.string().max(50).optional(),
+  ip: z.string().max(50).optional(),
+});
 
 // This endpoint is called by the MikroTik router to authenticate hotspot users
 export async function POST(req: NextRequest) {
@@ -17,14 +26,14 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { apiKey, username, password, mac, ip } = body;
-
-    if (!apiKey || !username) {
+    const parsed = hotspotAuthSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
+    const { apiKey, username, password, mac, ip } = parsed.data;
 
     // Find router by API key
     const router = await prisma.router.findUnique({

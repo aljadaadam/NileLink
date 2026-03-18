@@ -33,6 +33,7 @@ export async function PUT(
 
   const router = await prisma.router.findFirst({
     where: { id, userId: session.user.id },
+    select: { id: true },
   });
 
   if (!router) {
@@ -89,6 +90,7 @@ export async function DELETE(
 
   const router = await prisma.router.findFirst({
     where: { id, userId: session.user.id },
+    select: { id: true },
   });
 
   if (!router) {

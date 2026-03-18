@@ -13,6 +13,7 @@ async function isAdmin() {
 }
 
 export async function GET() {
+  try {
   if (!(await isAdmin())) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -94,4 +95,7 @@ export async function GET() {
     recentUsers,
     adminPaymentStats,
   });
+  } catch {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }

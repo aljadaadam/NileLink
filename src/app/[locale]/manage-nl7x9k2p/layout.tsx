@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { AlertTriangle, CreditCard } from "lucide-react";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
+import OnboardingTour from "@/components/dashboard/OnboardingTour";
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { status } = useSession();
@@ -93,6 +94,7 @@ export default function DashboardLayout({
             <main className="flex-1 p-4 sm:p-6 lg:p-8">
               {children}
             </main>
+            <OnboardingTour />
           </div>
         </div>
       </AuthGuard>

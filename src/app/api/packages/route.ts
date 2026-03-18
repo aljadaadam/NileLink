@@ -15,23 +15,40 @@ const createPackageSchema = z.object({
 });
 
 export async function GET() {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const packages = await prisma.package.findMany({
+      where: { userId: session.user.id },
+      select: {
+        id: true,
+        name: true,
+        nameAr: true,
+        duration: true,
+        dataLimit: true,
+        uploadSpeed: true,
+        downloadSpeed: true,
+        price: true,
+        currency: true,
+        isActive: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json(
+      packages.map((p) => ({
+        ...p,
+        price: p.price.toString(),
+        dataLimit: p.dataLimit?.toString() ?? null,
+      }))
+    );
+  } catch {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
-
-  const packages = await prisma.package.findMany({
-    where: { userId: session.user.id },
-    orderBy: { createdAt: "desc" },
-  });
-
-  return NextResponse.json(
-    packages.map((p) => ({
-      ...p,
-      price: p.price.toString(),
-      dataLimit: p.dataLimit?.toString() ?? null,
-    }))
-  );
 }
 
 export async function POST(req: NextRequest) {

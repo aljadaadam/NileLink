@@ -6,6 +6,7 @@ export async function GET(
   _req: Request,
   { params }: { params: Promise<{ apiKey: string }> }
 ) {
+  try {
   const { apiKey } = await params;
 
   const router = await prisma.router.findUnique({
@@ -48,4 +49,7 @@ export async function GET(
       "Cache-Control": "no-cache, no-store, must-revalidate",
     },
   });
+  } catch {
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
 }

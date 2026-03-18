@@ -14,24 +14,41 @@ const createUserSchema = z.object({
 });
 
 export async function GET() {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const users = await prisma.hotspotUser.findMany({
+      where: { userId: session.user.id },
+      select: {
+        id: true,
+        username: true,
+        password: true,
+        packageName: true,
+        isActive: true,
+        bytesIn: true,
+        bytesOut: true,
+        uptime: true,
+        expiresAt: true,
+        createdAt: true,
+        routerId: true,
+        router: { select: { name: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json(
+      users.map((u) => ({
+        ...u,
+        bytesIn: u.bytesIn.toString(),
+        bytesOut: u.bytesOut.toString(),
+      }))
+    );
+  } catch {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
-
-  const users = await prisma.hotspotUser.findMany({
-    where: { userId: session.user.id },
-    include: { router: { select: { name: true } } },
-    orderBy: { createdAt: "desc" },
-  });
-
-  return NextResponse.json(
-    users.map((u) => ({
-      ...u,
-      bytesIn: u.bytesIn.toString(),
-      bytesOut: u.bytesOut.toString(),
-    }))
-  );
 }
 
 export async function POST(req: NextRequest) {

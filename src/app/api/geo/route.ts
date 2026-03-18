@@ -44,6 +44,7 @@ const CURRENCY_MAP: Record<string, { code: string; symbol: string; rate: number 
 const DEFAULT_CURRENCY = { code: "USD", symbol: "$", rate: 1 };
 
 export async function GET() {
+  try {
   const hdrs = await headers();
   
   // Try common geo headers set by proxies/CDNs
@@ -60,4 +61,7 @@ export async function GET() {
     country: country?.toUpperCase() || "US",
     currency,
   });
+  } catch {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }

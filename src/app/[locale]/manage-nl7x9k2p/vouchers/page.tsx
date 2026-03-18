@@ -83,11 +83,12 @@ export default function VouchersPage() {
   async function loadData() {
     try {
       const [vRes, pRes, rRes] = await Promise.all([
-        fetch("/api/vouchers"),
+        fetch("/api/vouchers?limit=5000"),
         fetch("/api/packages"),
         fetch("/api/routers"),
       ]);
-      setVouchers(await vRes.json());
+      const vData = await vRes.json();
+      setVouchers(vData.vouchers || []);
       setPackages(await pRes.json());
       const routerData = await rRes.json();
       const mapped = routerData.map((r: { id: string; name: string; apiKey: string }) => ({

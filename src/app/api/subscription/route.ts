@@ -5,6 +5,7 @@ import { PLAN_LIMITS } from "@/lib/plans";
 
 // GET /api/subscription — get current user's subscription info
 export async function GET() {
+  try {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -49,4 +50,7 @@ export async function GET() {
     isActive: !planChosen || isTrialActive || isSubscriptionActive,
     limits,
   });
+  } catch {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }

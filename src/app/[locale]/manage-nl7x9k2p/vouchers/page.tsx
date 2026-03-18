@@ -651,7 +651,7 @@ export default function VouchersPage() {
                       <td className="p-4">
                         <div className="flex items-center gap-1.5 text-sm text-slate-500">
                           <Clock className="w-3.5 h-3.5 text-slate-300" />
-                          {new Date(voucher.createdAt).toLocaleDateString()}
+                          {new Date(voucher.createdAt).toLocaleDateString(locale)}
                         </div>
                       </td>
                     </tr>
@@ -753,7 +753,7 @@ export default function VouchersPage() {
                 <span className="text-sm text-slate-500 flex items-center gap-2">
                   <Clock className="w-4 h-4" /> {t("createdAt")}
                 </span>
-                <span className="text-sm font-medium text-slate-700">{new Date(activeVoucher.createdAt).toLocaleDateString()}</span>
+                <span className="text-sm font-medium text-slate-700">{new Date(activeVoucher.createdAt).toLocaleDateString(locale)}</span>
               </div>
               {activeVoucher.usedBy && (
                 <div className="flex items-center justify-between py-2 border-b border-gray-100">
@@ -766,7 +766,7 @@ export default function VouchersPage() {
                   <span className="text-sm text-slate-500 flex items-center gap-2">
                     <Calendar className="w-4 h-4" /> {t("expiry")}
                   </span>
-                  <span className="text-sm font-medium text-slate-700">{new Date(activeVoucher.expiresAt).toLocaleDateString()}</span>
+                  <span className="text-sm font-medium text-slate-700">{new Date(activeVoucher.expiresAt).toLocaleDateString(locale)}</span>
                 </div>
               )}
             </div>

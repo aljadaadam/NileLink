@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
+import { formatDate } from "@/lib/utils";
 import {
   CreditCard,
   Search,
@@ -60,9 +61,7 @@ const statusColors: Record<string, string> = {
   CANCELLED: "bg-gray-100 text-gray-500",
 };
 
-function formatDate(d: string) {
-  return new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-}
+// formatDate imported from utils
 
 type Tab = "invoices" | "usage";
 
@@ -256,7 +255,7 @@ export default function AdminSubscriptionsPage() {
                       <tr key={inv.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
                         <td className="py-3 px-3">
                           <p className="font-mono text-xs font-medium">{inv.invoiceNumber}</p>
-                          <p className="text-[10px] text-slate-400 mt-0.5">{formatDate(inv.createdAt)}</p>
+                          <p className="text-[10px] text-slate-400 mt-0.5">{formatDate(inv.createdAt, locale)}</p>
                         </td>
                         <td className="py-3 px-3">
                           <p className="font-medium text-slate-900 text-sm">{inv.user.name}</p>
@@ -274,7 +273,7 @@ export default function AdminSubscriptionsPage() {
                             {inv.status}
                           </span>
                         </td>
-                        <td className="py-3 px-3 text-slate-500 text-xs">{formatDate(inv.dueDate)}</td>
+                        <td className="py-3 px-3 text-slate-500 text-xs">{formatDate(inv.dueDate, locale)}</td>
                         <td className="py-3 px-3">
                           {(inv.status === "PENDING" || inv.status === "OVERDUE") && (
                             <div className="flex items-center gap-1.5">
@@ -296,7 +295,7 @@ export default function AdminSubscriptionsPage() {
                             </div>
                           )}
                           {inv.status === "PAID" && inv.paidAt && (
-                            <span className="text-[11px] text-emerald-600">{formatDate(inv.paidAt)}</span>
+                            <span className="text-[11px] text-emerald-600">{formatDate(inv.paidAt, locale)}</span>
                           )}
                         </td>
                       </tr>
@@ -362,7 +361,7 @@ export default function AdminSubscriptionsPage() {
 
                 <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-slate-400">
                   {isAr ? "تاريخ التسجيل: " : "Joined: "}
-                  {new Date(user.createdAt).toLocaleDateString()}
+                  {new Date(user.createdAt).toLocaleDateString(locale)}
                 </div>
               </div>
             ))

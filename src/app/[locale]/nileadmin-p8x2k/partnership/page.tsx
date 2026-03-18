@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
+import { formatDateTime } from "@/lib/utils";
 import {
   DollarSign,
   Users,
@@ -88,15 +89,7 @@ const actionLabels: Record<string, { en: string; ar: string; icon: typeof CheckC
   TOGGLE_ROLE: { en: "Changed Role", ar: "تغيير صلاحية", icon: Shield, color: "text-blue-500" },
 };
 
-function formatDate(d: string) {
-  return new Date(d).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+// formatDate is formatDateTime from utils
 
 function formatMonth(m: string) {
   const [y, mo] = m.split("-");
@@ -353,7 +346,7 @@ export default function PartnershipPage() {
                             <span className="text-xs text-slate-400">{isAr ? "—" : "—"}</span>
                           )}
                         </td>
-                        <td className="py-2.5 px-3 text-xs text-slate-500">{p.paidAt ? formatDate(p.paidAt) : "—"}</td>
+                        <td className="py-2.5 px-3 text-xs text-slate-500">{p.paidAt ? formatDateTime(p.paidAt, locale) : "—"}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -451,7 +444,7 @@ export default function PartnershipPage() {
                             <span className="text-blue-500 text-xs"> → {log.details.newRole as string}</span>
                           )}
                         </p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">{formatDate(log.createdAt)}</p>
+                        <p className="text-[10px] text-slate-400 mt-0.5">{formatDateTime(log.createdAt, locale)}</p>
                       </div>
                     </div>
                   );

@@ -11,6 +11,7 @@ export default function LanguageSwitcher() {
 
   function switchLocale() {
     const newLocale = locale === "en" ? "ar" : "en";
+    document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=${365 * 24 * 60 * 60};SameSite=Lax`;
     router.replace(pathname, { locale: newLocale });
   }
 

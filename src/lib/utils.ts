@@ -5,6 +5,36 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function formatDate(
+  date: string | Date,
+  locale: string,
+  options?: Intl.DateTimeFormatOptions
+): string {
+  const opts: Intl.DateTimeFormatOptions = options ?? {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  };
+  return new Date(date).toLocaleDateString(locale, opts);
+}
+
+export function formatDateTime(
+  date: string | Date,
+  locale: string
+): string {
+  return new Date(date).toLocaleDateString(locale, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+export function formatNumber(num: number, locale: string): string {
+  return new Intl.NumberFormat(locale).format(num);
+}
+
 export function formatBytes(bytes: number | bigint): string {
   const b = Number(bytes);
   if (b === 0) return "0 B";

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
+import { formatDate } from "@/lib/utils";
 import StatsCard from "@/components/dashboard/StatsCard";
 import {
   Users,
@@ -205,7 +206,7 @@ export default function AdminDashboardPage() {
                     </td>
                     <td className="py-3 px-4 text-slate-600">{user._count.routers}</td>
                     <td className="py-3 px-4 text-slate-500 text-xs">
-                      {new Date(user.createdAt).toLocaleDateString()}
+                      {formatDate(user.createdAt, locale)}
                     </td>
                   </tr>
                 ))

@@ -1,8 +1,9 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useEffect, useState } from "react";
 import { CreditCard, FileText, Clock, CheckCircle, AlertCircle, Zap, Crown, Rocket, MessageCircle, Mail, HelpCircle } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 import { PLAN_LIMITS } from "@/lib/plans";
 import { toast } from "sonner";
 
@@ -55,9 +56,7 @@ const subStatusColors: Record<string, string> = {
   EXPIRED: "bg-gray-100 text-gray-500",
 };
 
-function formatDate(d: string) {
-  return new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-}
+// formatDate imported from @/lib/utils
 
 interface CurrencyInfo {
   code: string;
@@ -82,6 +81,7 @@ function formatPrice(amount: number, currency: CurrencyInfo): string {
 
 export default function BillingPage() {
   const t = useTranslations("billing");
+  const locale = useLocale();
   const [sub, setSub] = useState<SubscriptionInfo | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
@@ -177,14 +177,14 @@ export default function BillingPage() {
             <div className="bg-slate-50 rounded-xl p-4">
               <p className="text-sm text-slate-500">{t("limits.vouchers")}</p>
               <p className="text-lg font-bold text-slate-900">
-                {sub.limits.maxVouchersPerMonth === -1 ? t("unlimited") : sub.limits.maxVouchersPerMonth.toLocaleString()}
+                {sub.limits.maxVouchersPerMonth === -1 ? t("unlimited") : sub.limits.maxVouchersPerMonth.toLocaleString(locale)}
               </p>
             </div>
           </div>
 
           {sub.subscription && (
             <div className="mt-4 text-sm text-slate-500">
-              {t("period")}: {formatDate(sub.subscription.currentPeriodStart)} → {formatDate(sub.subscription.currentPeriodEnd)}
+              {t("period")}: {formatDate(sub.subscription.currentPeriodStart, locale)} → {formatDate(sub.subscription.currentPeriodEnd, locale)}
             </div>
           )}
         </div>
@@ -227,9 +227,9 @@ export default function BillingPage() {
                         {t(`invoiceStatus.${inv.status}`)}
                       </span>
                     </td>
-                    <td className="py-3 px-2 text-slate-500">{formatDate(inv.dueDate)}</td>
+                    <td className="py-3 px-2 text-slate-500">{formatDate(inv.dueDate, locale)}</td>
                     <td className="py-3 px-2 text-slate-500 text-xs">
-                      {formatDate(inv.periodStart)} – {formatDate(inv.periodEnd)}
+                      {formatDate(inv.periodStart, locale)} – {formatDate(inv.periodEnd, locale)}
                     </td>
                   </tr>
                 ))}

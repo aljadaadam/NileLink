@@ -41,7 +41,7 @@ function useInView(threshold = 0.15) {
 }
 
 // ─── Animated Counter ───────────────────────────────────────
-function Counter({ end, suffix = "" }: { end: number; suffix?: string }) {
+function Counter({ end, suffix = "", locale }: { end: number; suffix?: string; locale: string }) {
   const [val, setVal] = useState(0);
   const { ref, inView } = useInView();
   useEffect(() => {
@@ -55,7 +55,7 @@ function Counter({ end, suffix = "" }: { end: number; suffix?: string }) {
     }, 30);
     return () => clearInterval(id);
   }, [inView, end]);
-  return <span ref={ref}>{val.toLocaleString()}{suffix}</span>;
+  return <span ref={ref}>{val.toLocaleString(locale)}{suffix}</span>;
 }
 
 export default function HeroLanding() {
@@ -273,7 +273,7 @@ export default function HeroLanding() {
             {stats.map((s, i) => (
               <div key={i} className="text-center">
                 <div className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-primary-600 to-cyan-500 bg-clip-text text-transparent">
-                  <Counter end={s.value} suffix={s.suffix} />
+                  <Counter end={s.value} suffix={s.suffix} locale={locale} />
                 </div>
                 <p className="text-sm text-slate-500 mt-1">{s.label}</p>
               </div>

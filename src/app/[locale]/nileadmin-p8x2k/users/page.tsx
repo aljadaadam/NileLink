@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
+import { formatDate } from "@/lib/utils";
 import {
   Users,
   Search,
@@ -170,7 +171,7 @@ export default function AdminUsersPage() {
                     <td className="py-3 px-4 text-slate-600" dir="ltr">{user.email}</td>
                     <td className="py-3 px-4 text-slate-600">{user._count.routers}</td>
                     <td className="py-3 px-4 text-slate-500 text-xs">
-                      {new Date(user.createdAt).toLocaleDateString()}
+                      {formatDate(user.createdAt, locale)}
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-1">
@@ -245,7 +246,7 @@ export default function AdminUsersPage() {
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="w-4 h-4 text-slate-400" />
                   <span className="text-slate-600">
-                    {new Date(selectedUser.createdAt).toLocaleDateString()}
+                    {formatDate(selectedUser.createdAt, locale)}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">

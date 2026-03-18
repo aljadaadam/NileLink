@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { useEffect, useState } from "react";
 import {
   Plus,
@@ -40,6 +40,7 @@ interface RouterItem {
 export default function RoutersPage() {
   const t = useTranslations("routers");
   const tc = useTranslations("common");
+  const locale = useLocale();
   const [routers, setRouters] = useState<RouterItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showWizard, setShowWizard] = useState(false);
@@ -275,7 +276,7 @@ export default function RoutersPage() {
                 {/* Last Seen */}
                 {router.lastSeen && (
                   <p className="text-xs text-slate-400">
-                    {t("lastSeen")}: {new Date(router.lastSeen).toLocaleString()}
+                    {t("lastSeen")}: {new Date(router.lastSeen).toLocaleString(locale)}
                   </p>
                 )}
 

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
+import { COUNTRY_LOCALE_MAP } from "@/i18n/routing";
 
 const CURRENCY_MAP: Record<string, { code: string; symbol: string; rate: number }> = {
   // Middle East & North Africa
@@ -57,9 +58,13 @@ export async function GET() {
 
   const currency = country ? CURRENCY_MAP[country.toUpperCase()] || DEFAULT_CURRENCY : DEFAULT_CURRENCY;
 
+  const countryUpper = country?.toUpperCase() || "US";
+  const suggestedLocale = COUNTRY_LOCALE_MAP[countryUpper] || "en";
+
   return NextResponse.json({
-    country: country?.toUpperCase() || "US",
+    country: countryUpper,
     currency,
+    suggestedLocale,
   });
   } catch {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

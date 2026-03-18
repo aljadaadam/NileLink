@@ -1,11 +1,44 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
-import { routing } from "@/i18n/routing";
+import { routing, RTL_LOCALES, type Locale } from "@/i18n/routing";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { Toaster } from "sonner";
 
 const SITE_URL = "https://nilelink.net";
+
+const LOCALE_META: Record<string, { title: string; description: string; ogLocale: string }> = {
+  en: {
+    title: "NileLink — MikroTik Hotspot Management Platform",
+    description: "The easiest MikroTik hotspot management platform. Generate WiFi vouchers, manage users & packages, and control routers from one dashboard. Full reseller system with one-click setup.",
+    ogLocale: "en_US",
+  },
+  ar: {
+    title: "NileLink — منصة إدارة هوت سبوت مايكروتك",
+    description: "أسهل ربط للمايكروتيك. أنشئ أكواد واي فاي، أدِر المستخدمين والباقات، وتحكم بالراوترات من لوحة تحكم واحدة. نظام وكلاء متكامل وإعداد تلقائي بضغطة واحدة.",
+    ogLocale: "ar_EG",
+  },
+  tr: {
+    title: "NileLink — MikroTik Hotspot Yönetim Platformu",
+    description: "En kolay MikroTik hotspot yönetim platformu. WiFi kodları oluşturun, kullanıcıları ve paketleri yönetin, router'ları tek bir panelden kontrol edin.",
+    ogLocale: "tr_TR",
+  },
+  fr: {
+    title: "NileLink — Plateforme de Gestion Hotspot MikroTik",
+    description: "La plateforme de gestion hotspot MikroTik la plus simple. Générez des codes WiFi, gérez utilisateurs et forfaits, contrôlez les routeurs depuis un seul tableau de bord.",
+    ogLocale: "fr_FR",
+  },
+  es: {
+    title: "NileLink — Plataforma de Gestión Hotspot MikroTik",
+    description: "La plataforma de gestión hotspot MikroTik más fácil. Genere códigos WiFi, gestione usuarios y paquetes, controle routers desde un solo panel.",
+    ogLocale: "es_ES",
+  },
+  fa: {
+    title: "NileLink — پلتفرم مدیریت هات‌اسپات میکروتیک",
+    description: "ساده‌ترین پلتفرم مدیریت هات‌اسپات میکروتیک. کدهای WiFi تولید کنید، کاربران و بسته‌ها را مدیریت و روترها را از یک داشبورد کنترل کنید.",
+    ogLocale: "fa_IR",
+  },
+};
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -17,22 +50,19 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const isAr = locale === "ar";
 
-  const title = isAr
-    ? "NileLink — منصة إدارة هوت سبوت مايكروتك"
-    : "NileLink — MikroTik Hotspot Management Platform";
-  const description = isAr
-    ? "أسهل ربط للمايكروتيك. أنشئ أكواد واي فاي، أدِر المستخدمين والباقات، وتحكم بالراوترات من لوحة تحكم واحدة. نظام وكلاء متكامل وإعداد تلقائي بضغطة واحدة."
-    : "The easiest MikroTik hotspot management platform. Generate WiFi vouchers, manage users & packages, and control routers from one dashboard. Full reseller system with one-click setup.";
+  const meta = LOCALE_META[locale] || LOCALE_META.en;
+  const { title, description } = meta;
 
   return {
     title,
     description,
     openGraph: {
       type: "website",
-      locale: isAr ? "ar_EG" : "en_US",
-      alternateLocale: isAr ? "en_US" : "ar_EG",
+      locale: meta.ogLocale,
+      alternateLocale: Object.values(LOCALE_META)
+        .map((m) => m.ogLocale)
+        .filter((l) => l !== meta.ogLocale),
       url: `${SITE_URL}/${locale}`,
       siteName: "NileLink",
       title,
@@ -45,10 +75,9 @@ export async function generateMetadata({
     },
     alternates: {
       canonical: `${SITE_URL}/${locale}`,
-      languages: {
-        en: `${SITE_URL}/en`,
-        ar: `${SITE_URL}/ar`,
-      },
+      languages: Object.fromEntries(
+        routing.locales.map((loc) => [loc, `${SITE_URL}/${loc}`])
+      ),
     },
   };
 }
@@ -65,7 +94,7 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const messages = await getMessages();
-  const dir = locale === "ar" ? "rtl" : "ltr";
+  const dir = RTL_LOCALES.includes(locale as Locale) ? "rtl" : "ltr";
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -74,10 +103,7 @@ export default async function LocaleLayout({
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     url: SITE_URL,
-    description:
-      locale === "ar"
-        ? "منصة إدارة شبكات الواي فاي وهوت سبوت مايكروتك. أنشئ أكواد وباقات وتحكم بالمستخدمين من لوحة تحكم واحدة."
-        : "MikroTik hotspot management platform. Generate WiFi vouchers, create packages, and control users from one dashboard.",
+    description: (LOCALE_META[locale] || LOCALE_META.en).description,
     offers: {
       "@type": "Offer",
       price: "0",

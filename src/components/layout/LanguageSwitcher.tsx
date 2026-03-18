@@ -2,28 +2,78 @@
 
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
-import { Globe } from "lucide-react";
+import { Globe, ChevronDown } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import {
+  locales,
+  LOCALE_NAMES,
+  LOCALE_FLAGS,
+  type Locale,
+} from "@/i18n/routing";
 
 export default function LanguageSwitcher() {
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const router = useRouter();
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-  function switchLocale() {
-    const newLocale = locale === "en" ? "ar" : "en";
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  function switchLocale(newLocale: Locale) {
+    if (newLocale === locale) {
+      setOpen(false);
+      return;
+    }
     document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=${365 * 24 * 60 * 60};SameSite=Lax`;
+    setOpen(false);
     router.replace(pathname, { locale: newLocale });
   }
 
   return (
-    <button
-      onClick={switchLocale}
-      className="inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-sm
-        text-slate-600 hover:text-slate-900 hover:bg-gray-100 transition-colors"
-    >
-      <Globe className="w-4 h-4" />
-      <span className="hidden sm:inline">{locale === "en" ? "العربية" : "English"}</span>
-      <span className="sm:hidden text-xs">{locale === "en" ? "AR" : "EN"}</span>
-    </button>
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-sm
+          text-slate-600 hover:text-slate-900 hover:bg-gray-100 transition-colors"
+      >
+        <Globe className="w-4 h-4" />
+        <span className="hidden sm:inline">
+          {LOCALE_FLAGS[locale]} {LOCALE_NAMES[locale]}
+        </span>
+        <span className="sm:hidden text-xs">{LOCALE_FLAGS[locale]}</span>
+        <ChevronDown className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <div
+          className="absolute top-full mt-1 end-0 bg-white border border-gray-200 rounded-lg shadow-lg
+            py-1 min-w-[160px] z-50 animate-in fade-in slide-in-from-top-1 duration-150"
+        >
+          {locales.map((loc) => (
+            <button
+              key={loc}
+              onClick={() => switchLocale(loc)}
+              className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors
+                ${loc === locale
+                  ? "bg-blue-50 text-blue-700 font-medium"
+                  : "text-slate-700 hover:bg-gray-50"
+                }`}
+            >
+              <span className="text-base">{LOCALE_FLAGS[loc]}</span>
+              <span>{LOCALE_NAMES[loc]}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

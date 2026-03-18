@@ -65,8 +65,12 @@ add dst-host=nilelink.net action=accept comment="NileLink Platform"
 # Step 4: Download login page from NileLink
 /tool fetch url="https://nilelink.net/api/hotspot/login/${apiKey}" dst-path="hotspot/login.html"
 
+# Step 5: Phone-home — tell NileLink this router is alive
+/tool fetch url="https://nilelink.net/api/routers/phonehome?key=${apiKey}" keep-result=no
+/system scheduler add name=nilelink_phonehome interval=1m on-event="/tool fetch url=\\"https://nilelink.net/api/routers/phonehome?key=${apiKey}\\" keep-result=no" comment="NileLink heartbeat — do not delete"
+
 # ═══════════════════════════════════════════════════════
-# Done! Go back to NileLink and click "Verify Connection"
+# Done! NileLink will detect this router automatically.
 # ═══════════════════════════════════════════════════════
 `;
 }

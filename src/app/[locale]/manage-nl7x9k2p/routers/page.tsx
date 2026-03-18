@@ -14,16 +14,13 @@ import {
   X,
   Plug,
   Pencil,
-  HelpCircle,
-  BookOpen,
-  Terminal,
-  ExternalLink,
-  Rocket,
   Cpu,
+  Rocket,
+  Sparkles,
+  Wifi,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import type { RouterFormData } from "@/types";
 import RouterSetupWizard from "@/components/dashboard/RouterSetupWizard";
 
 interface RouterItem {
@@ -45,15 +42,11 @@ export default function RoutersPage() {
   const tc = useTranslations("common");
   const [routers, setRouters] = useState<RouterItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
   const [editingRouter, setEditingRouter] = useState<RouterItem | null>(null);
   const [saving, setSaving] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [testingId, setTestingId] = useState<string | null>(null);
-  const [showHelp, setShowHelp] = useState(false);
-  const [guideRouter, setGuideRouter] = useState<RouterItem | null>(null);
-  const [copiedCmd, setCopiedCmd] = useState<string | null>(null);
-  const [showWizard, setShowWizard] = useState(false);
 
   async function loadRouters() {
     try {
@@ -71,11 +64,12 @@ export default function RoutersPage() {
     loadRouters();
   }, []);
 
-  async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
+  async function handleEdit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!editingRouter) return;
     setSaving(true);
     const formData = new FormData(e.currentTarget);
-    const body: RouterFormData = {
+    const body = {
       name: formData.get("name") as string,
       host: formData.get("host") as string,
       port: parseInt(formData.get("port") as string) || 8728,
@@ -84,11 +78,8 @@ export default function RoutersPage() {
     };
 
     try {
-      const isEdit = !!editingRouter;
-      const url = isEdit ? `/api/routers/${editingRouter.id}` : "/api/routers";
-      const method = isEdit ? "PUT" : "POST";
-      const res = await fetch(url, {
-        method,
+      const res = await fetch(`/api/routers/${editingRouter.id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
@@ -97,10 +88,9 @@ export default function RoutersPage() {
         toast.error(err?.error || t("connectionFailed"));
         return;
       }
-      setShowModal(false);
       setEditingRouter(null);
       loadRouters();
-      toast.success(isEdit ? tc("saved") : t("connectionSuccess"));
+      toast.success(tc("saved"));
     } catch {
       toast.error(t("connectionFailed"));
     } finally {
@@ -143,13 +133,6 @@ export default function RoutersPage() {
     setTimeout(() => setCopiedKey(null), 2000);
   }
 
-  function copyCommand(id: string, text: string) {
-    navigator.clipboard.writeText(text);
-    setCopiedCmd(id);
-    toast.success(tc("copied"));
-    setTimeout(() => setCopiedCmd(null), 2000);
-  }
-
   const statusConfig = {
     ONLINE: { icon: CheckCircle, class: "badge-success", label: t("online") },
     OFFLINE: { icon: XCircle, class: "badge-gray", label: t("offline") },
@@ -168,143 +151,91 @@ export default function RoutersPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
-          <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
-            <HelpCircle className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="flex items-center gap-2">
+        <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+        {routers.length > 0 && (
           <button
             onClick={() => setShowWizard(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all shadow-md shadow-primary-500/20 text-sm"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all shadow-lg shadow-primary-500/20 text-sm"
           >
-            <Rocket className="w-4 h-4" />
-            {t("quickSetup")}
-          </button>
-          <button onClick={() => { setEditingRouter(null); setShowModal(true); }} className="btn-primary">
             <Plus className="w-4 h-4" />
             {t("add")}
           </button>
-        </div>
+        )}
       </div>
 
-      {showHelp && (
-        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
-          {t("helpDesc")}
-        </div>
-      )}
-
-      {/* Router Cards */}
+      {/* Empty State — Wizard CTA */}
       {routers.length === 0 ? (
-        <>
-          <div className="card text-center py-12">
-            <RouterIcon className="w-12 h-12 text-slate-300 mx-auto" />
-            <p className="mt-4 text-slate-500">{t("empty")}</p>
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 p-8 md:p-12 text-white">
+          {/* Decorative elements */}
+          <div className="absolute top-0 end-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 start-0 w-40 h-40 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+
+          <div className="relative z-10 flex flex-col items-center text-center max-w-lg mx-auto">
+            <div className="w-20 h-20 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center mb-6 animate-float-slow">
+              <RouterIcon className="w-10 h-10 text-white" />
+            </div>
+
+            <div className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm text-xs font-medium px-3 py-1 rounded-full mb-4">
+              <Sparkles className="w-3 h-3" />
+              {t("wizard.onlyOneScript")}
+            </div>
+
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">
+              {t("wizard.emptyTitle")}
+            </h2>
+            <p className="text-primary-100 mb-8 leading-relaxed">
+              {t("wizard.emptyDesc")}
+            </p>
+
             <button
-              onClick={() => setShowModal(true)}
-              className="btn-primary mt-4"
+              onClick={() => setShowWizard(true)}
+              className="inline-flex items-center gap-2.5 px-8 py-4 bg-white text-primary-700 font-bold rounded-2xl hover:bg-primary-50 transition-all shadow-xl shadow-black/10 text-base"
             >
-              <Plus className="w-4 h-4" />
-              {t("add")}
+              <Rocket className="w-5 h-5" />
+              {t("wizard.startSetup")}
             </button>
-          </div>
 
-          {/* Inline Setup Guide */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-amber-600" />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-slate-900">{t("setupGuide")}</h2>
-                <p className="text-sm text-slate-500">{t("guide.introDesc")}</p>
-              </div>
-            </div>
-
-            {/* Step 1 */}
-            <div className="card border-s-4 border-s-primary-500">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center shrink-0">1</span>
-                <h3 className="font-semibold text-slate-900">{t("guide.step1Title")}</h3>
-              </div>
-              <p className="text-sm text-slate-600 mb-3">{t("guide.step1Desc")}</p>
-              <CommandBlock id="s1" code={`/ip service enable api\n/ip service set api port=8728`} copiedCmd={copiedCmd} onCopy={copyCommand} />
-            </div>
-
-            {/* Step 2 */}
-            <div className="card border-s-4 border-s-primary-500">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center shrink-0">2</span>
-                <h3 className="font-semibold text-slate-900">{t("guide.step2Title")}</h3>
-              </div>
-              <p className="text-sm text-slate-600 mb-3">{t("guide.step2Desc")}</p>
-              <CommandBlock id="s2" code={`/ip hotspot setup`} copiedCmd={copiedCmd} onCopy={copyCommand} />
-              <p className="text-xs text-slate-400 mt-2">{t("guide.step2Note")}</p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="card border-s-4 border-s-primary-500">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center shrink-0">3</span>
-                <h3 className="font-semibold text-slate-900">{t("guide.step3Title")}</h3>
-              </div>
-              <p className="text-sm text-slate-600 mb-3">{t("guide.step3Desc")}</p>
-              <CommandBlock id="s3" code={`/ip hotspot walled-garden ip\nadd dst-host=nilelink.net action=accept`} copiedCmd={copiedCmd} onCopy={copyCommand} />
-            </div>
-
-            {/* Step 4 */}
-            <div className="card border-s-4 border-s-primary-500">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center shrink-0">4</span>
-                <h3 className="font-semibold text-slate-900">{t("guide.step4AddRouter")}</h3>
-              </div>
-              <p className="text-sm text-slate-600 mb-3">{t("guide.step4AddDesc")}</p>
-              <button onClick={() => setShowModal(true)} className="btn-primary">
-                <Plus className="w-4 h-4" />
-                {t("add")}
-              </button>
-            </div>
-
-            {/* Step 5 */}
-            <div className="card border-s-4 border-s-amber-500 bg-amber-50/30">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-7 h-7 rounded-full bg-amber-500 text-white text-sm font-bold flex items-center justify-center shrink-0">5</span>
-                <h3 className="font-semibold text-slate-900">{t("guide.step5Title")}</h3>
-              </div>
-              <p className="text-sm text-slate-600 mb-3">{t("guide.step5DescGeneric")}</p>
-              <CommandBlock id="s5" code={`/tool fetch url="https://nilelink.net/api/hotspot/login/YOUR_API_KEY" dst-path="hotspot/login.html"`} copiedCmd={copiedCmd} onCopy={copyCommand} />
-              <p className="text-xs text-slate-400 mt-2">{t("guide.step5Note")}</p>
-            </div>
-
-            {/* Done */}
-            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
-                <p className="text-sm text-emerald-800">{t("guide.doneNote")}</p>
-              </div>
+            {/* 3 feature pills */}
+            <div className="flex flex-wrap justify-center gap-3 mt-8">
+              {[t("wizard.feat1"), t("wizard.feat2"), t("wizard.feat3")].map((feat, i) => (
+                <div key={i} className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-xs text-primary-100 px-3 py-1.5 rounded-full">
+                  <CheckCircle className="w-3 h-3" />
+                  {feat}
+                </div>
+              ))}
             </div>
           </div>
-        </>
+        </div>
       ) : (
+        /* Router Cards Grid */
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {routers.map((router) => {
             const status = statusConfig[router.status];
             const StatusIcon = status.icon;
             return (
-              <div key={router.id} className="card space-y-4">
+              <div key={router.id} className="card space-y-4 hover:shadow-md transition-shadow">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center">
-                      <RouterIcon className="w-5 h-5 text-primary-600" />
+                    <div className={cn(
+                      "w-10 h-10 rounded-xl flex items-center justify-center",
+                      router.status === "ONLINE"
+                        ? "bg-emerald-50"
+                        : router.status === "ERROR"
+                        ? "bg-red-50"
+                        : "bg-slate-100"
+                    )}>
+                      <Wifi className={cn(
+                        "w-5 h-5",
+                        router.status === "ONLINE"
+                          ? "text-emerald-500"
+                          : router.status === "ERROR"
+                          ? "text-red-500"
+                          : "text-slate-400"
+                      )} />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-900">
-                        {router.name}
-                      </h3>
-                      <p className="text-sm text-slate-500" dir="ltr">
-                        {router.host}:{router.port}
-                      </p>
+                      <h3 className="font-semibold text-slate-900">{router.name}</h3>
+                      <p className="text-sm text-slate-500" dir="ltr">{router.host}:{router.port}</p>
                     </div>
                   </div>
                   <span className={status.class}>
@@ -317,9 +248,7 @@ export default function RoutersPage() {
                 <div className="bg-slate-50 rounded-xl p-3">
                   <p className="text-xs text-slate-500 mb-1">{t("apiKey")}</p>
                   <div className="flex items-center gap-2">
-                    <code className="text-xs text-slate-700 flex-1 truncate" dir="ltr">
-                      {router.apiKey}
-                    </code>
+                    <code className="text-xs text-slate-700 flex-1 truncate" dir="ltr">{router.apiKey}</code>
                     <button
                       onClick={() => copyApiKey(router.apiKey)}
                       className="text-slate-400 hover:text-primary-600 transition-colors"
@@ -365,17 +294,7 @@ export default function RoutersPage() {
                     {t("testConnection")}
                   </button>
                   <button
-                    onClick={() => setGuideRouter(router)}
-                    className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
-                    title={t("setupGuide")}
-                  >
-                    <BookOpen className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => {
-                      setEditingRouter(router);
-                      setShowModal(true);
-                    }}
+                    onClick={() => setEditingRouter(router)}
                     className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
                   >
                     <Pencil className="w-4 h-4" />
@@ -393,76 +312,44 @@ export default function RoutersPage() {
         </div>
       )}
 
-      {/* Modal */}
-      {showModal && (
+      {/* Edit Router Modal — only for existing routers */}
+      {editingRouter && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-900">
-                {editingRouter ? tc("edit") : t("add")}
-              </h2>
-              <button
-                onClick={() => { setShowModal(false); setEditingRouter(null); }}
-                className="text-slate-400 hover:text-slate-600"
-              >
+              <h2 className="text-lg font-bold text-slate-900">{tc("edit")}</h2>
+              <button onClick={() => setEditingRouter(null)} className="text-slate-400 hover:text-slate-600">
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleCreate} className="space-y-4" key={editingRouter?.id || "new"}>
+            <form onSubmit={handleEdit} className="space-y-4" key={editingRouter.id}>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t("name")}
-                </label>
-                <input name="name" required className="input-field" placeholder="Router-Main" defaultValue={editingRouter?.name || ""} />
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t("name")}</label>
+                <input name="name" required className="input-field" defaultValue={editingRouter.name} />
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div className="col-span-2">
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    {t("host")}
-                  </label>
-                  <input name="host" required className="input-field" dir="ltr" placeholder="192.168.88.1" defaultValue={editingRouter?.host || ""} />
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t("host")}</label>
+                  <input name="host" required className="input-field" dir="ltr" defaultValue={editingRouter.host} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    {t("port")}
-                  </label>
-                  <input
-                    name="port"
-                    type="number"
-                    defaultValue={editingRouter?.port ?? 8728}
-                    className="input-field"
-                    dir="ltr"
-                  />
+                  <label className="block text-sm font-medium text-slate-700 mb-1">{t("port")}</label>
+                  <input name="port" type="number" defaultValue={editingRouter.port} className="input-field" dir="ltr" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t("username")}
-                </label>
-                <input name="username" required className="input-field" dir="ltr" placeholder="admin" defaultValue={editingRouter?.username || ""} />
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t("username")}</label>
+                <input name="username" required className="input-field" dir="ltr" defaultValue={editingRouter.username} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  {t("password")}
-                </label>
-                <input
-                  name="password"
-                  type="password"
-                  required={!editingRouter}
-                  placeholder={editingRouter ? t("passwordPlaceholder") : "••••••••"}
-                  className="input-field"
-                  dir="ltr"
-                />
+                <label className="block text-sm font-medium text-slate-700 mb-1">{t("password")}</label>
+                <input name="password" type="password" placeholder={t("passwordPlaceholder")} className="input-field" dir="ltr" />
               </div>
               <div className="flex gap-3 pt-2">
                 <button type="submit" disabled={saving} className="btn-primary flex-1">
-                  {saving ? tc("loading") : editingRouter ? tc("save") : t("add")}
+                  {saving ? tc("loading") : tc("save")}
                 </button>
-                <button
-                  type="button"
-                  onClick={() => { setShowModal(false); setEditingRouter(null); }}
-                  className="btn-secondary"
-                >
+                <button type="button" onClick={() => setEditingRouter(null)} className="btn-secondary">
                   {tc("cancel")}
                 </button>
               </div>
@@ -471,152 +358,7 @@ export default function RoutersPage() {
         </div>
       )}
 
-      {/* Setup Guide Modal */}
-      {guideRouter && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
-                  <BookOpen className="w-5 h-5 text-amber-600" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-bold text-slate-900">{t("setupGuide")}</h2>
-                  <p className="text-sm text-slate-500">{guideRouter.name}</p>
-                </div>
-              </div>
-              <button onClick={() => setGuideRouter(null)} className="text-slate-400 hover:text-slate-600">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="space-y-6">
-              {/* Step 1 */}
-              <div className="border border-slate-200 rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center">1</span>
-                  <h3 className="font-semibold text-slate-900">{t("guide.step1Title")}</h3>
-                </div>
-                <p className="text-sm text-slate-600 mb-3">{t("guide.step1Desc")}</p>
-                <CommandBlock
-                  id="step1"
-                  code={`/ip service enable api\n/ip service set api port=8728`}
-                  copiedCmd={copiedCmd}
-                  onCopy={copyCommand}
-                />
-              </div>
-
-              {/* Step 2 */}
-              <div className="border border-slate-200 rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center">2</span>
-                  <h3 className="font-semibold text-slate-900">{t("guide.step2Title")}</h3>
-                </div>
-                <p className="text-sm text-slate-600 mb-3">{t("guide.step2Desc")}</p>
-                <CommandBlock
-                  id="step2"
-                  code={`/ip hotspot setup`}
-                  copiedCmd={copiedCmd}
-                  onCopy={copyCommand}
-                />
-                <p className="text-xs text-slate-400 mt-2">{t("guide.step2Note")}</p>
-              </div>
-
-              {/* Step 3 */}
-              <div className="border border-slate-200 rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center">3</span>
-                  <h3 className="font-semibold text-slate-900">{t("guide.step3Title")}</h3>
-                </div>
-                <p className="text-sm text-slate-600 mb-3">{t("guide.step3Desc")}</p>
-                <CommandBlock
-                  id="step3"
-                  code={`/ip hotspot walled-garden ip\nadd dst-host=nilelink.net action=accept`}
-                  copiedCmd={copiedCmd}
-                  onCopy={copyCommand}
-                />
-              </div>
-
-              {/* Step 4 */}
-              <div className="border border-slate-200 rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="w-7 h-7 rounded-full bg-primary-500 text-white text-sm font-bold flex items-center justify-center">4</span>
-                  <h3 className="font-semibold text-slate-900">{t("guide.step4Title")}</h3>
-                </div>
-                <p className="text-sm text-slate-600 mb-3">{t("guide.step4Desc")}</p>
-
-                <div className="space-y-3">
-                  <div className="bg-slate-50 rounded-lg p-3">
-                    <p className="text-xs text-slate-500 mb-1">{t("apiKey")}</p>
-                    <div className="flex items-center gap-2">
-                      <code className="text-xs text-slate-700 flex-1 truncate" dir="ltr">{guideRouter.apiKey}</code>
-                      <button onClick={() => copyCommand("apikey", guideRouter.apiKey)} className="text-slate-400 hover:text-primary-600">
-                        {copiedCmd === "apikey" ? <CheckCircle className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 rounded-lg p-3">
-                    <p className="text-xs text-slate-500 mb-1">{t("guide.loginPageUrl")}</p>
-                    <div className="flex items-center gap-2">
-                      <code className="text-xs text-primary-600 flex-1 truncate" dir="ltr">
-                        https://nilelink.net/api/hotspot/login/{guideRouter.apiKey}
-                      </code>
-                      <button onClick={() => copyCommand("loginurl", `https://nilelink.net/api/hotspot/login/${guideRouter.apiKey}`)} className="text-slate-400 hover:text-primary-600">
-                        {copiedCmd === "loginurl" ? <CheckCircle className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 rounded-lg p-3">
-                    <p className="text-xs text-slate-500 mb-1">{t("guide.authEndpoint")}</p>
-                    <div className="flex items-center gap-2">
-                      <code className="text-xs text-primary-600 flex-1 truncate" dir="ltr">
-                        https://nilelink.net/api/hotspot/auth
-                      </code>
-                      <button onClick={() => copyCommand("authurl", "https://nilelink.net/api/hotspot/auth")} className="text-slate-400 hover:text-primary-600">
-                        {copiedCmd === "authurl" ? <CheckCircle className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Step 5 - Login page script */}
-              <div className="border border-amber-200 bg-amber-50/50 rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="w-7 h-7 rounded-full bg-amber-500 text-white text-sm font-bold flex items-center justify-center">5</span>
-                  <h3 className="font-semibold text-slate-900">{t("guide.step5Title")}</h3>
-                </div>
-                <p className="text-sm text-slate-600 mb-3">{t("guide.step5Desc")}</p>
-                <CommandBlock
-                  id="step5"
-                  code={`/tool fetch url="https://nilelink.net/api/hotspot/login/${guideRouter.apiKey}" dst-path="hotspot/login.html"`}
-                  copiedCmd={copiedCmd}
-                  onCopy={copyCommand}
-                />
-                <p className="text-xs text-slate-400 mt-2">{t("guide.step5Note")}</p>
-              </div>
-
-              {/* Final note */}
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0" />
-                  <p className="text-sm text-emerald-800">{t("guide.doneNote")}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-end pt-4 mt-4 border-t border-slate-100">
-              <button onClick={() => setGuideRouter(null)} className="btn-secondary">
-                {tc("close")}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Quick Setup Wizard */}
+      {/* Setup Wizard */}
       {showWizard && (
         <RouterSetupWizard
           onComplete={() => {
@@ -626,26 +368,6 @@ export default function RoutersPage() {
           onClose={() => setShowWizard(false)}
         />
       )}
-    </div>
-  );
-}
-
-// ─── Command Block Component ────────────────────────────────
-function CommandBlock({ id, code, copiedCmd, onCopy }: {
-  id: string;
-  code: string;
-  copiedCmd: string | null;
-  onCopy: (id: string, text: string) => void;
-}) {
-  return (
-    <div className="bg-slate-900 rounded-lg p-3 relative group">
-      <pre className="text-xs text-emerald-400 font-mono whitespace-pre-wrap" dir="ltr">{code}</pre>
-      <button
-        onClick={() => onCopy(id, code)}
-        className="absolute top-2 end-2 p-1.5 rounded-md bg-slate-700 text-slate-300 hover:text-white hover:bg-slate-600 opacity-0 group-hover:opacity-100 transition-all"
-      >
-        {copiedCmd === id ? <CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-      </button>
     </div>
   );
 }

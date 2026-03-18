@@ -266,6 +266,20 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
                 </div>
               </div>
 
+              {/* Cloud DNS Hint */}
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-3.5">
+                <div className="flex items-start gap-2.5">
+                  <Info className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
+                  <div className="text-xs text-blue-800 leading-relaxed">
+                    <p className="font-semibold mb-1">{t("wizard.cloudDnsTitle")}</p>
+                    <p>{t("wizard.cloudDnsDesc")}</p>
+                    <code className="inline-block mt-1 bg-blue-100 px-2 py-0.5 rounded text-[11px] font-mono" dir="ltr">
+                      xxxx.sn.mynetname.net
+                    </code>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex justify-end pt-2">
                 <button
                   onClick={handleStep1Next}

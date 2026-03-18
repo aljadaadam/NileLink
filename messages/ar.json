@@ -482,5 +482,29 @@
     "finish": "هيا نبدأ!",
     "skipTour": "تخطي الجولة",
     "stepOf": "الخطوة {current} من {total}"
+  },
+  "ai": {
+    "title": "مساعد NileLink",
+    "subtitle": "مساعد ذكي",
+    "welcome": "مرحباً! أنا مساعدك الذكي 👋",
+    "welcomeHint": "اسألني عن لوحة التحكم، توليد الأكواد، حالة الراوترات، أو إدارة المستخدمين.",
+    "placeholder": "اكتب رسالتك...",
+    "clear": "مسح المحادثة",
+    "poweredBy": "مدعوم بالذكاء الاصطناعي",
+    "networkError": "خطأ في الشبكة. حاول مرة أخرى.",
+    "executingTool": "جارٍ التنفيذ:",
+    "suggestion1": "ملخص لوحة التحكم",
+    "suggestion2": "كم كود متبقي؟",
+    "suggestion3": "حالة الراوترات",
+    "tools": {
+      "stats": "إحصائيات اللوحة",
+      "generateVouchers": "توليد أكواد",
+      "listUsers": "قائمة المستخدمين",
+      "disconnectUser": "قطع اتصال مستخدم",
+      "listRouters": "قائمة الراوترات",
+      "testRouter": "اختبار الراوتر",
+      "listPackages": "قائمة الباقات",
+      "listVouchers": "قائمة الأكواد"
+    }
   }
 }

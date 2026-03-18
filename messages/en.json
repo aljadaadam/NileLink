@@ -482,5 +482,29 @@
     "finish": "Get Started!",
     "skipTour": "Skip Tour",
     "stepOf": "Step {current} of {total}"
+  },
+  "ai": {
+    "title": "NileLink AI",
+    "subtitle": "Smart Assistant",
+    "welcome": "Hi! I'm your NileLink assistant 👋",
+    "welcomeHint": "Ask me about your dashboard, generate vouchers, check router status, or manage users.",
+    "placeholder": "Type your message...",
+    "clear": "Clear chat",
+    "poweredBy": "Powered by AI",
+    "networkError": "Network error. Please try again.",
+    "executingTool": "Running:",
+    "suggestion1": "Dashboard summary",
+    "suggestion2": "How many vouchers left?",
+    "suggestion3": "Router status",
+    "tools": {
+      "stats": "Dashboard Stats",
+      "generateVouchers": "Generate Vouchers",
+      "listUsers": "List Users",
+      "disconnectUser": "Disconnect User",
+      "listRouters": "List Routers",
+      "testRouter": "Test Router",
+      "listPackages": "List Packages",
+      "listVouchers": "List Vouchers"
+    }
   }
 }

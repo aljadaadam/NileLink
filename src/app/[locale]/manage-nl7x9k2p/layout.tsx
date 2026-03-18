@@ -8,6 +8,7 @@ import { AlertTriangle, CreditCard } from "lucide-react";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
 import OnboardingTour from "@/components/dashboard/OnboardingTour";
+import AIChatbot from "@/components/dashboard/AIChatbot";
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { status } = useSession();
@@ -95,6 +96,7 @@ export default function DashboardLayout({
               {children}
             </main>
             <OnboardingTour />
+            <AIChatbot />
           </div>
         </div>
       </AuthGuard>

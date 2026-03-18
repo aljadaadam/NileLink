@@ -26,6 +26,7 @@
     "next-intl": "^4.1.0",
     "node-routeros": "^1.6.9",
     "nodemailer": "^7.0.13",
+    "openai": "^6.32.0",
     "qrcode": "^1.5.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

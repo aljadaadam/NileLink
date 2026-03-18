@@ -38,6 +38,15 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showHelp, setShowHelp] = useState(false);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsDark(document.documentElement.classList.contains("dark"));
+    check();
+    const obs = new MutationObserver(check);
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => obs.disconnect();
+  }, []);
 
   useEffect(() => {
     fetch("/api/manage-nl7x9k2p/stats")
@@ -198,18 +207,18 @@ export default function DashboardPage() {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stats.peakHours}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#334155" : "#f1f5f9"} />
                   <XAxis
                     dataKey="hour"
                     tickFormatter={(h) => `${h}:00`}
-                    tick={{ fontSize: 11, fill: "#94a3b8" }}
+                    tick={{ fontSize: 11, fill: isDark ? "#94a3b8" : "#64748b" }}
                     interval={2}
                   />
-                  <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} allowDecimals={false} />
+                  <YAxis tick={{ fontSize: 11, fill: isDark ? "#94a3b8" : "#64748b" }} allowDecimals={false} />
                   <Tooltip
                     labelFormatter={(h) => `${h}:00 - ${h}:59`}
                     formatter={(value: number) => [value, t("stats.sessions")]}
-                    contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0", fontSize: 13 }}
+                    contentStyle={{ borderRadius: 12, border: `1px solid ${isDark ? "#334155" : "#e2e8f0"}`, fontSize: 13, backgroundColor: isDark ? "#1e293b" : "#fff", color: isDark ? "#e2e8f0" : "#0f172a" }}
                   />
                   <Bar dataKey="sessions" fill="#0891b2" radius={[4, 4, 0, 0]} />
                 </BarChart>
@@ -236,16 +245,16 @@ export default function DashboardPage() {
                           <stop offset="95%" stopColor="#0891b2" stopOpacity={0} />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                      <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#334155" : "#f1f5f9"} />
                       <XAxis
                         dataKey="day"
                         tickFormatter={(d) => d.slice(5)}
-                        tick={{ fontSize: 11, fill: "#94a3b8" }}
+                        tick={{ fontSize: 11, fill: isDark ? "#94a3b8" : "#64748b" }}
                       />
-                      <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} allowDecimals={false} />
+                      <YAxis tick={{ fontSize: 11, fill: isDark ? "#94a3b8" : "#64748b" }} allowDecimals={false} />
                       <Tooltip
                         formatter={(value: number) => [value, t("stats.usedVouchers")]}
-                        contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0", fontSize: 13 }}
+                        contentStyle={{ borderRadius: 12, border: `1px solid ${isDark ? "#334155" : "#e2e8f0"}`, fontSize: 13, backgroundColor: isDark ? "#1e293b" : "#fff", color: isDark ? "#e2e8f0" : "#0f172a" }}
                       />
                       <Area
                         type="monotone"

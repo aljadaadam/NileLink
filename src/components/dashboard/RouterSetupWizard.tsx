@@ -231,7 +231,7 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
               <div>
                 <button
                   onClick={() => setShowScript(!showScript)}
-                  className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 transition-colors"
+                  className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                 >
                   <ChevronDown className={cn("w-3 h-3 transition-transform", showScript && "rotate-180")} />
                   {t("wizard.showScript")}

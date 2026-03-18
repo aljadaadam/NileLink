@@ -40,6 +40,85 @@
     @apply bg-slate-950 text-slate-100;
   }
 
+  /* ─── Dark Mode Auto-Contrast ─────────────────────────── */
+  /* Automatically lighten text & border colors in dark mode  */
+  /* so no element is left with unreadable dark-on-dark text. */
+
+  .dark .text-slate-500,
+  .text-slate-500:where(.dark *) {
+    color: var(--color-slate-400, #94a3b8);
+  }
+
+  .dark .text-slate-600,
+  .text-slate-600:where(.dark *) {
+    color: var(--color-slate-400, #94a3b8);
+  }
+
+  .dark .text-slate-700,
+  .text-slate-700:where(.dark *) {
+    color: var(--color-slate-300, #cbd5e1);
+  }
+
+  .dark .text-slate-800,
+  .text-slate-800:where(.dark *) {
+    color: var(--color-slate-200, #e2e8f0);
+  }
+
+  .dark .text-gray-500,
+  .text-gray-500:where(.dark *) {
+    color: var(--color-gray-400, #9ca3af);
+  }
+
+  .dark .text-gray-600,
+  .text-gray-600:where(.dark *) {
+    color: var(--color-gray-400, #9ca3af);
+  }
+
+  .dark .text-gray-700,
+  .text-gray-700:where(.dark *) {
+    color: var(--color-gray-300, #d1d5db);
+  }
+
+  .dark .bg-slate-50,
+  .bg-slate-50:where(.dark *) {
+    background-color: var(--color-slate-800, #1e293b);
+  }
+
+  .dark .bg-gray-50,
+  .bg-gray-50:where(.dark *) {
+    background-color: var(--color-slate-800, #1e293b);
+  }
+
+  .dark .bg-gray-100,
+  .bg-gray-100:where(.dark *) {
+    background-color: var(--color-slate-700, #334155);
+  }
+
+  .dark .border-gray-100,
+  .border-gray-100:where(.dark *) {
+    border-color: var(--color-slate-700, #334155);
+  }
+
+  .dark .border-gray-200,
+  .border-gray-200:where(.dark *) {
+    border-color: var(--color-slate-600, #475569);
+  }
+
+  .dark .border-gray-300,
+  .border-gray-300:where(.dark *) {
+    border-color: var(--color-slate-600, #475569);
+  }
+
+  .dark .hover\:bg-gray-50:hover,
+  .hover\:bg-gray-50:hover:where(.dark *) {
+    background-color: var(--color-slate-700, #334155);
+  }
+
+  .dark .placeholder\:text-slate-400::placeholder,
+  .placeholder\:text-slate-400::placeholder:where(.dark *) {
+    color: var(--color-slate-500, #64748b);
+  }
+
   /* Arabic/RTL font weight boost — Cairo needs slightly heavier weight */
   [dir="rtl"] {
     font-family: "Cairo", "Inter", system-ui, -apple-system, sans-serif;

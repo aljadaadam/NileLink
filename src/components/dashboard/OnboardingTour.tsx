@@ -90,7 +90,7 @@ export default function OnboardingTour() {
               </button>
               <button
                 onClick={dismiss}
-                className="px-6 py-3 text-slate-500 hover:text-slate-700 font-medium transition-colors"
+                className="px-6 py-3 text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 font-medium transition-colors"
               >
                 {t("skipTour")}
               </button>

@@ -214,8 +214,8 @@ export default function LoginPagesPage() {
       )}
 
       {routers.length === 0 ? (
-        <div className="card bg-amber-50 border-amber-200 py-3 px-4">
-          <p className="text-sm text-amber-700">{t("noRouters")}</p>
+        <div className="card bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-700 py-3 px-4">
+          <p className="text-sm text-amber-700 dark:text-amber-300">{t("noRouters")}</p>
         </div>
       ) : (
         <div className="card">

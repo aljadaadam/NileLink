@@ -215,7 +215,7 @@ export default function AdminUsersPage() {
               <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                 {isAr ? "تفاصيل المستخدم" : "User Details"}
               </h2>
-              <button onClick={() => setSelectedUser(null)} className="text-slate-400 hover:text-slate-700">
+              <button onClick={() => setSelectedUser(null)} className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200">
                 <X className="w-5 h-5" />
               </button>
             </div>

@@ -73,7 +73,7 @@ export default function PricingSection() {
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
             {t("title")}
           </h2>
-          <p className="mt-4 text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-slate-600 dark:text-white/70 max-w-2xl mx-auto">
             {t("subtitle")}
           </p>
         </div>
@@ -120,7 +120,7 @@ export default function PricingSection() {
                   </span>
                 </div>
 
-                <p className={`text-sm mb-8 ${popular ? "text-primary-100" : "text-slate-500 dark:text-slate-400"}`}>
+                <p className={`text-sm mb-8 ${popular ? "text-primary-100" : "text-slate-500 dark:text-white/70"}`}>
                   {t(`plans.${key}.desc`)}
                 </p>
 

@@ -329,7 +329,7 @@ export default function PartnershipPage() {
                   </thead>
                   <tbody>
                     {data.recentPayments.map((p) => (
-                      <tr key={p.id} className="border-b border-gray-50 hover:bg-gray-50/50">
+                      <tr key={p.id} className="border-b border-gray-50 hover:bg-gray-50/50 dark:border-slate-800 dark:hover:bg-slate-800/50">
                         <td className="py-2.5 px-3 font-mono text-xs">{p.invoiceNumber}</td>
                         <td className="py-2.5 px-3">
                           <p className="font-medium text-slate-900 text-xs">{p.user.name}</p>
@@ -371,28 +371,28 @@ export default function PartnershipPage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="flex items-center gap-2 bg-emerald-50 rounded-lg p-2.5">
+                  <div className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/30 rounded-lg p-2.5">
                     <CheckCircle className="w-4 h-4 text-emerald-600" />
                     <div>
                       <p className="text-sm font-bold text-emerald-700">{a.confirmPayments}</p>
                       <p className="text-[10px] text-emerald-600">{isAr ? "تأكيد دفع" : "Payments"}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 bg-red-50 rounded-lg p-2.5">
+                  <div className="flex items-center gap-2 bg-red-50 dark:bg-red-900/30 rounded-lg p-2.5">
                     <XCircle className="w-4 h-4 text-red-500" />
                     <div>
                       <p className="text-sm font-bold text-red-600">{a.cancelInvoices}</p>
                       <p className="text-[10px] text-red-500">{isAr ? "إلغاء فاتورة" : "Cancelled"}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 bg-orange-50 rounded-lg p-2.5">
+                  <div className="flex items-center gap-2 bg-orange-50 dark:bg-orange-900/30 rounded-lg p-2.5">
                     <Trash2 className="w-4 h-4 text-orange-500" />
                     <div>
                       <p className="text-sm font-bold text-orange-600">{a.deleteUsers}</p>
                       <p className="text-[10px] text-orange-500">{isAr ? "حذف مستخدم" : "Deleted"}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 bg-blue-50 rounded-lg p-2.5">
+                  <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg p-2.5">
                     <Shield className="w-4 h-4 text-blue-500" />
                     <div>
                       <p className="text-sm font-bold text-blue-600">{a.toggleRoles}</p>
@@ -422,7 +422,7 @@ export default function PartnershipPage() {
                   const meta = actionLabels[log.action] || { en: log.action, ar: log.action, icon: Clock, color: "text-slate-500" };
                   const Icon = meta.icon;
                   return (
-                    <div key={log.id} className="flex items-start gap-3 p-3 hover:bg-gray-50/50 transition-colors">
+                    <div key={log.id} className="flex items-start gap-3 p-3 hover:bg-gray-50/50 dark:hover:bg-slate-800/50 transition-colors">
                       <div className={`mt-0.5 ${meta.color}`}>
                         <Icon className="w-4 h-4" />
                       </div>

@@ -239,7 +239,7 @@ export default function HeroLanding() {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white leading-tight animate-fade-in-up">
               {t("hero.title")}
             </h1>
-            <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto animate-fade-in-up-delay">
+            <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-white/70 leading-relaxed max-w-2xl mx-auto animate-fade-in-up-delay">
               {t("hero.subtitle")}
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up-delay2">
@@ -306,7 +306,7 @@ export default function HeroLanding() {
                 <h3 className="mt-5 text-lg font-bold text-slate-900 dark:text-white group-hover:text-white transition-colors">
                   {t(`features.${key}.title`)}
                 </h3>
-                <p className="mt-2 text-slate-500 dark:text-slate-400 group-hover:text-white/80 leading-relaxed transition-colors">
+                <p className="mt-2 text-slate-500 dark:text-white/70 group-hover:text-white/80 leading-relaxed transition-colors">
                   {t(`features.${key}.desc`)}
                 </p>
               </div>
@@ -342,7 +342,7 @@ export default function HeroLanding() {
                   </span>
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">{step.title}</h3>
-                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{step.desc}</p>
+                <p className="mt-2 text-sm text-slate-500 dark:text-white/70">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -361,7 +361,7 @@ export default function HeroLanding() {
               <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
                 {locale === "ar" ? "كل ما تحتاجه في منصة واحدة" : "Everything You Need in One Platform"}
               </h2>
-              <p className="mt-4 text-slate-500 dark:text-slate-400 leading-relaxed">
+              <p className="mt-4 text-slate-500 dark:text-white/70 leading-relaxed">
                 {locale === "ar"
                   ? "NileLink يوفر لك أدوات إدارة شبكات الواي فاي الأكثر تقدماً. تحكم كامل من أي مكان، بأمان عالي وسرعة فائقة."
                   : "NileLink provides the most advanced WiFi network management tools. Full control from anywhere, with high security and blazing speed."}
@@ -378,7 +378,7 @@ export default function HeroLanding() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-slate-900 dark:text-white">{item.title}</h4>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">{item.desc}</p>
+                      <p className="text-sm text-slate-500 dark:text-white/70">{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -475,7 +475,7 @@ export default function HeroLanding() {
                 <div className="flex gap-1 mb-4">
                   {[...Array(5)].map((_, j) => <Star key={j} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
                 </div>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">&quot;{review.text}&quot;</p>
+                <p className="text-slate-600 dark:text-white/70 leading-relaxed mb-4">&quot;{review.text}&quot;</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-cyan-500 flex items-center justify-center text-white font-bold text-sm">
                     {review.name[0]}

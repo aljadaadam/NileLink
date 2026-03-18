@@ -259,7 +259,9 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
               {/* Help link */}
               <div className="text-center pt-1">
                 <a
-                  href={`/${locale}/manage-nl7x9k2p/routers#guide`}
+                  href={`/${locale}/manage-nl7x9k2p/routers`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-primary-600 transition-colors"
                 >
                   <ExternalLink className="w-3 h-3" />

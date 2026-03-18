@@ -41,15 +41,15 @@ export default function StatsCard({
     <div className="stat-card">
       <div
         className={cn(
-          "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
+          "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
           colors.bg
         )}
       >
-        <Icon className={cn("w-6 h-6", colors.icon)} />
+        <Icon className={cn("w-5 h-5", colors.icon)} />
       </div>
       <div className="min-w-0">
-        <p className="text-sm text-slate-500 truncate">{title}</p>
-        <p className="text-2xl font-bold text-slate-900">{value}</p>
+        <p className="text-xs text-slate-400 truncate">{title}</p>
+        <p className="text-3xl font-extrabold text-slate-900 leading-tight">{value}</p>
         {trend && (
           <p className="text-xs text-emerald-600 font-medium mt-0.5">
             {trend}

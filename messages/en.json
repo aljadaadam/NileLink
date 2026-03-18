@@ -183,13 +183,13 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "helpDesc": "A complete overview of your network: connected routers, active users, used codes, and revenue. Use the quick actions to navigate directly to any section.",
+    "helpDesc": "Overview of your network stats and quick actions.",
     "welcome": "Welcome back, {name}",
     "stats": {
-      "totalRouters": "Total Routers",
-      "onlineRouters": "Online Routers",
-      "activeUsers": "Active Users",
-      "totalVouchers": "Total Codes",
+      "totalRouters": "Routers",
+      "onlineRouters": "Online",
+      "activeUsers": "Users",
+      "totalVouchers": "Codes",
       "usedVouchers": "Used Codes",
       "revenue": "Revenue",
       "peakHours": "Peak Hours (Last 30 Days)",

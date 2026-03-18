@@ -47,30 +47,34 @@ export async function GET(
 function generateMikroTikScript(apiKey: string, port: number, password: string): string {
   return `# ═══════════════════════════════════════════════════════
 # NileLink Auto-Setup Script
-# Generated for your router — paste this into MikroTik Terminal
+# Paste this into your MikroTik Terminal — we handle the rest
 # ═══════════════════════════════════════════════════════
 
 # Step 1: Enable API service on port ${port}
 /ip service enable api
 /ip service set api port=${port}
 
-# Step 2: Create dedicated NileLink API user with limited permissions
+# Step 2: Create dedicated NileLink API user
 /user group add name=nilelink_group policy=api,read,write,test,!ftp,!local,!telnet,!ssh,!reboot,!policy,!winbox,!password,!web,!sniff,!sensitive,!romon,!rest-api
-/user add name=nilelink_user password="${password}" group=nilelink_group comment="NileLink Platform API User — do not delete"
+/user add name=nilelink_user password="${password}" group=nilelink_group comment="NileLink — do not delete"
 
-# Step 3: Allow NileLink domain through Walled Garden
+# Step 3: Allow NileLink through Walled Garden
 /ip hotspot walled-garden ip
-add dst-host=nilelink.net action=accept comment="NileLink Platform"
+add dst-host=nilelink.net action=accept comment="NileLink"
 
-# Step 4: Download login page from NileLink
+# Step 4: Download login page
 /tool fetch url="https://nilelink.net/api/hotspot/login/${apiKey}" dst-path="hotspot/login.html"
 
-# Step 5: Phone-home — tell NileLink this router is alive
-/tool fetch url="https://nilelink.net/api/routers/phonehome?key=${apiKey}" keep-result=no
-/system scheduler add name=nilelink_phonehome interval=1m on-event="/tool fetch url=\\"https://nilelink.net/api/routers/phonehome?key=${apiKey}\\" keep-result=no" comment="NileLink heartbeat — do not delete"
+# Step 5: Auto-register — detect Cloud DNS and phone home
+:do { /ip cloud set ddns-enabled=yes } on-error={}
+:delay 3s
+:local dnsName ""
+:do { :set dnsName [/ip cloud get dns-name] } on-error={}
+:local phoneUrl "https://nilelink.net/api/routers/phonehome?key=${apiKey}"
+:if ([:len \$dnsName] > 0) do={ :set phoneUrl (\$phoneUrl . "&dns=" . \$dnsName) }
+/tool fetch url=\$phoneUrl keep-result=no
+/system scheduler add name=nilelink_phonehome interval=1m on-event=":local d \\\"\\\";:do {:set d [/ip cloud get dns-name]} on-error={};:local u \\\"https://nilelink.net/api/routers/phonehome?key=${apiKey}\\\";:if ([:len \\\$d] > 0) do={:set u (\\\$u . \\\"&dns=\\\" . \\\$d)};/tool fetch url=\\\$u keep-result=no" comment="NileLink heartbeat — do not delete"
 
-# ═══════════════════════════════════════════════════════
 # Done! NileLink will detect this router automatically.
-# ═══════════════════════════════════════════════════════
 `;
 }

@@ -10,8 +10,8 @@ import {
   Rocket,
   X,
   Cpu,
-  Info,
   Wifi,
+  HelpCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -21,21 +21,13 @@ interface SetupWizardProps {
   onClose: () => void;
 }
 
-const PRIVATE_IP_REGEX = /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|0\.|169\.254\.|localhost|::1|fc|fd|fe80)/i;
-
 export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardProps) {
   const t = useTranslations("routers");
-  const tc = useTranslations("common");
   const locale = useLocale();
   const isAr = locale === "ar";
 
-  // Input state
-  const [host, setHost] = useState("");
-  const [routerName, setRouterName] = useState("");
-
   // Script state
   const [routerId, setRouterId] = useState<string | null>(null);
-  const [routerApiKey, setRouterApiKey] = useState<string | null>(null);
   const [script, setScript] = useState("");
   const [scriptLoading, setScriptLoading] = useState(false);
   const [scriptCopied, setScriptCopied] = useState(false);
@@ -47,10 +39,8 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pollingActive = useRef(false);
 
-  // Derived: which "phase" are we in?
   const phase: "input" | "script" | "success" = verified ? "success" : script ? "script" : "input";
 
-  // Poll router status via the test endpoint every 5s
   const pollOnce = useCallback(async () => {
     if (!routerId || pollingActive.current || verified) return;
     pollingActive.current = true;
@@ -80,7 +70,6 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
     return () => { if (pollRef.current) clearInterval(pollRef.current); };
   }, [phase, routerId, verified, pollOnce]);
 
-  // Auto-navigate to dashboard 3s after success
   useEffect(() => {
     if (verified) {
       const timer = setTimeout(onComplete, 3000);
@@ -89,27 +78,20 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
   }, [verified, onComplete]);
 
   async function handleGenerate() {
-    const trimmedHost = host.trim();
-    if (!trimmedHost) return;
-    if (PRIVATE_IP_REGEX.test(trimmedHost)) {
-      toast.error(t("wizard.privateIpError"));
-      return;
-    }
-
     setScriptLoading(true);
     try {
-      // Count existing routers for auto-name
+      // Auto-name
       const routersRes = await fetch("/api/routers");
       const existingRouters = await routersRes.json();
-      const autoName = routerName.trim() || `Router_${(existingRouters?.length || 0) + 1}`;
+      const autoName = `Router ${(existingRouters?.length || 0) + 1}`;
 
-      // Create router record
+      // Create router with pending host — phonehome will auto-detect it
       const res = await fetch("/api/routers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: autoName,
-          host: trimmedHost,
+          host: "pending",
           port: 8728,
           username: "nilelink_user",
           password: "placeholder_temp",
@@ -124,7 +106,6 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
 
       const router = await res.json();
       setRouterId(router.id);
-      setRouterApiKey(router.apiKey);
 
       // Generate setup script
       const scriptRes = await fetch(`/api/routers/${router.id}/setup-script`);
@@ -136,13 +117,13 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
       const scriptData = await scriptRes.json();
       setScript(scriptData.script);
 
-      // Update router with actual credentials
+      // Update with real credentials
       await fetch(`/api/routers/${router.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: autoName,
-          host: trimmedHost,
+          host: "pending",
           port: 8728,
           username: scriptData.credentials.username,
           password: scriptData.credentials.password,
@@ -166,7 +147,7 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <div
         dir={isAr ? "rtl" : "ltr"}
-        className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+        className="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
       >
         {/* Close */}
         <button
@@ -176,74 +157,27 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
           <X className="w-4 h-4" />
         </button>
 
-        {/* Header */}
-        <div className="bg-gradient-to-r from-primary-600 to-primary-700 px-6 py-5 text-white">
-          <h2 className="text-lg font-bold mb-1">{t("quickSetup")}</h2>
-          <p className="text-sm text-primary-100">{t("quickSetupDesc")}</p>
-        </div>
-
         {/* Content */}
         <div className="p-6">
 
-          {/* ──── Phase: Input ──── */}
+          {/* ──── Phase: Input (zero fields — just a big button) ──── */}
           {phase === "input" && (
-            <div className="space-y-5">
+            <div className="flex flex-col items-center text-center py-6 space-y-6">
+              <div className="w-16 h-16 rounded-2xl bg-primary-50 flex items-center justify-center">
+                <Terminal className="w-8 h-8 text-primary-600" />
+              </div>
+
               <div>
-                <h3 className="text-lg font-bold text-slate-900 mb-1">
+                <h2 className="text-xl font-bold text-slate-900 mb-2">
                   {t("wizard.step1Title")}
-                </h3>
+                </h2>
                 <p className="text-sm text-slate-500">{t("wizard.step1Desc")}</p>
               </div>
 
-              {/* Host field — the only required input */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                  {t("wizard.hostLabel")}
-                </label>
-                <input
-                  type="text"
-                  value={host}
-                  onChange={(e) => setHost(e.target.value)}
-                  placeholder={t("wizard.hostPlaceholder")}
-                  className="input-field text-base"
-                  dir="ltr"
-                  autoFocus
-                />
-              </div>
-
-              {/* Optional name */}
-              <div>
-                <label className="block text-sm font-medium text-slate-400 mb-1.5">
-                  {t("wizard.routerNameLabel")} <span className="text-xs">({t("wizard.optional")})</span>
-                </label>
-                <input
-                  type="text"
-                  value={routerName}
-                  onChange={(e) => setRouterName(e.target.value)}
-                  placeholder={t("wizard.routerNamePlaceholder")}
-                  className="input-field"
-                />
-              </div>
-
-              {/* Cloud DNS Hint */}
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-3.5">
-                <div className="flex items-start gap-2.5">
-                  <Info className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
-                  <div className="text-xs text-blue-800 leading-relaxed">
-                    <p className="font-semibold mb-1">{t("wizard.cloudDnsTitle")}</p>
-                    <p>{t("wizard.cloudDnsDesc")}</p>
-                    <code className="inline-block mt-1 bg-blue-100 px-2 py-0.5 rounded text-[11px] font-mono" dir="ltr">
-                      xxxx.sn.mynetname.net
-                    </code>
-                  </div>
-                </div>
-              </div>
-
-              {/* Generate button */}
               <button
                 onClick={handleGenerate}
-                disabled={!host.trim() || scriptLoading}
-                className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-bold rounded-xl hover:from-primary-700 hover:to-primary-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-primary-500/20 text-base"
+                disabled={scriptLoading}
+                className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-bold rounded-xl hover:from-primary-700 hover:to-primary-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-primary-500/20 text-lg"
               >
                 {scriptLoading ? (
                   <>
@@ -252,18 +186,28 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
                   </>
                 ) : (
                   <>
-                    <Terminal className="w-5 h-5" />
+                    <Rocket className="w-5 h-5" />
                     {t("wizard.generateBtn")}
                   </>
                 )}
               </button>
+
+              {/* Tiny tooltip for Cloud DNS */}
+              <div className="group relative inline-flex items-center gap-1.5 text-xs text-slate-400 cursor-help">
+                <HelpCircle className="w-3.5 h-3.5" />
+                <span>{t("wizard.cloudDnsTip")}</span>
+                <div className="absolute bottom-full start-1/2 -translate-x-1/2 mb-2 w-64 bg-slate-900 text-white text-xs rounded-lg p-3 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all z-10 leading-relaxed">
+                  {t("wizard.cloudDnsTooltip")}
+                  <code className="block mt-1 text-emerald-400 text-[10px]" dir="ltr">xxxx.sn.mynetname.net</code>
+                  <div className="absolute top-full start-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
+                </div>
+              </div>
             </div>
           )}
 
-          {/* ──── Phase: Script (code box + auto-polling) ──── */}
+          {/* ──── Phase: Script ──── */}
           {phase === "script" && (
-            <div className="space-y-5">
-              {/* Instruction */}
+            <div className="space-y-4">
               <div className="text-center">
                 <h3 className="text-lg font-bold text-slate-900 mb-1">
                   {t("wizard.step2Title")}
@@ -271,7 +215,6 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
                 <p className="text-sm text-slate-500">{t("wizard.scriptInstruction")}</p>
               </div>
 
-              {/* Big copy button */}
               <button
                 onClick={copyScript}
                 className={cn(
@@ -282,29 +225,18 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
                 )}
               >
                 {scriptCopied ? (
-                  <>
-                    <CheckCircle className="w-5 h-5" />
-                    {t("wizard.scriptCopied")}
-                  </>
+                  <><CheckCircle className="w-5 h-5" />{t("wizard.scriptCopied")}</>
                 ) : (
-                  <>
-                    <Copy className="w-5 h-5" />
-                    {t("wizard.copyScript")}
-                  </>
+                  <><Copy className="w-5 h-5" />{t("wizard.copyScript")}</>
                 )}
               </button>
 
-              {/* Script box */}
-              <div className="bg-slate-900 rounded-xl p-4 max-h-52 overflow-y-auto">
-                <pre
-                  className="text-[11px] text-emerald-400 font-mono whitespace-pre-wrap leading-relaxed"
-                  dir="ltr"
-                >
+              <div className="bg-slate-900 rounded-xl p-4 max-h-48 overflow-y-auto">
+                <pre className="text-[11px] text-emerald-400 font-mono whitespace-pre-wrap leading-relaxed" dir="ltr">
                   {script}
                 </pre>
               </div>
 
-              {/* Auto-polling indicator */}
               <div className="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-3">
                 <div className="relative shrink-0">
                   <Wifi className="w-5 h-5 text-primary-400" />
@@ -316,9 +248,7 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
                   <p className="text-xs text-slate-400">
                     {t("wizard.autoCheckDesc")}
                     {pollCount > 0 && (
-                      <span className="ms-1 text-slate-300">
-                        ({t("wizard.attempt")} #{pollCount})
-                      </span>
+                      <span className="ms-1 text-slate-300">({t("wizard.attempt")} #{pollCount})</span>
                     )}
                   </p>
                 </div>
@@ -363,7 +293,7 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
                 )}
               </div>
 
-              <div className="flex justify-center pt-2">
+              <div className="flex justify-center">
                 <button
                   onClick={onComplete}
                   className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-semibold rounded-xl hover:from-emerald-700 hover:to-emerald-800 transition-all shadow-lg shadow-emerald-500/25 text-sm"

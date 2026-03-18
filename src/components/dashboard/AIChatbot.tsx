@@ -200,20 +200,17 @@ export default function AIChatbot() {
       <button
         onClick={() => setOpen(!open)}
         className={cn(
-          "fixed z-50 bottom-6 p-3.5 rounded-2xl shadow-xl transition-all duration-300",
+          "fixed z-50 bottom-6 p-2.5 rounded-xl shadow-lg transition-all duration-200",
           isAr ? "left-6" : "right-6",
           open
-            ? "bg-slate-600 hover:bg-slate-700 scale-90"
-            : "bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 animate-bounce-slow"
+            ? "bg-slate-500 hover:bg-slate-600 scale-90"
+            : "bg-primary-600 hover:bg-primary-700 opacity-70 hover:opacity-100"
         )}
       >
         {open ? (
-          <X className="w-6 h-6 text-white" />
+          <X className="w-5 h-5 text-white" />
         ) : (
-          <div className="relative">
-            <MessageCircle className="w-6 h-6 text-white" />
-            <Sparkles className="w-3 h-3 text-amber-300 absolute -top-1.5 -end-1.5" />
-          </div>
+          <MessageCircle className="w-5 h-5 text-white" />
         )}
       </button>
 

@@ -11,7 +11,7 @@ const PRIVATE_IP_REGEX = /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|0\.|
 const createRouterSchema = z.object({
   name: z.string().min(1).max(100),
   host: z.string().min(1).max(255).refine(
-    (h) => !PRIVATE_IP_REGEX.test(h),
+    (h) => h === "pending" || !PRIVATE_IP_REGEX.test(h),
     { message: "Private/internal IP addresses are not allowed" }
   ),
   port: z.number().int().min(1).max(65535).default(8728),

@@ -43,7 +43,7 @@ export default function LanguageSwitcher() {
       <button
         onClick={() => setOpen(!open)}
         className="inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg text-sm
-          text-slate-600 hover:text-slate-900 hover:bg-gray-100 transition-colors"
+          text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
       >
         <Globe className="w-4 h-4" />
         <span className="hidden sm:inline">
@@ -55,7 +55,7 @@ export default function LanguageSwitcher() {
 
       {open && (
         <div
-          className="absolute top-full mt-1 end-0 bg-white border border-gray-200 rounded-lg shadow-lg
+          className="absolute top-full mt-1 end-0 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg shadow-lg
             py-1 min-w-[160px] z-50 animate-in fade-in slide-in-from-top-1 duration-150"
         >
           {locales.map((loc) => (
@@ -64,8 +64,8 @@ export default function LanguageSwitcher() {
               onClick={() => switchLocale(loc)}
               className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors
                 ${loc === locale
-                  ? "bg-blue-50 text-blue-700 font-medium"
-                  : "text-slate-700 hover:bg-gray-50"
+                  ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium"
+                  : "text-slate-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700"
                 }`}
             >
               <span className="text-base">{LOCALE_FLAGS[loc]}</span>

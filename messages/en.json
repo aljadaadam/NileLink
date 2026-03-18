@@ -297,7 +297,11 @@
       "routerOs": "RouterOS Version",
       "boardName": "Device Model",
       "goToDashboard": "Go to Dashboard",
-      "retry": "Try Again"
+      "retry": "Try Again",
+      "autoCheckTitle": "Waiting for router connection...",
+      "autoCheckDesc": "We're checking every 5 seconds",
+      "attempt": "attempt",
+      "autoRedirect": "Redirecting to dashboard..."
     }
   },
   "packages": {

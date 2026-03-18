@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import {
   Globe,
@@ -16,6 +16,7 @@ import {
   Shield,
   Cpu,
   Info,
+  Wifi,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -47,10 +48,58 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
   const [scriptLoading, setScriptLoading] = useState(false);
   const [scriptCopied, setScriptCopied] = useState(false);
 
-  // Step 3 state
-  const [verifying, setVerifying] = useState(false);
-  const [verified, setVerified] = useState<boolean | null>(null);
+  // Auto-polling & verification state
+  const [pollCount, setPollCount] = useState(0);
+  const [verified, setVerified] = useState(false);
   const [deviceInfo, setDeviceInfo] = useState<{ routerOsVersion?: string; boardName?: string } | null>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollingActive = useRef(false);
+
+  // Auto-poll: try to connect every 5s while on step 2
+  const pollOnce = useCallback(async () => {
+    if (!routerId || pollingActive.current || verified) return;
+    pollingActive.current = true;
+    try {
+      const res = await fetch(`/api/routers/${routerId}/test`, { method: "POST" });
+      const data = await res.json();
+      setPollCount((c) => c + 1);
+      if (data.success) {
+        setVerified(true);
+        if (data.routerOsVersion || data.boardName) {
+          setDeviceInfo({ routerOsVersion: data.routerOsVersion, boardName: data.boardName });
+        }
+        // Auto-advance to success step
+        setStep(2);
+        toast.success(t("wizard.connectionSuccess"));
+      }
+    } catch {
+      setPollCount((c) => c + 1);
+    } finally {
+      pollingActive.current = false;
+    }
+  }, [routerId, verified, t]);
+
+  useEffect(() => {
+    if (step === 1 && script && routerId && !verified) {
+      // Start polling every 5 seconds
+      pollRef.current = setInterval(pollOnce, 5000);
+      return () => {
+        if (pollRef.current) clearInterval(pollRef.current);
+      };
+    }
+    // Clear if step changes
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, [step, script, routerId, verified, pollOnce]);
+
+  // Auto-navigate to dashboard 3s after success
+  useEffect(() => {
+    if (step === 2 && verified) {
+      const timer = setTimeout(onComplete, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [step, verified, onComplete]);
 
   async function handleStep1Next() {
     if (!host.trim() || !routerName.trim()) return;
@@ -59,7 +108,6 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
       return;
     }
 
-    // Create the router first
     try {
       const res = await fetch("/api/routers", {
         method: "POST",
@@ -82,7 +130,6 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
       const router = await res.json();
       setRouterId(router.id);
 
-      // Now fetch the setup script
       setScriptLoading(true);
       setStep(1);
 
@@ -96,7 +143,6 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
       setScript(scriptData.script);
       setCredentials(scriptData.credentials);
 
-      // Update router with the actual credentials from script
       await fetch(`/api/routers/${router.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -120,34 +166,6 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
     setScriptCopied(true);
     toast.success(t("wizard.scriptCopied"));
     setTimeout(() => setScriptCopied(false), 3000);
-  }
-
-  async function handleVerify() {
-    if (!routerId) return;
-    setVerifying(true);
-    setVerified(null);
-    setDeviceInfo(null);
-
-    try {
-      const res = await fetch(`/api/routers/${routerId}/test`, { method: "POST" });
-      const data = await res.json();
-
-      if (data.success) {
-        setVerified(true);
-        if (data.routerOsVersion || data.boardName) {
-          setDeviceInfo({
-            routerOsVersion: data.routerOsVersion,
-            boardName: data.boardName,
-          });
-        }
-      } else {
-        setVerified(false);
-      }
-    } catch {
-      setVerified(false);
-    } finally {
-      setVerifying(false);
-    }
   }
 
   const steps = [
@@ -373,10 +391,31 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
                       </div>
                     </div>
                   )}
+
+                  {/* Auto-polling indicator */}
+                  <div className="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-3">
+                    <div className="relative shrink-0">
+                      <Wifi className="w-5 h-5 text-primary-400" />
+                      <span className="absolute -top-0.5 -end-0.5 w-2 h-2 bg-primary-500 rounded-full animate-ping" />
+                      <span className="absolute -top-0.5 -end-0.5 w-2 h-2 bg-primary-500 rounded-full" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-slate-700">{t("wizard.autoCheckTitle")}</p>
+                      <p className="text-xs text-slate-400">
+                        {t("wizard.autoCheckDesc")}
+                        {pollCount > 0 && (
+                          <span className="ms-1 text-slate-300">
+                            ({t("wizard.attempt")} #{pollCount})
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                    <Loader2 className="w-4 h-4 animate-spin text-primary-400 shrink-0" />
+                  </div>
                 </>
               )}
 
-              <div className="flex items-center justify-between pt-2">
+              <div className="flex items-center justify-start pt-2">
                 <button
                   onClick={() => setStep(0)}
                   className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
@@ -384,114 +423,51 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
                   {isAr ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
                   {tc("back")}
                 </button>
-                <button
-                  onClick={() => setStep(2)}
-                  disabled={!script}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
-                >
-                  {tc("next")}
-                  {isAr ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-                </button>
               </div>
             </div>
           )}
 
-          {/* ──── Step 3: Verify Connection ──── */}
+          {/* ──── Step 3: Connection Success (auto-reached) ──── */}
           {step === 2 && (
             <div className="space-y-5">
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 mb-1">
-                  {t("wizard.step3Title")}
+              <div className="flex flex-col items-center py-8">
+                <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mb-4 animate-in zoom-in duration-300">
+                  <CheckCircle className="w-10 h-10 text-emerald-500" />
+                </div>
+                <h3 className="text-xl font-bold text-emerald-700 mb-1">
+                  {t("wizard.connectionSuccess")}
                 </h3>
-                <p className="text-sm text-slate-500">{t("wizard.step3Desc")}</p>
-              </div>
+                <p className="text-sm text-slate-500">{t("wizard.autoRedirect")}</p>
 
-              <div className="flex flex-col items-center py-6">
-                {verified === null && !verifying && (
-                  <button
-                    onClick={handleVerify}
-                    className="inline-flex items-center gap-2.5 px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-bold rounded-2xl hover:from-primary-700 hover:to-primary-800 transition-all shadow-lg shadow-primary-500/25 text-base"
-                  >
-                    <Shield className="w-5 h-5" />
-                    {t("wizard.verifyConnection")}
-                  </button>
-                )}
-
-                {verifying && (
-                  <div className="flex flex-col items-center gap-3 py-4">
-                    <div className="relative">
-                      <div className="w-16 h-16 rounded-full border-[3px] border-primary-100" />
-                      <div className="absolute inset-0 w-16 h-16 rounded-full border-[3px] border-primary-500 border-t-transparent animate-spin" />
+                {/* Device Info */}
+                {deviceInfo && (deviceInfo.routerOsVersion || deviceInfo.boardName) && (
+                  <div className="bg-slate-50 rounded-xl p-4 mt-6 w-full">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Cpu className="w-4 h-4 text-slate-500" />
+                      <p className="text-sm font-semibold text-slate-700">{t("wizard.detectedInfo")}</p>
                     </div>
-                    <p className="text-sm text-slate-500 animate-pulse">{t("wizard.verifying")}</p>
-                  </div>
-                )}
-
-                {verified === true && (
-                  <div className="w-full space-y-4">
-                    <div className="flex flex-col items-center gap-3 py-4">
-                      <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center">
-                        <CheckCircle className="w-8 h-8 text-emerald-500" />
-                      </div>
-                      <p className="text-lg font-bold text-emerald-700">{t("wizard.connectionSuccess")}</p>
-                    </div>
-
-                    {/* Device Info */}
-                    {deviceInfo && (deviceInfo.routerOsVersion || deviceInfo.boardName) && (
-                      <div className="bg-slate-50 rounded-xl p-4">
-                        <div className="flex items-center gap-2 mb-3">
-                          <Cpu className="w-4 h-4 text-slate-500" />
-                          <p className="text-sm font-semibold text-slate-700">{t("wizard.detectedInfo")}</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      {deviceInfo.routerOsVersion && (
+                        <div className="bg-white rounded-lg px-3 py-2 border border-slate-200">
+                          <p className="text-[10px] text-slate-400 uppercase tracking-wider">{t("wizard.routerOs")}</p>
+                          <p className="text-sm font-medium text-slate-800" dir="ltr">{deviceInfo.routerOsVersion}</p>
                         </div>
-                        <div className="grid grid-cols-2 gap-3">
-                          {deviceInfo.routerOsVersion && (
-                            <div className="bg-white rounded-lg px-3 py-2 border border-slate-200">
-                              <p className="text-[10px] text-slate-400 uppercase tracking-wider">{t("wizard.routerOs")}</p>
-                              <p className="text-sm font-medium text-slate-800" dir="ltr">{deviceInfo.routerOsVersion}</p>
-                            </div>
-                          )}
-                          {deviceInfo.boardName && (
-                            <div className="bg-white rounded-lg px-3 py-2 border border-slate-200">
-                              <p className="text-[10px] text-slate-400 uppercase tracking-wider">{t("wizard.boardName")}</p>
-                              <p className="text-sm font-medium text-slate-800" dir="ltr">{deviceInfo.boardName}</p>
-                            </div>
-                          )}
+                      )}
+                      {deviceInfo.boardName && (
+                        <div className="bg-white rounded-lg px-3 py-2 border border-slate-200">
+                          <p className="text-[10px] text-slate-400 uppercase tracking-wider">{t("wizard.boardName")}</p>
+                          <p className="text-sm font-medium text-slate-800" dir="ltr">{deviceInfo.boardName}</p>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {verified === false && (
-                  <div className="flex flex-col items-center gap-3 py-4">
-                    <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
-                      <XCircle className="w-8 h-8 text-red-500" />
+                      )}
                     </div>
-                    <p className="text-sm font-medium text-red-700 text-center max-w-xs">
-                      {t("wizard.connectionFailed")}
-                    </p>
-                    <button
-                      onClick={handleVerify}
-                      className="inline-flex items-center gap-2 px-5 py-2 bg-red-50 text-red-700 font-medium rounded-lg hover:bg-red-100 transition-colors text-sm mt-2"
-                    >
-                      {t("wizard.retry")}
-                    </button>
                   </div>
                 )}
               </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                <button
-                  onClick={() => setStep(1)}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
-                >
-                  {isAr ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-                  {tc("back")}
-                </button>
+              <div className="flex justify-center pt-2">
                 <button
                   onClick={onComplete}
-                  disabled={!verified}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-semibold rounded-xl hover:from-emerald-700 hover:to-emerald-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-emerald-500/25 text-sm"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-semibold rounded-xl hover:from-emerald-700 hover:to-emerald-800 transition-all shadow-lg shadow-emerald-500/25 text-sm"
                 >
                   <Rocket className="w-4 h-4" />
                   {t("wizard.goToDashboard")}

@@ -297,7 +297,11 @@
       "routerOs": "إصدار RouterOS",
       "boardName": "موديل الجهاز",
       "goToDashboard": "الذهاب للوحة التحكم",
-      "retry": "إعادة المحاولة"
+      "retry": "إعادة المحاولة",
+      "autoCheckTitle": "بانتظار اتصال الراوتر...",
+      "autoCheckDesc": "نتحقق كل 5 ثوانٍ",
+      "attempt": "محاولة",
+      "autoRedirect": "جاري التحويل للوحة التحكم..."
     }
   },
   "packages": {

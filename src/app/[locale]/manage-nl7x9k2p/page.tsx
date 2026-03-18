@@ -81,13 +81,13 @@ export default function DashboardPage() {
     <div className="space-y-8">
       {/* Help */}
       <div className="flex items-center gap-2">
-        <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
-        <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("title")}</h1>
+        <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-primary-600 transition-colors">
           <HelpCircle className="w-5 h-5" />
         </button>
       </div>
       {showHelp && (
-        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
+        <div className="bg-primary-50 dark:bg-primary-900/30 border border-primary-100 dark:border-primary-800 rounded-xl p-4 text-sm text-primary-800 dark:text-primary-200 leading-relaxed">
           {t("helpDesc")}
         </div>
       )}
@@ -122,7 +122,7 @@ export default function DashboardPage() {
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
           {t("quickActions")}
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -137,7 +137,7 @@ export default function DashboardPage() {
               >
                 <action.icon className="w-6 h-6" />
               </div>
-              <span className="text-sm font-medium text-slate-700">
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 {action.label}
               </span>
             </Link>
@@ -149,12 +149,12 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="card">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-slate-900">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100">
               {t("stats.usedVouchers")}
             </h3>
             <CheckCircle className="w-5 h-5 text-emerald-500" />
           </div>
-          <p className="text-3xl font-bold text-slate-900">
+          <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">
             {loading ? "–" : stats?.usedVouchers ?? 0}
           </p>
           <p className="text-sm text-slate-500 mt-1">
@@ -163,19 +163,19 @@ export default function DashboardPage() {
         </div>
         <div className="card">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-slate-900">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100">
               {t("stats.revenue")}
             </h3>
             <DollarSign className="w-5 h-5 text-accent-500" />
           </div>
           {loading ? (
-            <p className="text-3xl font-bold text-slate-900">–</p>
+            <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">–</p>
           ) : !stats?.revenueByCurrency?.length ? (
-            <p className="text-3xl font-bold text-slate-900">0</p>
+            <p className="text-3xl font-bold text-slate-900 dark:text-slate-100">0</p>
           ) : (
             <div className="space-y-1">
               {stats.revenueByCurrency.map((r) => (
-                <p key={r.currency} className="text-2xl font-bold text-slate-900">
+                <p key={r.currency} className="text-2xl font-bold text-slate-900 dark:text-slate-100">
                   {r.amount.toFixed(2)} <span className="text-base font-medium text-slate-500">{r.currency}</span>
                 </p>
               ))}
@@ -190,7 +190,7 @@ export default function DashboardPage() {
           {/* Peak Hours Chart */}
           <div className="card">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+              <h3 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-primary-500" />
                 {t("stats.peakHours")}
               </h3>
@@ -221,7 +221,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2 card">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+                <h3 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                   <TrendingUp className="w-5 h-5 text-emerald-500" />
                   {t("stats.dailyUsage")}
                 </h3>
@@ -266,7 +266,7 @@ export default function DashboardPage() {
             <div className="card flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+                  <h3 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                     <AlertTriangle className="w-5 h-5 text-amber-500" />
                     {t("stats.prediction")}
                   </h3>
@@ -274,7 +274,7 @@ export default function DashboardPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{t("stats.unusedCodes")}</p>
-                    <p className="text-3xl font-bold text-slate-900 mt-1">{stats.unusedVouchers}</p>
+                    <p className="text-3xl font-bold text-slate-900 dark:text-slate-100 mt-1">{stats.unusedVouchers}</p>
                   </div>
                   <div>
                     <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{t("stats.avgPerDay")}</p>
@@ -282,16 +282,16 @@ export default function DashboardPage() {
                   </div>
                 </div>
               </div>
-              <div className="mt-4 pt-4 border-t border-gray-100">
+              <div className="mt-4 pt-4 border-t border-gray-100 dark:border-slate-700">
                 {stats.daysUntilEmpty !== null ? (
-                  <div className={`rounded-xl p-3 text-center ${stats.daysUntilEmpty <= 3 ? "bg-red-50" : stats.daysUntilEmpty <= 7 ? "bg-amber-50" : "bg-emerald-50"}`}>
+                  <div className={`rounded-xl p-3 text-center ${stats.daysUntilEmpty <= 3 ? "bg-red-50 dark:bg-red-900/30" : stats.daysUntilEmpty <= 7 ? "bg-amber-50 dark:bg-amber-900/30" : "bg-emerald-50 dark:bg-emerald-900/30"}`}>
                     <p className={`text-2xl font-bold ${stats.daysUntilEmpty <= 3 ? "text-red-600" : stats.daysUntilEmpty <= 7 ? "text-amber-600" : "text-emerald-600"}`}>
                       ~{stats.daysUntilEmpty} {t("stats.days")}
                     </p>
                     <p className="text-xs text-slate-500 mt-1">{t("stats.untilEmpty")}</p>
                   </div>
                 ) : (
-                  <div className="rounded-xl p-3 bg-slate-50 text-center">
+                  <div className="rounded-xl p-3 bg-slate-50 dark:bg-slate-800 text-center">
                     <p className="text-sm text-slate-400">{t("stats.noData")}</p>
                   </div>
                 )}

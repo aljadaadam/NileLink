@@ -55,10 +55,10 @@ const statusIcons: Record<string, typeof Clock> = {
   CANCELLED: XCircle,
 };
 const statusColors: Record<string, string> = {
-  PENDING: "bg-yellow-50 text-yellow-700",
-  PAID: "bg-emerald-50 text-emerald-700",
-  OVERDUE: "bg-red-50 text-red-700",
-  CANCELLED: "bg-gray-100 text-gray-500",
+  PENDING: "bg-yellow-50 dark:bg-yellow-950 text-yellow-700 dark:text-yellow-400",
+  PAID: "bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400",
+  OVERDUE: "bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-400",
+  CANCELLED: "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400",
 };
 
 // formatDate imported from utils
@@ -135,7 +135,7 @@ export default function AdminSubscriptionsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
             {isAr ? "الاشتراكات والفواتير" : "Subscriptions & Invoices"}
           </h1>
           <p className="text-slate-500 mt-1">
@@ -149,7 +149,7 @@ export default function AdminSubscriptionsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={isAr ? "بحث..." : "Search..."}
-            className="w-full ps-9 pe-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+            className="w-full ps-9 pe-4 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 bg-white dark:bg-slate-800 dark:text-white"
           />
         </div>
       </div>
@@ -157,51 +157,51 @@ export default function AdminSubscriptionsPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="card flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-            <FileText className="w-5 h-5 text-blue-600" />
+          <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
+            <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           </div>
           <div>
-            <p className="text-xl font-bold text-slate-900">{invoices.length}</p>
+            <p className="text-xl font-bold text-slate-900 dark:text-white">{invoices.length}</p>
             <p className="text-xs text-slate-500">{isAr ? "إجمالي الفواتير" : "Total Invoices"}</p>
           </div>
         </div>
         <div className="card flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-yellow-50 flex items-center justify-center">
-            <Clock className="w-5 h-5 text-yellow-600" />
+          <div className="w-10 h-10 rounded-xl bg-yellow-50 dark:bg-yellow-900/30 flex items-center justify-center">
+            <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
           </div>
           <div>
-            <p className="text-xl font-bold text-slate-900">{pendingCount}</p>
+            <p className="text-xl font-bold text-slate-900 dark:text-white">{pendingCount}</p>
             <p className="text-xs text-slate-500">{isAr ? "بانتظار الدفع" : "Awaiting Payment"}</p>
           </div>
         </div>
         <div className="card flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-            <DollarSign className="w-5 h-5 text-emerald-600" />
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
+            <DollarSign className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
           </div>
           <div>
-            <p className="text-xl font-bold text-slate-900">
+            <p className="text-xl font-bold text-slate-900 dark:text-white">
               ${invoices.filter((i) => i.status === "PAID").reduce((s, i) => s + i.amount, 0)}
             </p>
             <p className="text-xs text-slate-500">{isAr ? "إجمالي المحصّل" : "Total Collected"}</p>
           </div>
         </div>
         <div className="card flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
-            <Users className="w-5 h-5 text-purple-600" />
+          <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center">
+            <Users className="w-5 h-5 text-purple-600 dark:text-purple-400" />
           </div>
           <div>
-            <p className="text-xl font-bold text-slate-900">{users.length}</p>
+            <p className="text-xl font-bold text-slate-900 dark:text-white">{users.length}</p>
             <p className="text-xs text-slate-500">{isAr ? "المستخدمين" : "Total Users"}</p>
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-slate-100 rounded-xl p-1 w-fit">
+      <div className="flex gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-1 w-fit">
         <button
           onClick={() => setTab("invoices")}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
-            tab === "invoices" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+            tab === "invoices" ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
           }`}
         >
           <FileText className="w-4 h-4" />
@@ -213,7 +213,7 @@ export default function AdminSubscriptionsPage() {
         <button
           onClick={() => setTab("usage")}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
-            tab === "usage" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+            tab === "usage" ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
           }`}
         >
           <CreditCard className="w-4 h-4" />
@@ -238,7 +238,7 @@ export default function AdminSubscriptionsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100 bg-slate-50/50">
+                  <tr className="border-b border-gray-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
                     <th className="text-start py-3 px-3 font-medium text-slate-500">{isAr ? "الفاتورة" : "Invoice"}</th>
                     <th className="text-start py-3 px-3 font-medium text-slate-500">{isAr ? "المستخدم" : "User"}</th>
                     <th className="text-start py-3 px-3 font-medium text-slate-500">{isAr ? "الباقة" : "Plan"}</th>
@@ -252,17 +252,17 @@ export default function AdminSubscriptionsPage() {
                   {filteredInvoices.map((inv) => {
                     const StatusIcon = statusIcons[inv.status] || Clock;
                     return (
-                      <tr key={inv.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
+                      <tr key={inv.id} className="border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50/50 dark:hover:bg-slate-800/50 transition-colors">
                         <td className="py-3 px-3">
                           <p className="font-mono text-xs font-medium">{inv.invoiceNumber}</p>
                           <p className="text-[10px] text-slate-400 mt-0.5">{formatDate(inv.createdAt, locale)}</p>
                         </td>
                         <td className="py-3 px-3">
-                          <p className="font-medium text-slate-900 text-sm">{inv.user.name}</p>
+                          <p className="font-medium text-slate-900 dark:text-white text-sm">{inv.user.name}</p>
                           <p className="text-[11px] text-slate-400" dir="ltr">{inv.user.email}</p>
                         </td>
                         <td className="py-3 px-3">
-                          <span className="text-xs font-medium bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full">
+                          <span className="text-xs font-medium bg-primary-50 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 px-2 py-0.5 rounded-full">
                             {inv.plan}
                           </span>
                         </td>
@@ -295,7 +295,7 @@ export default function AdminSubscriptionsPage() {
                             </div>
                           )}
                           {inv.status === "PAID" && inv.paidAt && (
-                            <span className="text-[11px] text-emerald-600">{formatDate(inv.paidAt, locale)}</span>
+                            <span className="text-[11px] text-emerald-600 dark:text-emerald-400">{formatDate(inv.paidAt, locale)}</span>
                           )}
                         </td>
                       </tr>
@@ -317,49 +317,49 @@ export default function AdminSubscriptionsPage() {
             filteredUsers.map((user) => (
               <div key={user.id} className="card hover:shadow-md transition-shadow">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
-                    <span className="text-sm font-bold text-primary-700">
+                  <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center">
+                    <span className="text-sm font-bold text-primary-700 dark:text-primary-300">
                       {user.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-medium text-slate-900 truncate">{user.name}</p>
+                    <p className="font-medium text-slate-900 dark:text-white truncate">{user.name}</p>
                     <p className="text-xs text-slate-400 truncate" dir="ltr">{user.email}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2">
-                  <div className="bg-slate-50 rounded-lg p-2.5 flex items-center gap-2">
+                  <div className="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-2.5 flex items-center gap-2">
                     <Router className="w-4 h-4 text-primary-500" />
                     <div>
-                      <p className="text-sm font-bold text-slate-900">{user._count.routers}</p>
+                      <p className="text-sm font-bold text-slate-900 dark:text-white">{user._count.routers}</p>
                       <p className="text-[10px] text-slate-400">{isAr ? "راوترات" : "Routers"}</p>
                     </div>
                   </div>
-                  <div className="bg-slate-50 rounded-lg p-2.5 flex items-center gap-2">
+                  <div className="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-2.5 flex items-center gap-2">
                     <Package className="w-4 h-4 text-emerald-500" />
                     <div>
-                      <p className="text-sm font-bold text-slate-900">{user._count.packages}</p>
+                      <p className="text-sm font-bold text-slate-900 dark:text-white">{user._count.packages}</p>
                       <p className="text-[10px] text-slate-400">{isAr ? "باقات" : "Packages"}</p>
                     </div>
                   </div>
-                  <div className="bg-slate-50 rounded-lg p-2.5 flex items-center gap-2">
+                  <div className="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-2.5 flex items-center gap-2">
                     <Ticket className="w-4 h-4 text-accent-500" />
                     <div>
-                      <p className="text-sm font-bold text-slate-900">{user._count.vouchers}</p>
+                      <p className="text-sm font-bold text-slate-900 dark:text-white">{user._count.vouchers}</p>
                       <p className="text-[10px] text-slate-400">{isAr ? "أكواد" : "Codes"}</p>
                     </div>
                   </div>
-                  <div className="bg-slate-50 rounded-lg p-2.5 flex items-center gap-2">
+                  <div className="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-2.5 flex items-center gap-2">
                     <Users className="w-4 h-4 text-purple-500" />
                     <div>
-                      <p className="text-sm font-bold text-slate-900">{user._count.hotspotUsers}</p>
+                      <p className="text-sm font-bold text-slate-900 dark:text-white">{user._count.hotspotUsers}</p>
                       <p className="text-[10px] text-slate-400">{isAr ? "مستخدمين" : "Users"}</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-slate-400">
+                <div className="mt-3 pt-3 border-t border-gray-100 dark:border-slate-700 text-xs text-slate-400">
                   {isAr ? "تاريخ التسجيل: " : "Joined: "}
                   {new Date(user.createdAt).toLocaleDateString(locale)}
                 </div>

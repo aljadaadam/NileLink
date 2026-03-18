@@ -131,7 +131,7 @@ export default function PartnershipPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
           {isAr ? "الشراكة والأرباح" : "Partnership & Revenue"}
         </h1>
         <p className="text-slate-500 mt-1">
@@ -145,44 +145,44 @@ export default function PartnershipPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="card">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-              <DollarSign className="w-5 h-5 text-emerald-600" />
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
+              <DollarSign className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
-              <p className="text-xl font-bold text-slate-900">${data.totalRevenue.toFixed(2)}</p>
+              <p className="text-xl font-bold text-slate-900 dark:text-white">${data.totalRevenue.toFixed(2)}</p>
               <p className="text-xs text-slate-500">{isAr ? "إجمالي الأرباح" : "Total Revenue"}</p>
             </div>
           </div>
         </div>
         <div className="card">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-blue-600" />
+            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
+              <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <p className="text-xl font-bold text-slate-900">${data.monthlyRevenue.toFixed(2)}</p>
+              <p className="text-xl font-bold text-slate-900 dark:text-white">${data.monthlyRevenue.toFixed(2)}</p>
               <p className="text-xs text-slate-500">{isAr ? "أرباح الشهر" : "This Month"}</p>
             </div>
           </div>
         </div>
         <div className="card">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
-              <Users className="w-5 h-5 text-purple-600" />
+            <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-900/30 flex items-center justify-center">
+              <Users className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
             <div>
-              <p className="text-xl font-bold text-slate-900">${data.sharePerPartner.toFixed(2)}</p>
+              <p className="text-xl font-bold text-slate-900 dark:text-white">${data.sharePerPartner.toFixed(2)}</p>
               <p className="text-xs text-slate-500">{isAr ? "حصة كل شريك" : "Share / Partner"}</p>
             </div>
           </div>
         </div>
         <div className="card">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-amber-600" />
+            <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center">
+              <TrendingUp className="w-5 h-5 text-amber-600 dark:text-amber-400" />
             </div>
             <div>
-              <p className="text-xl font-bold text-slate-900">${data.monthlySharePerPartner.toFixed(2)}</p>
+              <p className="text-xl font-bold text-slate-900 dark:text-white">${data.monthlySharePerPartner.toFixed(2)}</p>
               <p className="text-xs text-slate-500">{isAr ? "حصة الشهر / شريك" : "Monthly / Partner"}</p>
             </div>
           </div>
@@ -198,21 +198,21 @@ export default function PartnershipPage() {
                 {admin.name.charAt(0)}
               </div>
               <div>
-                <p className="font-semibold text-sm text-slate-900">{admin.name}</p>
+                <p className="font-semibold text-sm text-slate-900 dark:text-white">{admin.name}</p>
                 <p className="text-xs text-slate-400" dir="ltr">{admin.email}</p>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-3">
-              <div className="bg-slate-50 rounded-xl p-3 text-center">
-                <p className="text-lg font-bold text-emerald-600">${admin.totalConfirmed.toFixed(2)}</p>
+              <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-3 text-center">
+                <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">${admin.totalConfirmed.toFixed(2)}</p>
                 <p className="text-[10px] text-slate-500">{isAr ? "إجمالي المحصّل" : "Total Confirmed"}</p>
               </div>
-              <div className="bg-slate-50 rounded-xl p-3 text-center">
-                <p className="text-lg font-bold text-blue-600">${admin.monthlyConfirmed.toFixed(2)}</p>
+              <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-3 text-center">
+                <p className="text-lg font-bold text-blue-600 dark:text-blue-400">${admin.monthlyConfirmed.toFixed(2)}</p>
                 <p className="text-[10px] text-slate-500">{isAr ? "هذا الشهر" : "This Month"}</p>
               </div>
-              <div className="bg-slate-50 rounded-xl p-3 text-center">
-                <p className="text-lg font-bold text-slate-900">{admin.invoiceCount}</p>
+              <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-3 text-center">
+                <p className="text-lg font-bold text-slate-900 dark:text-white">{admin.invoiceCount}</p>
                 <p className="text-[10px] text-slate-500">{isAr ? "فواتير" : "Invoices"}</p>
               </div>
             </div>
@@ -221,11 +221,11 @@ export default function PartnershipPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-slate-100 rounded-xl p-1 w-fit">
+      <div className="flex gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-1 w-fit">
         <button
           onClick={() => setTab("overview")}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
-            tab === "overview" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+            tab === "overview" ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
           }`}
         >
           <TrendingUp className="w-4 h-4" />
@@ -234,7 +234,7 @@ export default function PartnershipPage() {
         <button
           onClick={() => setTab("activity")}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${
-            tab === "activity" ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+            tab === "activity" ? "bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm" : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
           }`}
         >
           <Activity className="w-4 h-4" />
@@ -246,14 +246,14 @@ export default function PartnershipPage() {
         <>
           {/* Monthly Revenue Chart (Bar chart with CSS) */}
           <div className="card !p-5">
-            <h2 className="text-sm font-semibold text-slate-900 mb-4">
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-white mb-4">
               {isAr ? "الأرباح الشهرية (آخر 12 شهر)" : "Monthly Revenue (Last 12 Months)"}
             </h2>
             <div className="space-y-2">
               {data.monthlyBreakdown.map((m) => (
                 <div key={m.month} className="flex items-center gap-3">
                   <span className="text-xs text-slate-500 w-16 shrink-0">{formatMonth(m.month)}</span>
-                  <div className="flex-1 h-7 bg-slate-100 rounded-lg overflow-hidden flex">
+                  <div className="flex-1 h-7 bg-slate-100 dark:bg-slate-700 rounded-lg overflow-hidden flex">
                     {data.admins.map((admin, i) => {
                       const adminAmount = m.perAdmin[admin.id] || 0;
                       const pct = m.total > 0 ? (adminAmount / maxMonthly) * 100 : 0;
@@ -281,7 +281,7 @@ export default function PartnershipPage() {
                       );
                     })()}
                   </div>
-                  <span className="text-xs font-semibold w-16 text-end text-slate-700">${m.total.toFixed(2)}</span>
+                  <span className="text-xs font-semibold w-16 text-end text-slate-700 dark:text-slate-300">${m.total.toFixed(2)}</span>
                 </div>
               ))}
             </div>
@@ -291,7 +291,7 @@ export default function PartnershipPage() {
               {data.admins.map((admin, i) => (
                 <div key={admin.id} className="flex items-center gap-1.5">
                   <div className={`w-3 h-3 rounded-sm ${adminColors[i % adminColors.length]}`} />
-                  <span className="text-xs text-slate-600">{admin.name}</span>
+                  <span className="text-xs text-slate-600 dark:text-slate-300">{admin.name}</span>
                 </div>
               ))}
               {data.unattributedTotal > 0 && (

@@ -72,7 +72,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 flex items-center justify-center px-3 py-6 sm:p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center px-3 py-6 sm:p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-6 sm:mb-8">
@@ -80,24 +80,24 @@ export default function LoginPage() {
             <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center">
               <Wifi className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-slate-900">NileLink</span>
+            <span className="text-2xl font-bold text-slate-900 dark:text-white">NileLink</span>
           </Link>
         </div>
 
         {/* Card */}
         <div className="card !p-4 sm:!p-6">
-          <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
-          <p className="mt-1 text-slate-500">{t("subtitle")}</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t("title")}</h1>
+          <p className="mt-1 text-slate-500 dark:text-slate-400">{t("subtitle")}</p>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             {error && (
-              <div className="p-3 rounded-xl bg-red-50 text-red-600 text-sm">
+              <div className="p-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-300 text-sm">
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 {t("email")}
               </label>
               <div className="relative">
@@ -114,7 +114,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 {t("password")}
               </label>
               <div className="relative">
@@ -130,7 +130,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -160,7 +160,7 @@ export default function LoginPage() {
             </Link>
           </div>
 
-          <p className="mt-4 text-center text-sm text-slate-500">
+          <p className="mt-4 text-center text-sm text-slate-500 dark:text-slate-400">
             {t("noAccount")}{" "}
             <Link
               href="/auth/register"

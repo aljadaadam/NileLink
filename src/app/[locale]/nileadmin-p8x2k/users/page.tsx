@@ -90,8 +90,7 @@ export default function AdminUsersPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">
-            {isAr ? "إدارة المستخدمين" : "User Management"}
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
           </h1>
           <p className="text-slate-500 mt-1">
             {isAr ? `${users.length} مستخدم مسجل` : `${users.length} registered users`}
@@ -106,7 +105,7 @@ export default function AdminUsersPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={isAr ? "بحث..." : "Search..."}
-            className="w-full ps-9 pe-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+            className="w-full ps-9 pe-4 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 bg-white dark:bg-slate-800 dark:text-white"
           />
         </div>
       </div>
@@ -116,7 +115,7 @@ export default function AdminUsersPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-slate-50/50">
+              <tr className="border-b border-gray-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
                 <th className="text-start py-3 px-4 font-medium text-slate-500">
                   {isAr ? "المستخدم" : "User"}
                 </th>
@@ -152,24 +151,24 @@ export default function AdminUsersPage() {
                 </tr>
               ) : (
                 filtered.map((user) => (
-                  <tr key={user.id} className="border-b border-gray-50 hover:bg-slate-50/50">
+                  <tr key={user.id} className="border-b border-gray-50 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/50">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center shrink-0">
-                          <span className="text-xs font-bold text-primary-700">
+                        <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center shrink-0">
+                          <span className="text-xs font-bold text-primary-700 dark:text-primary-300">
                             {user.name.charAt(0).toUpperCase()}
                           </span>
                         </div>
                         <div>
-                          <p className="font-medium text-slate-900">{user.name}</p>
+                          <p className="font-medium text-slate-900 dark:text-white">{user.name}</p>
                           {user.company && (
                             <p className="text-xs text-slate-400">{user.company}</p>
                           )}
                         </div>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-slate-600" dir="ltr">{user.email}</td>
-                    <td className="py-3 px-4 text-slate-600">{user._count.routers}</td>
+                    <td className="py-3 px-4 text-slate-600 dark:text-slate-400" dir="ltr">{user.email}</td>
+                    <td className="py-3 px-4 text-slate-600 dark:text-slate-400">{user._count.routers}</td>
                     <td className="py-3 px-4 text-slate-500 text-xs">
                       {formatDate(user.createdAt, locale)}
                     </td>
@@ -177,7 +176,7 @@ export default function AdminUsersPage() {
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => setSelectedUser(user)}
-                          className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700"
+                          className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
                           title={isAr ? "عرض" : "View"}
                         >
                           <Eye className="w-4 h-4" />
@@ -186,14 +185,14 @@ export default function AdminUsersPage() {
                           onClick={() =>
                             handleRoleToggle(user.id, user.role === "ADMIN" ? "USER" : "ADMIN")
                           }
-                          className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700"
+                          className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
                           title={isAr ? "تغيير الدور" : "Toggle Role"}
                         >
                           <Shield className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(user.id, user.name)}
-                          className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600"
+                          className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-950 text-slate-400 hover:text-red-600"
                           title={isAr ? "حذف" : "Delete"}
                         >
                           <Trash2 className="w-4 h-4" />
@@ -211,9 +210,9 @@ export default function AdminUsersPage() {
       {/* User Detail Modal */}
       {selectedUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setSelectedUser(null)}>
-          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl dark:shadow-slate-950/50 max-w-lg w-full p-6" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-900">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                 {isAr ? "تفاصيل المستخدم" : "User Details"}
               </h2>
               <button onClick={() => setSelectedUser(null)} className="text-slate-400 hover:text-slate-700">
@@ -223,29 +222,29 @@ export default function AdminUsersPage() {
 
             <div className="space-y-4">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-full bg-primary-100 flex items-center justify-center">
-                  <span className="text-xl font-bold text-primary-700">
+                <div className="w-14 h-14 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center">
+                  <span className="text-xl font-bold text-primary-700 dark:text-primary-300">
                     {selectedUser.name.charAt(0).toUpperCase()}
                   </span>
                 </div>
                 <div>
-                  <p className="text-lg font-bold text-slate-900">{selectedUser.name}</p>
+                  <p className="text-lg font-bold text-slate-900 dark:text-white">{selectedUser.name}</p>
                   <p className="text-sm text-slate-500" dir="ltr">{selectedUser.email}</p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 pt-4 border-t">
+              <div className="grid grid-cols-2 gap-3 pt-4 border-t dark:border-slate-700">
                 <div className="flex items-center gap-2 text-sm">
                   <Building2 className="w-4 h-4 text-slate-400" />
-                  <span className="text-slate-600">{selectedUser.company || "—"}</span>
+                  <span className="text-slate-600 dark:text-slate-300">{selectedUser.company || "—"}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Phone className="w-4 h-4 text-slate-400" />
-                  <span className="text-slate-600" dir="ltr">{selectedUser.phone || "—"}</span>
+                  <span className="text-slate-600 dark:text-slate-300" dir="ltr">{selectedUser.phone || "—"}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="w-4 h-4 text-slate-400" />
-                  <span className="text-slate-600">
+                  <span className="text-slate-600 dark:text-slate-300">
                     {formatDate(selectedUser.createdAt, locale)}
                   </span>
                 </div>
@@ -257,20 +256,20 @@ export default function AdminUsersPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 pt-4 border-t">
-                <div className="bg-slate-50 rounded-xl p-3 text-center">
-                  <Router className="w-5 h-5 text-primary-600 mx-auto mb-1" />
-                  <p className="text-lg font-bold text-slate-900">{selectedUser._count.routers}</p>
+              <div className="grid grid-cols-2 gap-3 pt-4 border-t dark:border-slate-700">
+                <div className="bg-slate-50 dark:bg-slate-700 rounded-xl p-3 text-center">
+                  <Router className="w-5 h-5 text-primary-600 dark:text-primary-400 mx-auto mb-1" />
+                  <p className="text-lg font-bold text-slate-900 dark:text-white">{selectedUser._count.routers}</p>
                   <p className="text-xs text-slate-500">{isAr ? "راوترات" : "Routers"}</p>
                 </div>
-                <div className="bg-slate-50 rounded-xl p-3 text-center">
-                  <Ticket className="w-5 h-5 text-accent-600 mx-auto mb-1" />
-                  <p className="text-lg font-bold text-slate-900">{selectedUser._count.vouchers}</p>
+                <div className="bg-slate-50 dark:bg-slate-700 rounded-xl p-3 text-center">
+                  <Ticket className="w-5 h-5 text-accent-600 dark:text-accent-400 mx-auto mb-1" />
+                  <p className="text-lg font-bold text-slate-900 dark:text-white">{selectedUser._count.vouchers}</p>
                   <p className="text-xs text-slate-500">{isAr ? "قسائم" : "Vouchers"}</p>
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-4 border-t">
+              <div className="flex gap-2 pt-4 border-t dark:border-slate-700">
                 <button
                   onClick={() => {
                     handleRoleToggle(
@@ -279,7 +278,7 @@ export default function AdminUsersPage() {
                     );
                     setSelectedUser(null);
                   }}
-                  className="flex-1 py-2 px-4 rounded-xl text-sm font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                  className="flex-1 py-2 px-4 rounded-xl text-sm font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
                 >
                   {selectedUser.role === "ADMIN"
                     ? isAr ? "إزالة صلاحية الأدمن" : "Remove Admin"
@@ -287,7 +286,7 @@ export default function AdminUsersPage() {
                 </button>
                 <button
                   onClick={() => handleDelete(selectedUser.id, selectedUser.name)}
-                  className="py-2 px-4 rounded-xl text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                  className="py-2 px-4 rounded-xl text-sm font-medium bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 transition-colors"
                 >
                   {isAr ? "حذف" : "Delete"}
                 </button>

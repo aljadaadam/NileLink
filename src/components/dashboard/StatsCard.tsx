@@ -11,20 +11,20 @@ interface StatsCardProps {
 
 const colorMap = {
   primary: {
-    bg: "bg-primary-50",
-    icon: "text-primary-600",
+    bg: "bg-primary-50 dark:bg-primary-900/30",
+    icon: "text-primary-600 dark:text-primary-400",
   },
   accent: {
-    bg: "bg-accent-50",
-    icon: "text-accent-600",
+    bg: "bg-accent-50 dark:bg-accent-900/30",
+    icon: "text-accent-600 dark:text-accent-400",
   },
   emerald: {
-    bg: "bg-emerald-50",
-    icon: "text-emerald-600",
+    bg: "bg-emerald-50 dark:bg-emerald-900/30",
+    icon: "text-emerald-600 dark:text-emerald-400",
   },
   red: {
-    bg: "bg-red-50",
-    icon: "text-red-600",
+    bg: "bg-red-50 dark:bg-red-900/30",
+    icon: "text-red-600 dark:text-red-400",
   },
 };
 
@@ -49,7 +49,7 @@ export default function StatsCard({
       </div>
       <div className="min-w-0">
         <p className="text-xs text-slate-400 truncate">{title}</p>
-        <p className="text-3xl font-extrabold text-slate-900 leading-tight">{value}</p>
+        <p className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 leading-tight">{value}</p>
         {trend && (
           <p className="text-xs text-emerald-600 font-medium mt-0.5">
             {trend}

@@ -184,8 +184,8 @@ export default function LoginPagesPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
-            <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("title")}</h1>
+            <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-primary-600 transition-colors">
               <HelpCircle className="w-5 h-5" />
             </button>
           </div>
@@ -208,7 +208,7 @@ export default function LoginPagesPage() {
       </div>
 
       {showHelp && (
-        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
+        <div className="bg-primary-50 dark:bg-primary-950/30 border border-primary-100 dark:border-primary-800 rounded-xl p-4 text-sm text-primary-800 dark:text-primary-300 leading-relaxed">
           {t("helpDesc")}
         </div>
       )}
@@ -244,7 +244,7 @@ export default function LoginPagesPage() {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 !showAdvanced
                   ? "bg-primary-500 text-white"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
               }`}
             >
               <Palette className="w-4 h-4" />
@@ -266,7 +266,7 @@ export default function LoginPagesPage() {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 showAdvanced
                   ? "bg-primary-500 text-white"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
               }`}
             >
               <Code className="w-4 h-4" />
@@ -278,7 +278,7 @@ export default function LoginPagesPage() {
             <>
               {/* Template Gallery */}
               <div>
-                <h2 className="text-lg font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
                   <Palette className="w-5 h-5" />
                   {t("chooseTemplate")}
                 </h2>
@@ -289,8 +289,8 @@ export default function LoginPagesPage() {
                       onClick={() => { setSelectedTemplate(tmpl.id); setHasUnsavedChanges(true); }}
                       className={`group relative rounded-xl overflow-hidden border-2 transition-all duration-200 ${
                         selectedTemplate === tmpl.id
-                          ? "border-primary-500 ring-2 ring-primary-200 scale-[1.02]"
-                          : "border-slate-200 hover:border-slate-300"
+                        ? "border-primary-500 ring-2 ring-primary-200 dark:ring-primary-800 scale-[1.02]"
+                        : "border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
                       }`}
                     >
                       {/* Template Preview Card */}
@@ -318,8 +318,8 @@ export default function LoginPagesPage() {
                           </div>
                         )}
                       </div>
-                      <div className="p-3 bg-white">
-                        <p className="text-sm font-semibold text-slate-800">
+                      <div className="p-3 bg-white dark:bg-slate-800">
+                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                           {tmpl.name}
                         </p>
                         <p className="text-xs text-slate-400 mt-0.5">
@@ -335,7 +335,7 @@ export default function LoginPagesPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Business Name */}
                 <div className="card">
-                  <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
                     <Type className="w-4 h-4" />
                     {t("businessName")}
                   </h3>
@@ -347,14 +347,14 @@ export default function LoginPagesPage() {
                     className="input-field w-full"
                     maxLength={100}
                   />
-                  <p className="text-xs text-slate-400 mt-2">
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
                     {t("businessNameHint")}
                   </p>
                 </div>
 
                 {/* Logo Upload */}
                 <div className="card">
-                  <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
                     <ImageIcon className="w-4 h-4" />
                     {t("logoUpload")}
                   </h3>
@@ -392,7 +392,7 @@ export default function LoginPagesPage() {
                   ) : (
                     <button
                       onClick={() => fileInputRef.current?.click()}
-                      className="w-full border-2 border-dashed border-slate-200 rounded-lg p-6 text-center hover:border-primary-300 hover:bg-primary-50/50 transition-colors"
+                      className="w-full border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg p-6 text-center hover:border-primary-300 hover:bg-primary-50/50 dark:hover:bg-primary-950/30 transition-colors"
                     >
                       <Upload className="w-8 h-8 text-slate-300 mx-auto" />
                       <p className="text-sm text-slate-500 mt-2">
@@ -410,7 +410,7 @@ export default function LoginPagesPage() {
             /* Advanced Code Editor */
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="card">
-                <h3 className="text-sm font-semibold text-slate-900 mb-3">
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3">
                   HTML
                 </h3>
                 <textarea
@@ -421,7 +421,7 @@ export default function LoginPagesPage() {
                 />
               </div>
               <div className="card">
-                <h3 className="text-sm font-semibold text-slate-900 mb-3">
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3">
                   CSS
                 </h3>
                 <textarea

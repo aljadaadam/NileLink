@@ -61,10 +61,10 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
           {isAr ? "لوحة تحكم المنصة" : "Platform Dashboard"}
         </h1>
-        <p className="text-slate-500 mt-1">
+        <p className="text-slate-500 dark:text-slate-400 mt-1">
           {isAr ? "نظرة عامة على المنصة بالكامل" : "Overview of the entire platform"}
         </p>
       </div>
@@ -130,29 +130,29 @@ export default function AdminDashboardPage() {
       {/* Admin Payment Stats */}
       {!loading && stats?.adminPaymentStats && stats.adminPaymentStats.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold text-slate-900 mb-3">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
             {isAr ? "تحصيل المدفوعات حسب المشرف" : "Payment Collection by Admin"}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {stats.adminPaymentStats.map((admin) => (
               <div key={admin.id} className="card !p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-lg">
+                  <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-primary-700 dark:text-primary-300 font-bold text-lg">
                     {admin.name.charAt(0)}
                   </div>
                   <div className="min-w-0">
-                    <p className="font-semibold text-sm text-slate-900 truncate">{admin.name}</p>
+                    <p className="font-semibold text-sm text-slate-900 dark:text-white truncate">{admin.name}</p>
                     <p className="text-[11px] text-slate-400 truncate" dir="ltr">{admin.email}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-emerald-50 rounded-xl p-3 text-center">
-                    <p className="text-lg font-bold text-emerald-600">${admin.totalAmount.toFixed(2)}</p>
-                    <p className="text-[10px] text-emerald-600/70">{isAr ? "إجمالي المحصّل" : "Total Collected"}</p>
+                  <div className="bg-emerald-50 dark:bg-emerald-900/30 rounded-xl p-3 text-center">
+                    <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">${admin.totalAmount.toFixed(2)}</p>
+                    <p className="text-[10px] text-emerald-600/70 dark:text-emerald-400/70">{isAr ? "إجمالي المحصّل" : "Total Collected"}</p>
                   </div>
-                  <div className="bg-blue-50 rounded-xl p-3 text-center">
-                    <p className="text-lg font-bold text-blue-600">{admin.invoiceCount}</p>
-                    <p className="text-[10px] text-blue-600/70">{isAr ? "فاتورة تم تسديدها" : "Invoices Confirmed"}</p>
+                  <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-3 text-center">
+                    <p className="text-lg font-bold text-blue-600 dark:text-blue-400">{admin.invoiceCount}</p>
+                    <p className="text-[10px] text-blue-600/70 dark:text-blue-400/70">{isAr ? "فاتورة تم تسديدها" : "Invoices Confirmed"}</p>
                   </div>
                 </div>
               </div>
@@ -163,13 +163,13 @@ export default function AdminDashboardPage() {
 
       {/* Recent Users */}
       <div className="card">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
           {isAr ? "أحدث المستخدمين المسجلين" : "Recently Registered Users"}
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100">
+              <tr className="border-b border-gray-100 dark:border-slate-700">
                 <th className="text-start py-3 px-4 font-medium text-slate-500">
                   {isAr ? "الاسم" : "Name"}
                 </th>
@@ -196,15 +196,15 @@ export default function AdminDashboardPage() {
                 </tr>
               ) : stats?.recentUsers?.length ? (
                 stats.recentUsers.map((user) => (
-                  <tr key={user.id} className="border-b border-gray-50 hover:bg-slate-50/50">
-                    <td className="py-3 px-4 font-medium text-slate-900">{user.name}</td>
-                    <td className="py-3 px-4 text-slate-600" dir="ltr">{user.email}</td>
+                  <tr key={user.id} className="border-b border-gray-50 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/50">
+                    <td className="py-3 px-4 font-medium text-slate-900 dark:text-white">{user.name}</td>
+                    <td className="py-3 px-4 text-slate-600 dark:text-slate-400" dir="ltr">{user.email}</td>
                     <td className="py-3 px-4">
-                      <span className="text-xs font-medium bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-medium bg-primary-50 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 px-2 py-0.5 rounded-full">
                         {user.plan}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-slate-600">{user._count.routers}</td>
+                    <td className="py-3 px-4 text-slate-600 dark:text-slate-400">{user._count.routers}</td>
                     <td className="py-3 px-4 text-slate-500 text-xs">
                       {formatDate(user.createdAt, locale)}
                     </td>

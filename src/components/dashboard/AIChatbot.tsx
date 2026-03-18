@@ -220,7 +220,7 @@ export default function AIChatbot() {
           dir={isAr ? "rtl" : "ltr"}
           className={cn(
             "fixed z-50 bottom-20 w-[380px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-8rem)]",
-            "bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden",
+            "bg-white dark:bg-slate-900 rounded-2xl shadow-2xl dark:shadow-slate-950/50 border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden",
             "animate-in slide-in-from-bottom-4 fade-in duration-300",
             isAr ? "left-6" : "right-6"
           )}
@@ -249,10 +249,10 @@ export default function AIChatbot() {
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center h-full text-center gap-3 px-4">
-                <div className="w-14 h-14 rounded-2xl bg-primary-50 flex items-center justify-center">
+                <div className="w-14 h-14 rounded-2xl bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center">
                   <Bot className="w-7 h-7 text-primary-500" />
                 </div>
-                <p className="text-sm font-medium text-slate-700">{t("welcome")}</p>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{t("welcome")}</p>
                 <p className="text-xs text-slate-400 leading-relaxed">{t("welcomeHint")}</p>
 
                 {/* Quick suggestions */}
@@ -265,7 +265,7 @@ export default function AIChatbot() {
                           setInput(s);
                           inputRef.current?.focus();
                         }}
-                        className="text-xs px-3 py-1.5 rounded-full bg-primary-50 text-primary-700 hover:bg-primary-100 transition-colors"
+                        className="text-xs px-3 py-1.5 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-900/50 transition-colors"
                       >
                         {s}
                       </button>
@@ -284,7 +284,7 @@ export default function AIChatbot() {
                 )}
               >
                 {msg.role === "assistant" && (
-                  <div className="w-7 h-7 rounded-lg bg-primary-50 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-7 h-7 rounded-lg bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center shrink-0 mt-0.5">
                     <Bot className="w-3.5 h-3.5 text-primary-600" />
                   </div>
                 )}
@@ -293,7 +293,7 @@ export default function AIChatbot() {
                     "max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
                     msg.role === "user"
                       ? "bg-primary-600 text-white rounded-ee-md"
-                      : "bg-slate-100 text-slate-800 rounded-es-md"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-es-md"
                   )}
                 >
                   {msg.content ? (
@@ -314,8 +314,8 @@ export default function AIChatbot() {
                   )}
                 </div>
                 {msg.role === "user" && (
-                  <div className="w-7 h-7 rounded-lg bg-slate-200 flex items-center justify-center shrink-0 mt-0.5">
-                    <User className="w-3.5 h-3.5 text-slate-600" />
+                  <div className="w-7 h-7 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center shrink-0 mt-0.5">
+                    <User className="w-3.5 h-3.5 text-slate-600 dark:text-slate-300" />
                   </div>
                 )}
               </div>
@@ -323,7 +323,7 @@ export default function AIChatbot() {
 
             {/* Tool execution indicator */}
             {toolStatus && (
-              <div className="flex items-center gap-2 text-xs text-slate-500 px-2 py-1.5 bg-amber-50 rounded-lg">
+              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 px-2 py-1.5 bg-amber-50 dark:bg-amber-900/30 rounded-lg">
                 {toolStatus.status === "running" ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-600" />
                 ) : (
@@ -341,7 +341,7 @@ export default function AIChatbot() {
           </div>
 
           {/* Input */}
-          <div className="border-t border-slate-100 p-3 shrink-0">
+          <div className="border-t border-slate-100 dark:border-slate-700 p-3 shrink-0">
             <div className="flex items-end gap-2">
               <textarea
                 ref={inputRef}
@@ -351,7 +351,7 @@ export default function AIChatbot() {
                 placeholder={t("placeholder")}
                 rows={1}
                 disabled={streaming}
-                className="flex-1 resize-none rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-100 outline-none transition-all disabled:opacity-50 max-h-24 bg-slate-50"
+                className="flex-1 resize-none rounded-xl border border-slate-200 dark:border-slate-700 px-3.5 py-2.5 text-sm focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/50 outline-none transition-all disabled:opacity-50 max-h-24 bg-slate-50 dark:bg-slate-800 dark:text-slate-100"
                 style={{ minHeight: "40px" }}
               />
               <button
@@ -361,7 +361,7 @@ export default function AIChatbot() {
                   "p-2.5 rounded-xl transition-all shrink-0",
                   input.trim() && !streaming
                     ? "bg-primary-600 text-white hover:bg-primary-700 shadow-md"
-                    : "bg-slate-100 text-slate-300 cursor-not-allowed"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-300 dark:text-slate-600 cursor-not-allowed"
                 )}
               >
                 {streaming ? (

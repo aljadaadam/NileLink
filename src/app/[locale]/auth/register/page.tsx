@@ -268,7 +268,7 @@ export default function RegisterPage() {
   const selectedCountry = COUNTRY_CODES.find((c) => c.code === countryCode);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 flex items-center justify-center px-3 py-6 sm:p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center px-3 py-6 sm:p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-6 sm:mb-8">
@@ -276,24 +276,24 @@ export default function RegisterPage() {
             <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center">
               <Wifi className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-slate-900">NileLink</span>
+            <span className="text-2xl font-bold text-slate-900 dark:text-white">NileLink</span>
           </Link>
         </div>
 
         {/* Card */}
         <div className="card !p-4 sm:!p-6">
-          <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
-          <p className="mt-1 text-slate-500">{t("subtitle")}</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t("title")}</h1>
+          <p className="mt-1 text-slate-500 dark:text-slate-400">{t("subtitle")}</p>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             {error && (
-              <div className="p-3 rounded-xl bg-red-50 text-red-600 text-sm">
+              <div className="p-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-300 text-sm">
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 {t("name")}
               </label>
               <div className="relative">
@@ -308,7 +308,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 {t("email")}
               </label>
               <div className="relative">
@@ -324,7 +324,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 {t("password")}
               </label>
               <div className="relative">
@@ -340,7 +340,7 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -348,7 +348,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 {t("confirmPassword")}
               </label>
               <div className="relative">
@@ -364,7 +364,7 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                 >
                   {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -372,7 +372,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 {t("company")}
               </label>
               <div className="relative">
@@ -382,7 +382,7 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                 {t("phone")}
               </label>
               <div className="flex gap-2" dir="ltr">
@@ -394,18 +394,18 @@ export default function RegisterPage() {
                     className="input-field flex items-center gap-1.5 px-2 sm:px-3 min-w-[100px] sm:min-w-[110px] h-full text-sm"
                   >
                     <span className="text-base sm:text-lg">{selectedCountry?.flag}</span>
-                    <span className="text-xs sm:text-sm font-medium text-slate-700">{countryCode}</span>
+                    <span className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">{countryCode}</span>
                     <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400" />
                   </button>
                   {showDropdown && (
-                    <div className="absolute top-full mt-1 start-0 w-[calc(100vw-2rem)] sm:w-64 max-w-[280px] max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-xl shadow-lg z-50">
-                      <div className="sticky top-0 bg-white p-2 border-b border-gray-100">
+                    <div className="absolute top-full mt-1 start-0 w-[calc(100vw-2rem)] sm:w-64 max-w-[280px] max-h-60 overflow-y-auto bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg z-50">
+                      <div className="sticky top-0 bg-white dark:bg-slate-800 p-2 border-b border-gray-100 dark:border-slate-700">
                         <input
                           type="text"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           placeholder="Search..."
-                          className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg outline-none focus:border-primary-400"
+                          className="w-full px-3 py-1.5 text-sm border border-gray-200 dark:border-slate-600 rounded-lg outline-none focus:border-primary-400 bg-white dark:bg-slate-700 dark:text-white"
                           autoFocus
                         />
                       </div>
@@ -424,8 +424,8 @@ export default function RegisterPage() {
                             setShowDropdown(false);
                             setSearchQuery("");
                           }}
-                          className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-primary-50 transition-colors ${
-                            c.code === countryCode ? "bg-primary-50 text-primary-700" : "text-slate-700"
+                          className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors ${
+                            c.code === countryCode ? "bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400" : "text-slate-700 dark:text-slate-300"
                           }`}
                         >
                           <span className="text-lg">{c.flag}</span>
@@ -462,7 +462,7 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-slate-500">
+          <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
             {t("hasAccount")}{" "}
             <Link
               href="/auth/login"

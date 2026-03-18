@@ -58,12 +58,12 @@ export default function OnboardingTour() {
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div
         dir={isAr ? "rtl" : "ltr"}
-        className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300"
+        className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl dark:shadow-slate-950/50 overflow-hidden animate-in fade-in zoom-in-95 duration-300"
       >
         {/* Close button */}
         <button
           onClick={dismiss}
-          className="absolute top-4 end-4 z-10 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+          className="absolute top-4 end-4 z-10 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
@@ -74,7 +74,7 @@ export default function OnboardingTour() {
             <div className="mx-auto w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center mb-6 shadow-lg shadow-primary-500/30">
               <Rocket className="w-10 h-10 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-3">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
               {t("welcome")}
             </h2>
             <p className="text-slate-500 mb-8 max-w-sm mx-auto leading-relaxed">
@@ -136,7 +136,7 @@ export default function OnboardingTour() {
               </div>
 
               {/* Content */}
-              <h3 className="text-xl font-bold text-slate-900 mb-2">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">
                 {t(`step${step + 1}Title`)}
               </h3>
               <p className="text-slate-500 leading-relaxed mb-8">
@@ -152,7 +152,7 @@ export default function OnboardingTour() {
                     "inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg transition-colors",
                     step === 0
                       ? "text-slate-300 cursor-not-allowed"
-                      : "text-slate-500 hover:text-slate-700 hover:bg-slate-100"
+                      : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
                   )}
                 >
                   {isAr ? (

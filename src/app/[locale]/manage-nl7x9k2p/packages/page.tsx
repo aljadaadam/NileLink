@@ -170,8 +170,8 @@ export default function PackagesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
-          <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("title")}</h1>
+          <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-primary-600 transition-colors">
             <HelpCircle className="w-5 h-5" />
           </button>
         </div>
@@ -189,20 +189,20 @@ export default function PackagesPage() {
       </div>
 
       {showHelp && (
-        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
+        <div className="bg-primary-50 dark:bg-primary-900/30 border border-primary-100 dark:border-primary-800 rounded-xl p-4 text-sm text-primary-800 dark:text-primary-200 leading-relaxed">
           {t("helpDesc")}
         </div>
       )}
 
       {packages.length === 0 ? (
         <div className="card text-center py-16">
-          <Package className="w-12 h-12 text-slate-300 mx-auto" />
+          <Package className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto" />
           <p className="mt-4 text-slate-500">{t("empty")}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {packages.map((pkg) => (
-            <div key={pkg.id} className="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 bg-white">
+            <div key={pkg.id} className="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl dark:shadow-slate-950/50 transition-all duration-300 border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900">
               {/* Header with gradient + pattern */}
               <div className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 px-5 pt-5 pb-8 overflow-hidden">
                 {/* Decorative SVG pattern */}
@@ -244,48 +244,48 @@ export default function PackagesPage() {
 
               {/* Body - specs grid */}
               <div className="px-5 -mt-3 relative z-10">
-                <div className="bg-white rounded-xl border border-gray-100 shadow-sm divide-y divide-gray-50">
+                <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-700 shadow-sm dark:shadow-slate-950/50 divide-y divide-gray-50 dark:divide-slate-800">
                   <div className="flex items-center justify-between px-4 py-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center">
-                        <Clock className="w-4 h-4 text-primary-600" />
+                      <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center">
+                        <Clock className="w-4 h-4 text-primary-600 dark:text-primary-400" />
                       </div>
                       <span className="text-xs font-medium text-slate-400">{t("duration")}</span>
                     </div>
-                    <span className="text-sm font-semibold text-slate-800">
+                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                       {pkg.duration ? formatDuration(pkg.duration) : t("unlimited")}
                     </span>
                   </div>
                   <div className="flex items-center justify-between px-4 py-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center">
-                        <HardDrive className="w-4 h-4 text-violet-600" />
+                      <div className="w-8 h-8 rounded-lg bg-violet-50 dark:bg-violet-900/30 flex items-center justify-center">
+                        <HardDrive className="w-4 h-4 text-violet-600 dark:text-violet-400" />
                       </div>
                       <span className="text-xs font-medium text-slate-400">{t("dataLimit")}</span>
                     </div>
-                    <span className="text-sm font-semibold text-slate-800">
+                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                       {pkg.dataLimit ? formatBytes(BigInt(pkg.dataLimit)) : t("unlimited")}
                     </span>
                   </div>
                   <div className="flex items-center justify-between px-4 py-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
-                        <ArrowDown className="w-4 h-4 text-emerald-600" />
+                      <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
+                        <ArrowDown className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                       </div>
                       <span className="text-xs font-medium text-slate-400">{t("downloadSpeed")}</span>
                     </div>
-                    <span className="text-sm font-semibold text-slate-800">
+                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                       {pkg.downloadSpeed ? `${pkg.downloadSpeed} Kbps` : t("unlimited")}
                     </span>
                   </div>
                   <div className="flex items-center justify-between px-4 py-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
-                        <ArrowUp className="w-4 h-4 text-amber-600" />
+                      <div className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center">
+                        <ArrowUp className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                       </div>
                       <span className="text-xs font-medium text-slate-400">{t("uploadSpeed")}</span>
                     </div>
-                    <span className="text-sm font-semibold text-slate-800">
+                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                       {pkg.uploadSpeed ? `${pkg.uploadSpeed} Kbps` : t("unlimited")}
                     </span>
                   </div>
@@ -296,7 +296,7 @@ export default function PackagesPage() {
               <div className="px-5 py-4 flex items-center justify-end gap-1">
                 <button
                   onClick={() => handleToggleActive(pkg)}
-                  className="p-2 rounded-lg text-slate-400 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                  className="p-2 rounded-lg text-slate-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors"
                   title={pkg.isActive ? tc("inactive") : tc("active")}
                 >
                   {pkg.isActive ? (
@@ -307,13 +307,13 @@ export default function PackagesPage() {
                 </button>
                 <button
                   onClick={() => openEdit(pkg)}
-                  className="p-2 rounded-lg text-slate-400 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                  className="p-2 rounded-lg text-slate-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-colors"
                 >
                   <Pencil className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(pkg.id)}
-                  className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                  className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -326,9 +326,9 @@ export default function PackagesPage() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl dark:shadow-slate-950/50 w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-900">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                 {editId ? tc("edit") : t("add")}
               </h2>
               <button
@@ -337,21 +337,21 @@ export default function PackagesPage() {
                   setEditId(null);
                   setEditingPkg(null);
                 }}
-                className="text-slate-400 hover:text-slate-600"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4" key={editId || "new"}>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   {t("name")}
                 </label>
                 <input name="name" required className="input-field" placeholder={isAr ? "مثال: باقة ساعة" : "e.g. 1 Hour Package"} defaultValue={editingPkg?.name || ""} />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     {t("duration")}
                   </label>
                   <input
@@ -365,7 +365,7 @@ export default function PackagesPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     {t("dataLimit")}
                   </label>
                   <input
@@ -381,7 +381,7 @@ export default function PackagesPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     {t("downloadSpeed")}
                   </label>
                   <input
@@ -395,7 +395,7 @@ export default function PackagesPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     {t("uploadSpeed")}
                   </label>
                   <input
@@ -411,7 +411,7 @@ export default function PackagesPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     {t("price")}
                   </label>
                   <input
@@ -427,7 +427,7 @@ export default function PackagesPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                     {t("currency")}
                   </label>
                   <select name="currency" className="input-field" defaultValue={editingPkg?.currency || currency.code}>

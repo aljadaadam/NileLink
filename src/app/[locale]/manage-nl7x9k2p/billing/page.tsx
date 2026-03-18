@@ -36,24 +36,24 @@ interface Invoice {
 
 const planIcons: Record<string, typeof Zap> = { STARTER: Zap, PRO: Crown, ENTERPRISE: Rocket };
 const planColors: Record<string, string> = {
-  STARTER: "bg-blue-50 text-blue-600",
-  PRO: "bg-purple-50 text-purple-600",
-  ENTERPRISE: "bg-amber-50 text-amber-600",
+  STARTER: "bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400",
+  PRO: "bg-purple-50 dark:bg-purple-950 text-purple-600 dark:text-purple-400",
+  ENTERPRISE: "bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400",
 };
 
 const statusColors: Record<string, string> = {
-  PAID: "bg-emerald-50 text-emerald-700",
-  PENDING: "bg-yellow-50 text-yellow-700",
-  OVERDUE: "bg-red-50 text-red-700",
-  CANCELLED: "bg-gray-100 text-gray-500",
+  PAID: "bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400",
+  PENDING: "bg-yellow-50 dark:bg-yellow-950 text-yellow-700 dark:text-yellow-400",
+  OVERDUE: "bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-400",
+  CANCELLED: "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400",
 };
 
 const subStatusColors: Record<string, string> = {
-  TRIAL: "bg-blue-50 text-blue-700",
-  ACTIVE: "bg-emerald-50 text-emerald-700",
-  PAST_DUE: "bg-red-50 text-red-700",
-  CANCELLED: "bg-gray-100 text-gray-500",
-  EXPIRED: "bg-gray-100 text-gray-500",
+  TRIAL: "bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-400",
+  ACTIVE: "bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400",
+  PAST_DUE: "bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-400",
+  CANCELLED: "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400",
+  EXPIRED: "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400",
 };
 
 // formatDate imported from @/lib/utils
@@ -119,13 +119,13 @@ export default function BillingPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2">
-        <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
-        <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("title")}</h1>
+        <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-primary-600 transition-colors">
           <HelpCircle className="w-5 h-5" />
         </button>
       </div>
       {showHelp && (
-        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
+        <div className="bg-primary-50 dark:bg-primary-950/30 border border-primary-100 dark:border-primary-800 rounded-xl p-4 text-sm text-primary-800 dark:text-primary-300 leading-relaxed">
           {t("helpDesc")}
         </div>
       )}
@@ -139,7 +139,7 @@ export default function BillingPage() {
                 <PlanIcon className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-slate-900">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                   {t(`planNames.${sub.plan}`)}
                 </h2>
                 <div className="flex items-center gap-2 mt-1">
@@ -155,28 +155,28 @@ export default function BillingPage() {
               </div>
             </div>
             <div className="text-end">
-              <p className="text-2xl font-bold text-slate-900">{formatPrice(sub.limits.priceUSD * currency.rate, currency)}</p>
+              <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{formatPrice(sub.limits.priceUSD * currency.rate, currency)}</p>
               <p className="text-sm text-slate-500">/ {t("month")}</p>
             </div>
           </div>
 
           {/* Limits */}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-slate-50 rounded-xl p-4">
-              <p className="text-sm text-slate-500">{t("limits.routers")}</p>
-              <p className="text-lg font-bold text-slate-900">
+            <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-4">
+              <p className="text-sm text-slate-500 dark:text-slate-400">{t("limits.routers")}</p>
+              <p className="text-lg font-bold text-slate-900 dark:text-slate-100">
                 {sub.limits.maxRouters === -1 ? t("unlimited") : sub.limits.maxRouters}
               </p>
             </div>
-            <div className="bg-slate-50 rounded-xl p-4">
-              <p className="text-sm text-slate-500">{t("limits.hotspotUsers")}</p>
-              <p className="text-lg font-bold text-slate-900">
+            <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-4">
+              <p className="text-sm text-slate-500 dark:text-slate-400">{t("limits.hotspotUsers")}</p>
+              <p className="text-lg font-bold text-slate-900 dark:text-slate-100">
                 {sub.limits.maxHotspotUsers === -1 ? t("unlimited") : sub.limits.maxHotspotUsers}
               </p>
             </div>
-            <div className="bg-slate-50 rounded-xl p-4">
-              <p className="text-sm text-slate-500">{t("limits.vouchers")}</p>
-              <p className="text-lg font-bold text-slate-900">
+            <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-4">
+              <p className="text-sm text-slate-500 dark:text-slate-400">{t("limits.vouchers")}</p>
+              <p className="text-lg font-bold text-slate-900 dark:text-slate-100">
                 {sub.limits.maxVouchersPerMonth === -1 ? t("unlimited") : sub.limits.maxVouchersPerMonth.toLocaleString(locale)}
               </p>
             </div>
@@ -194,7 +194,7 @@ export default function BillingPage() {
       <div className="card">
         <div className="flex items-center gap-2 mb-4">
           <FileText className="w-5 h-5 text-slate-400" />
-          <h2 className="text-lg font-bold text-slate-900">{t("invoices")}</h2>
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{t("invoices")}</h2>
         </div>
 
         {invoices.length === 0 ? (
@@ -207,7 +207,7 @@ export default function BillingPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100">
+                <tr className="border-b border-gray-100 dark:border-slate-700">
                   <th className="text-start py-3 px-2 font-medium text-slate-500">{t("invoiceNumber")}</th>
                   <th className="text-start py-3 px-2 font-medium text-slate-500">{t("plan")}</th>
                   <th className="text-start py-3 px-2 font-medium text-slate-500">{t("amount")}</th>
@@ -218,7 +218,7 @@ export default function BillingPage() {
               </thead>
               <tbody>
                 {invoices.map((inv) => (
-                  <tr key={inv.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                  <tr key={inv.id} className="border-b border-gray-50 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
                     <td className="py-3 px-2 font-mono text-xs">{inv.invoiceNumber}</td>
                     <td className="py-3 px-2">{t(`planNames.${inv.plan}`)}</td>
                     <td className="py-3 px-2 font-semibold">{formatPrice(inv.amount * currency.rate, currency)}</td>
@@ -241,12 +241,12 @@ export default function BillingPage() {
 
       {/* Payment Instructions */}
       {invoices.some((inv) => inv.status === "PENDING" || inv.status === "OVERDUE") && (
-        <div className="card border-2 border-primary-100 bg-gradient-to-br from-primary-50/30 to-transparent">
+        <div className="card border-2 border-primary-100 dark:border-primary-800 bg-gradient-to-br from-primary-50/30 dark:from-primary-950/30 to-transparent">
           <div className="flex items-center gap-2 mb-4">
             <CreditCard className="w-5 h-5 text-primary-600" />
-            <h2 className="text-lg font-bold text-slate-900">{t("paymentInstructions")}</h2>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{t("paymentInstructions")}</h2>
           </div>
-          <p className="text-sm text-slate-600 mb-4">{t("paymentDesc")}</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">{t("paymentDesc")}</p>
           <div className="flex flex-wrap gap-3">
             <a
               href="https://wa.me/249123456789"
@@ -259,7 +259,7 @@ export default function BillingPage() {
             </a>
             <a
               href="mailto:support@nilelink.net"
-              className="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
+              className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
             >
               <Mail className="w-4 h-4" />
               {t("contactEmail")}

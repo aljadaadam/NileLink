@@ -398,12 +398,12 @@ export default function VouchersPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
             <div className="p-2 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl text-white shadow-lg shadow-primary-500/25">
               <Ticket className="w-5 h-5" />
             </div>
             {t("title")}
-            <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
+            <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-primary-600 transition-colors">
               <HelpCircle className="w-5 h-5" />
             </button>
           </h1>
@@ -423,23 +423,23 @@ export default function VouchersPage() {
       </div>
 
       {showHelp && (
-        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
+        <div className="bg-primary-50 dark:bg-primary-900/30 border border-primary-100 dark:border-primary-800 rounded-xl p-4 text-sm text-primary-800 dark:text-primary-200 leading-relaxed">
           {t("helpDesc")}
         </div>
       )}
 
       {/* Router Selector for Smart QR */}
       {routers.length > 0 && (
-        <div className="flex items-center gap-3 bg-white rounded-xl border border-gray-100 shadow-sm px-4 py-3">
-          <div className="p-2 bg-primary-50 rounded-lg">
-            <Wifi className="w-4 h-4 text-primary-600" />
+        <div className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 shadow-sm dark:shadow-slate-950/50 px-4 py-3">
+          <div className="p-2 bg-primary-50 dark:bg-primary-900/30 rounded-lg">
+            <Wifi className="w-4 h-4 text-primary-600 dark:text-primary-400" />
           </div>
           <div className="flex-1">
-            <p className="text-xs font-semibold text-slate-500">{t("qrRouter")}</p>
+            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{t("qrRouter")}</p>
             <select
               value={selectedRouter}
               onChange={(e) => setSelectedRouter(e.target.value)}
-              className="mt-0.5 text-sm font-medium text-slate-800 bg-transparent border-none p-0 focus:ring-0 cursor-pointer w-full"
+              className="mt-0.5 text-sm font-medium text-slate-800 dark:text-slate-200 bg-transparent border-none p-0 focus:ring-0 cursor-pointer w-full"
             >
               <option value="">{t("qrCodeOnly")}</option>
               {routers.map((r) => (
@@ -448,7 +448,7 @@ export default function VouchersPage() {
             </select>
           </div>
           {selectedRouter && (
-            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full whitespace-nowrap">
+            <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded-full whitespace-nowrap">
               {t("qrSmart")}
             </span>
           )}
@@ -470,13 +470,13 @@ export default function VouchersPage() {
               "relative overflow-hidden rounded-2xl p-4 text-start transition-all duration-200 ring-1 ring-inset",
               ring,
               filterStatus === key
-                ? "bg-white shadow-md scale-[1.02]"
-                : "bg-white/60 hover:bg-white hover:shadow-sm"
+                ? "bg-white dark:bg-slate-900 shadow-md dark:shadow-slate-950/50 scale-[1.02]"
+                : "bg-white/60 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-900 hover:shadow-sm"
             )}
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold text-slate-900">{count}</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">{count}</p>
                 <p className="text-xs font-medium text-slate-500 mt-0.5">
                   {statusConfig[key].label}
                 </p>
@@ -504,7 +504,7 @@ export default function VouchersPage() {
             className="input-field ps-10"
           />
         </div>
-        <div className="flex gap-1.5 p-1 bg-white rounded-xl border border-gray-200 shadow-sm">
+        <div className="flex gap-1.5 p-1 bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-700 shadow-sm dark:shadow-slate-950/50">
           {(["ALL", "UNUSED", "ACTIVE", "USED", "EXPIRED"] as const).map((s) => (
             <button
               key={s}
@@ -513,7 +513,7 @@ export default function VouchersPage() {
                 "px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200",
                 filterStatus === s
                   ? "bg-primary-600 text-white shadow-sm"
-                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
               )}
             >
               {s === "ALL" ? tc("all") : statusConfig[s as keyof typeof statusConfig]?.label}
@@ -524,7 +524,7 @@ export default function VouchersPage() {
 
       {/* Content */}
       {filtered.length === 0 ? (
-        <div className="relative overflow-hidden rounded-2xl border border-dashed border-gray-200 bg-white/50 text-center py-20">
+        <div className="relative overflow-hidden rounded-2xl border border-dashed border-gray-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 text-center py-20">
           <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px] opacity-50" />
           <div className="relative">
             <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center mb-4">
@@ -541,17 +541,17 @@ export default function VouchersPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm dark:shadow-slate-950/50 overflow-hidden">
           {/* Bulk Action Bar */}
           {selectedIds.size > 0 && (
-            <div className="flex items-center justify-between px-4 py-3 bg-primary-50 border-b border-primary-100">
-              <span className="text-sm font-semibold text-primary-700">
+            <div className="flex items-center justify-between px-4 py-3 bg-primary-50 dark:bg-primary-900/30 border-b border-primary-100 dark:border-primary-800">
+              <span className="text-sm font-semibold text-primary-700 dark:text-primary-300">
                 {t("selected", { count: selectedIds.size })}
               </span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setSelectedIds(new Set())}
-                  className="px-3 py-1.5 text-xs font-medium text-slate-600 bg-white rounded-lg border border-gray-200 hover:bg-slate-50 transition-colors"
+                  className="px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                 >
                   <X className="w-3.5 h-3.5 inline-block me-1" />
                   {tc("cancel")}
@@ -577,7 +577,7 @@ export default function VouchersPage() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-100">
+                <tr className="border-b border-gray-100 dark:border-slate-800">
                   <th className="p-4 w-10">
                     <input
                       type="checkbox"
@@ -603,7 +603,7 @@ export default function VouchersPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-gray-50 dark:divide-slate-800">
                 {paginated.map((voucher) => {
                   const cfg = statusConfig[voucher.status];
                   return (
@@ -611,8 +611,8 @@ export default function VouchersPage() {
                       key={voucher.id}
                       onClick={() => openVoucherModal(voucher)}
                       className={cn(
-                        "group transition-colors duration-150 hover:bg-slate-50/70 cursor-pointer",
-                        selectedIds.has(voucher.id) && "bg-primary-50/40"
+                        "group transition-colors duration-150 hover:bg-slate-50/70 dark:hover:bg-slate-800/70 cursor-pointer",
+                        selectedIds.has(voucher.id) && "bg-primary-50/40 dark:bg-primary-900/20"
                       )}
                     >
                       <td className="p-4" onClick={(e) => e.stopPropagation()}>
@@ -624,14 +624,14 @@ export default function VouchersPage() {
                         />
                       </td>
                       <td className="p-4">
-                        <div className="flex items-center gap-1.5 bg-slate-50 rounded-lg px-3 py-1.5 font-mono text-sm font-bold text-slate-800 tracking-wider w-fit" dir="ltr">
+                        <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 rounded-lg px-3 py-1.5 font-mono text-sm font-bold text-slate-800 dark:text-slate-200 tracking-wider w-fit" dir="ltr">
                           {voucher.code}
                         </div>
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">
                           <Package className="w-4 h-4 text-slate-400" />
-                          <span className="text-sm font-medium text-slate-700">{voucher.package.name}</span>
+                          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{voucher.package.name}</span>
                         </div>
                       </td>
                       <td className="p-4">
@@ -663,7 +663,7 @@ export default function VouchersPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 bg-slate-50/30">
+            <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-800/30">
               <span className="text-sm text-slate-500">
                 {(currentPage - 1) * ITEMS_PER_PAGE + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)}{" "}
                 <span className="text-slate-400">/ {filtered.length}</span>
@@ -672,9 +672,9 @@ export default function VouchersPage() {
                 <button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-white hover:shadow-sm transition-all"
+                  className="p-1.5 rounded-lg border border-gray-200 dark:border-slate-700 disabled:opacity-30 hover:bg-white dark:hover:bg-slate-800 hover:shadow-sm transition-all"
                 >
-                  <ChevronLeft className="w-4 h-4 text-slate-600" />
+                  <ChevronLeft className="w-4 h-4 text-slate-600 dark:text-slate-400" />
                 </button>
                 {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
                   let pageNum: number;
@@ -695,7 +695,7 @@ export default function VouchersPage() {
                         "w-8 h-8 text-sm rounded-lg transition-all font-medium",
                         currentPage === pageNum
                           ? "bg-primary-600 text-white shadow-sm"
-                          : "text-slate-500 hover:bg-white hover:shadow-sm"
+                          : "text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:shadow-sm"
                       )}
                     >
                       {pageNum}
@@ -705,9 +705,9 @@ export default function VouchersPage() {
                 <button
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="p-1.5 rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-white hover:shadow-sm transition-all"
+                  className="p-1.5 rounded-lg border border-gray-200 dark:border-slate-700 disabled:opacity-30 hover:bg-white dark:hover:bg-slate-800 hover:shadow-sm transition-all"
                 >
-                  <ChevronRight className="w-4 h-4 text-slate-600" />
+                  <ChevronRight className="w-4 h-4 text-slate-600 dark:text-slate-400" />
                 </button>
               </div>
             </div>
@@ -719,7 +719,7 @@ export default function VouchersPage() {
       {activeVoucher && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setActiveVoucher(null)} />
-          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+          <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl dark:shadow-slate-950/50 w-full max-w-sm overflow-hidden">
             {/* Header with QR */}
             <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 p-6 text-white text-center">
               {activeQr ? (
@@ -743,30 +743,30 @@ export default function VouchersPage() {
 
             {/* Info */}
             <div className="p-5 space-y-3">
-              <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                <span className="text-sm text-slate-500 flex items-center gap-2">
+              <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-slate-700">
+                <span className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">
                   <Package className="w-4 h-4" /> {t("package")}
                 </span>
-                <span className="text-sm font-semibold text-slate-800">{activeVoucher.package.name}</span>
+                <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">{activeVoucher.package.name}</span>
               </div>
-              <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                <span className="text-sm text-slate-500 flex items-center gap-2">
+              <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-slate-700">
+                <span className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">
                   <Clock className="w-4 h-4" /> {t("createdAt")}
                 </span>
-                <span className="text-sm font-medium text-slate-700">{new Date(activeVoucher.createdAt).toLocaleDateString(locale)}</span>
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{new Date(activeVoucher.createdAt).toLocaleDateString(locale)}</span>
               </div>
               {activeVoucher.usedBy && (
-                <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm text-slate-500">{t("usedBy")}</span>
-                  <span className="text-sm font-medium text-slate-700">{activeVoucher.usedBy}</span>
+                <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-slate-700">
+                  <span className="text-sm text-slate-500 dark:text-slate-400">{t("usedBy")}</span>
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{activeVoucher.usedBy}</span>
                 </div>
               )}
               {activeVoucher.expiresAt && (
-                <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                  <span className="text-sm text-slate-500 flex items-center gap-2">
+                <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-slate-700">
+                  <span className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">
                     <Calendar className="w-4 h-4" /> {t("expiry")}
                   </span>
-                  <span className="text-sm font-medium text-slate-700">{new Date(activeVoucher.expiresAt).toLocaleDateString(locale)}</span>
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{new Date(activeVoucher.expiresAt).toLocaleDateString(locale)}</span>
                 </div>
               )}
             </div>
@@ -775,28 +775,28 @@ export default function VouchersPage() {
             <div className="p-5 pt-0 grid grid-cols-3 gap-2">
               <button
                 onClick={() => { copyCode(activeVoucher.code); }}
-                className="flex flex-col items-center gap-1.5 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors group"
+                className="flex flex-col items-center gap-1.5 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors group"
               >
                 {copiedCode === activeVoucher.code ? (
                   <CheckCircle className="w-5 h-5 text-emerald-500" />
                 ) : (
-                  <Copy className="w-5 h-5 text-slate-500 group-hover:text-primary-600 transition-colors" />
+                  <Copy className="w-5 h-5 text-slate-500 dark:text-slate-400 group-hover:text-primary-600 transition-colors" />
                 )}
-                <span className="text-xs font-medium text-slate-600">{tc("copy")}</span>
+                <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{tc("copy")}</span>
               </button>
               <button
                 onClick={() => printVoucher(activeVoucher)}
-                className="flex flex-col items-center gap-1.5 py-3 rounded-xl bg-primary-50 hover:bg-primary-100 transition-colors group"
+                className="flex flex-col items-center gap-1.5 py-3 rounded-xl bg-primary-50 dark:bg-primary-900/30 hover:bg-primary-100 dark:hover:bg-primary-900/50 transition-colors group"
               >
-                <Printer className="w-5 h-5 text-primary-600 group-hover:text-primary-700 transition-colors" />
-                <span className="text-xs font-medium text-primary-700">{tc("print")}</span>
+                <Printer className="w-5 h-5 text-primary-600 dark:text-primary-400 group-hover:text-primary-700 transition-colors" />
+                <span className="text-xs font-medium text-primary-700 dark:text-primary-300">{tc("print")}</span>
               </button>
               <button
                 onClick={() => handleDeleteVoucher(activeVoucher)}
-                className="flex flex-col items-center gap-1.5 py-3 rounded-xl bg-red-50 hover:bg-red-100 transition-colors group"
+                className="flex flex-col items-center gap-1.5 py-3 rounded-xl bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors group"
               >
-                <Trash2 className="w-5 h-5 text-red-500 group-hover:text-red-600 transition-colors" />
-                <span className="text-xs font-medium text-red-600">{tc("delete")}</span>
+                <Trash2 className="w-5 h-5 text-red-500 dark:text-red-400 group-hover:text-red-600 transition-colors" />
+                <span className="text-xs font-medium text-red-600 dark:text-red-400">{tc("delete")}</span>
               </button>
             </div>
           </div>
@@ -807,7 +807,7 @@ export default function VouchersPage() {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowModal(false)} />
-          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl dark:shadow-slate-950/50 w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             {/* Modal Header */}
             <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-5 text-white">
               <div className="flex items-center justify-between">
@@ -832,7 +832,7 @@ export default function VouchersPage() {
             {/* Modal Body */}
             <form onSubmit={handleGenerate} className="p-5 space-y-5">
               <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                   <Package className="w-4 h-4 text-primary-500" />
                   {t("package")}
                 </label>
@@ -844,7 +844,7 @@ export default function VouchersPage() {
                 </select>
               </div>
               <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                   <Hash className="w-4 h-4 text-primary-500" />
                   {t("count")}
                 </label>
@@ -860,7 +860,7 @@ export default function VouchersPage() {
                 />
               </div>
               <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                   <Calendar className="w-4 h-4 text-primary-500" />
                   {t("expiry")}
                 </label>

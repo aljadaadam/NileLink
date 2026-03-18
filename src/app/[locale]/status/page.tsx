@@ -70,7 +70,7 @@ export default function StatusPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50/30 to-teal-50/20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50/30 to-teal-50/20 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* Header */}
       <div className="bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 text-white">
         <div className="max-w-lg mx-auto px-6 py-10 text-center">
@@ -84,8 +84,8 @@ export default function StatusPage() {
 
       <div className="max-w-lg mx-auto px-6 -mt-6">
         {/* Search Form */}
-        <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-xl p-5 border border-gray-100">
-          <label className="text-sm font-semibold text-slate-700 mb-2 block">{t("enterCode")}</label>
+        <form onSubmit={handleSearch} className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl dark:shadow-slate-950/50 p-5 border border-gray-100 dark:border-slate-700">
+          <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 block">{t("enterCode")}</label>
           <div className="flex gap-2">
             <div className="relative flex-1">
               <Search className="absolute start-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -94,7 +94,7 @@ export default function StatusPage() {
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 placeholder={t("codePlaceholder")}
-                className="w-full ps-10 pe-4 py-3 border-2 border-gray-200 rounded-xl text-center font-mono tracking-[0.2em] text-slate-800 font-bold focus:border-primary-500 focus:ring-0 outline-none transition-colors"
+                className="w-full ps-10 pe-4 py-3 border-2 border-gray-200 dark:border-slate-600 rounded-xl text-center font-mono tracking-[0.2em] text-slate-800 dark:text-white font-bold focus:border-primary-500 focus:ring-0 outline-none transition-colors bg-white dark:bg-slate-700"
                 dir="ltr"
                 maxLength={50}
               />
@@ -115,16 +115,16 @@ export default function StatusPage() {
           <div className="mt-6 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
             {!data.found ? (
               // Not found
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
-                <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 p-8 text-center">
+                <div className="w-14 h-14 rounded-full bg-red-50 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-4">
                   <AlertCircle className="w-7 h-7 text-red-400" />
                 </div>
-                <p className="text-slate-700 font-semibold">{t("notFound")}</p>
-                <p className="text-sm text-slate-400 mt-1">{t("notFoundHint")}</p>
+                <p className="text-slate-700 dark:text-slate-200 font-semibold">{t("notFound")}</p>
+                <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{t("notFoundHint")}</p>
               </div>
             ) : data.type === "voucher" ? (
               // Unused voucher
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
                 <div className={cn(
                   "p-5 text-center",
                   data.status === "UNUSED"
@@ -148,7 +148,7 @@ export default function StatusPage() {
               </div>
             ) : (
               // Active usage
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
                 {/* Status bar */}
                 <div className={cn(
                   "p-5 text-center",
@@ -180,13 +180,13 @@ export default function StatusPage() {
                         <span className="text-slate-500 flex items-center gap-1.5">
                           <Database className="w-4 h-4" /> {t("dataUsage")}
                         </span>
-                        <span className="font-bold text-slate-800">
+                        <span className="font-bold text-slate-800 dark:text-slate-100">
                           {formatBytes(data.dataUsedMB)}
                           {data.dataLimitMB ? ` / ${formatBytes(data.dataLimitMB)}` : ""}
                         </span>
                       </div>
                       {data.dataPercent !== null && data.dataPercent !== undefined && (
-                        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="w-full h-3 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden">
                           <div
                             className={cn(
                               "h-full rounded-full transition-all duration-500",
@@ -216,14 +216,14 @@ export default function StatusPage() {
 
                   {/* Speed */}
                   {(data.downloadSpeed || data.uploadSpeed) && (
-                    <div className="flex items-center gap-4 bg-slate-50 rounded-xl p-3">
+                    <div className="flex items-center gap-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl p-3">
                       <div className="flex items-center gap-1.5 text-sm">
                         <ArrowDown className="w-4 h-4 text-emerald-500" />
-                        <span className="text-slate-600">{data.downloadSpeed || 0} Kbps</span>
+                        <span className="text-slate-600 dark:text-slate-300">{data.downloadSpeed || 0} Kbps</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-sm">
                         <ArrowUp className="w-4 h-4 text-sky-500" />
-                        <span className="text-slate-600">{data.uploadSpeed || 0} Kbps</span>
+                        <span className="text-slate-600 dark:text-slate-300">{data.uploadSpeed || 0} Kbps</span>
                       </div>
                     </div>
                   )}
@@ -255,9 +255,9 @@ export default function StatusPage() {
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
-      <span className="text-sm text-slate-500">{label}</span>
-      <span className="text-sm font-semibold text-slate-800">{value}</span>
+    <div className="flex items-center justify-between py-2 border-b border-gray-50 dark:border-slate-700 last:border-0">
+      <span className="text-sm text-slate-500 dark:text-slate-400">{label}</span>
+      <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">{value}</span>
     </div>
   );
 }

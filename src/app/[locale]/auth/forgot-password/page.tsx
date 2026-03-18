@@ -154,7 +154,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 flex items-center justify-center px-3 py-6 sm:p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center px-3 py-6 sm:p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-6 sm:mb-8">
@@ -162,7 +162,7 @@ export default function ForgotPasswordPage() {
             <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center">
               <Wifi className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-slate-900">NileLink</span>
+            <span className="text-2xl font-bold text-slate-900 dark:text-white">NileLink</span>
           </Link>
         </div>
 
@@ -170,32 +170,32 @@ export default function ForgotPasswordPage() {
           {step === "success" ? (
             /* ─── Success ─── */
             <div className="text-center py-6">
-              <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-8 h-8 text-emerald-600" />
+              <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
               </div>
-              <h2 className="text-xl font-bold text-slate-900">{t("successTitle")}</h2>
-              <p className="text-slate-500 mt-2 text-sm">{t("successMessage")}</p>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">{t("successTitle")}</h2>
+              <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">{t("successMessage")}</p>
             </div>
           ) : step === "email" ? (
             /* ─── Step 1: Enter Email ─── */
             <>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center">
-                  <KeyRound className="w-5 h-5 text-primary-600" />
+                <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+                  <KeyRound className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-slate-900">{t("title")}</h1>
-                  <p className="text-sm text-slate-500">{t("subtitle")}</p>
+                  <h1 className="text-xl font-bold text-slate-900 dark:text-white">{t("title")}</h1>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{t("subtitle")}</p>
                 </div>
               </div>
 
               <form onSubmit={handleSendCode} className="space-y-4">
                 {error && (
-                  <div className="p-3 rounded-xl bg-red-50 text-red-600 text-sm">{error}</div>
+                  <div className="p-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-300 text-sm">{error}</div>
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                     {t("email")}
                   </label>
                   <div className="relative">
@@ -222,7 +222,7 @@ export default function ForgotPasswordPage() {
                 </button>
               </form>
 
-              <p className="mt-6 text-center text-sm text-slate-500">
+              <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
                 <Link href="/auth/login" className="text-primary-600 hover:text-primary-700 font-medium inline-flex items-center gap-1">
                   <ArrowLeft className="w-4 h-4" />
                   {t("backToLogin")}
@@ -230,26 +230,25 @@ export default function ForgotPasswordPage() {
               </p>
             </>
           ) : (
-            /* ─── Step 2: Enter Code + New Password ─── */
             <>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center">
-                  <KeyRound className="w-5 h-5 text-primary-600" />
+                <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+                  <KeyRound className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-slate-900">{t("resetTitle")}</h1>
-                  <p className="text-sm text-slate-500">{t("resetSubtitle")}</p>
+                  <h1 className="text-xl font-bold text-slate-900 dark:text-white">{t("resetTitle")}</h1>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{t("resetSubtitle")}</p>
                 </div>
               </div>
 
               <form onSubmit={handleReset} className="space-y-4">
                 {error && (
-                  <div className="p-3 rounded-xl bg-red-50 text-red-600 text-sm">{error}</div>
+                  <div className="p-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-300 text-sm">{error}</div>
                 )}
 
                 {/* OTP Input */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                     {t("codeLabel")}
                   </label>
                   <div className="flex gap-2 justify-center" dir="ltr">
@@ -264,7 +263,7 @@ export default function ForgotPasswordPage() {
                         onChange={(e) => handleChange(i, e.target.value)}
                         onKeyDown={(e) => handleKeyDown(i, e)}
                         onPaste={i === 0 ? handlePaste : undefined}
-                        className="w-11 h-12 text-center text-lg font-bold rounded-xl border-2 border-gray-200 focus:border-primary-500 focus:ring-0 outline-none transition-colors"
+                        className="w-11 h-12 text-center text-lg font-bold rounded-xl border-2 border-gray-200 dark:border-slate-600 focus:border-primary-500 focus:ring-0 outline-none transition-colors bg-white dark:bg-slate-800 dark:text-white"
                       />
                     ))}
                   </div>
@@ -288,7 +287,7 @@ export default function ForgotPasswordPage() {
 
                 {/* New Password */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                     {t("newPassword")}
                   </label>
                   <div className="relative">
@@ -306,7 +305,7 @@ export default function ForgotPasswordPage() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                      className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -315,7 +314,7 @@ export default function ForgotPasswordPage() {
 
                 {/* Confirm Password */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                     {t("confirmPassword")}
                   </label>
                   <div className="relative">

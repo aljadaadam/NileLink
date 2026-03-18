@@ -111,15 +111,15 @@ export default function HeroLanding() {
   const s5 = useInView();
 
   return (
-    <div className="min-h-screen bg-slate-50 overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 overflow-x-hidden">
       {/* ═══ Navbar ═══ */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
+      <nav className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-gray-100 dark:border-slate-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg shadow-primary-500/30">
               <Wifi className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-slate-900">NileLink</span>
+            <span className="text-xl font-bold text-slate-900 dark:text-white">NileLink</span>
           </div>
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
@@ -137,7 +137,7 @@ export default function HeroLanding() {
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
         {/* Animated background */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-accent-50" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-accent-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800" />
           {/* Gradient orbs */}
           <div className="absolute top-1/4 start-1/4 w-96 h-96 bg-primary-300/20 rounded-full blur-[120px] animate-pulse" />
           <div className="absolute bottom-1/4 end-1/3 w-80 h-80 bg-violet-300/15 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: "1s" }} />
@@ -151,24 +151,24 @@ export default function HeroLanding() {
             className="absolute top-[15%] end-[8%] w-72 opacity-80 animate-float"
             style={{ transform: `translate(${mousePos.x * 0.3}px, ${mousePos.y * 0.3}px)` }}
           >
-            <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-xl">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-4 shadow-xl">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-3 h-3 rounded-full bg-emerald-400" />
-                <span className="text-xs text-slate-500">{locale === "ar" ? "لوحة التحكم" : "Dashboard"}</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">{locale === "ar" ? "لوحة التحكم" : "Dashboard"}</span>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-400">{locale === "ar" ? "المستخدمون" : "Users"}</span>
+                  <span className="text-xs text-slate-400 dark:text-slate-500">{locale === "ar" ? "المستخدمون" : "Users"}</span>
                   <span className="text-sm font-bold text-emerald-500">1,247</span>
                 </div>
-                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden">
                   <div className="h-full w-3/4 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full animate-pulse" />
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-400">{locale === "ar" ? "الإيرادات" : "Revenue"}</span>
+                  <span className="text-xs text-slate-400 dark:text-slate-500">{locale === "ar" ? "الإيرادات" : "Revenue"}</span>
                   <span className="text-sm font-bold text-amber-500">$3,842</span>
                 </div>
-                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden">
                   <div className="h-full w-2/3 bg-gradient-to-r from-amber-400 to-orange-400 rounded-full animate-pulse" style={{ animationDelay: "0.5s" }} />
                 </div>
               </div>
@@ -180,14 +180,14 @@ export default function HeroLanding() {
             className="absolute top-[55%] end-[5%] w-56 opacity-70 animate-float-delayed"
             style={{ transform: `translate(${mousePos.x * -0.2}px, ${mousePos.y * -0.2}px)` }}
           >
-            <div className="bg-white rounded-2xl border border-gray-200 p-3 shadow-xl">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-3 shadow-xl">
               <div className="flex items-center gap-2 mb-2">
                 <Router className="w-4 h-4 text-cyan-500" />
-                <span className="text-xs text-slate-500">Router-01</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">Router-01</span>
                 <span className="ms-auto w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               </div>
-              <div className="text-xs text-slate-400 space-y-1">
-                <div className="flex justify-between"><span>IP</span><span className="text-slate-600" dir="ltr">192.168.88.1</span></div>
+              <div className="text-xs text-slate-400 dark:text-slate-500 space-y-1">
+                <div className="flex justify-between"><span>IP</span><span className="text-slate-600 dark:text-slate-300" dir="ltr">192.168.88.1</span></div>
                 <div className="flex justify-between"><span>{locale === "ar" ? "متصل" : "Online"}</span><span className="text-emerald-500">✓</span></div>
               </div>
             </div>
@@ -198,13 +198,13 @@ export default function HeroLanding() {
             className="absolute top-[25%] start-[5%] w-48 opacity-70 animate-float-slow"
             style={{ transform: `translate(${mousePos.x * 0.15}px, ${mousePos.y * 0.15}px)` }}
           >
-            <div className="bg-white rounded-2xl border border-gray-200 p-3 shadow-xl">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-3 shadow-xl">
               <div className="flex items-center gap-2 mb-2">
                 <Ticket className="w-4 h-4 text-violet-500" />
-                <span className="text-xs text-slate-500">{locale === "ar" ? "كود جديد" : "New Code"}</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">{locale === "ar" ? "كود جديد" : "New Code"}</span>
               </div>
-              <div className="font-mono text-lg text-center text-slate-800 tracking-widest py-1">XK7M-9PLQ</div>
-              <div className="text-[10px] text-center text-slate-400">{locale === "ar" ? "ساعتين • 5 ميجا" : "2 hours • 5 Mbps"}</div>
+              <div className="font-mono text-lg text-center text-slate-800 dark:text-slate-200 tracking-widest py-1">XK7M-9PLQ</div>
+              <div className="text-[10px] text-center text-slate-400 dark:text-slate-500">{locale === "ar" ? "ساعتين • 5 ميجا" : "2 hours • 5 Mbps"}</div>
             </div>
           </div>
 
@@ -213,10 +213,10 @@ export default function HeroLanding() {
             className="absolute bottom-[25%] start-[8%] w-52 opacity-60 animate-float-delayed"
             style={{ transform: `translate(${mousePos.x * -0.25}px, ${mousePos.y * -0.25}px)` }}
           >
-            <div className="bg-white rounded-2xl border border-gray-200 p-3 shadow-xl">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-3 shadow-xl">
               <div className="flex items-center gap-2 mb-2">
                 <Users className="w-4 h-4 text-pink-500" />
-                <span className="text-xs text-slate-500">{locale === "ar" ? "مستخدمون متصلون" : "Connected Users"}</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">{locale === "ar" ? "مستخدمون متصلون" : "Connected Users"}</span>
               </div>
               <div className="flex gap-1">
                 {[...Array(8)].map((_, i) => (
@@ -232,14 +232,14 @@ export default function HeroLanding() {
         {/* Hero content */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-primary-50 rounded-full px-4 py-1.5 text-sm text-primary-600 border border-primary-200 mb-8 animate-fade-in">
+            <div className="inline-flex items-center gap-2 bg-primary-50 dark:bg-primary-900/30 rounded-full px-4 py-1.5 text-sm text-primary-600 dark:text-primary-400 border border-primary-200 dark:border-primary-700 mb-8 animate-fade-in">
               <Zap className="w-4 h-4" />
               {locale === "ar" ? "منصة إدارة شبكات الواي فاي الأولى" : "The #1 WiFi Network Management Platform"}
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight animate-fade-in-up">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white leading-tight animate-fade-in-up">
               {t("hero.title")}
             </h1>
-            <p className="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto animate-fade-in-up-delay">
+            <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto animate-fade-in-up-delay">
               {t("hero.subtitle")}
             </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up-delay2">
@@ -269,13 +269,13 @@ export default function HeroLanding() {
       {/* ═══ Stats Bar ═══ */}
       <section ref={s1.ref} className="relative -mt-16 z-20">
         <div className="max-w-5xl mx-auto px-4">
-          <div className={`bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-gray-100 p-6 grid grid-cols-2 md:grid-cols-4 gap-6 transition-all duration-700 ${s1.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+          <div className={`bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 border border-gray-100 dark:border-slate-700 p-6 grid grid-cols-2 md:grid-cols-4 gap-6 transition-all duration-700 ${s1.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
             {stats.map((s, i) => (
               <div key={i} className="text-center">
                 <div className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-primary-600 to-cyan-500 bg-clip-text text-transparent">
                   <Counter end={s.value} suffix={s.suffix} locale={locale} />
                 </div>
-                <p className="text-sm text-slate-500 mt-1">{s.label}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{s.label}</p>
               </div>
             ))}
           </div>
@@ -283,13 +283,13 @@ export default function HeroLanding() {
       </section>
 
       {/* ═══ Features ═══ */}
-      <section ref={s2.ref} className="py-24 bg-white">
+      <section ref={s2.ref} className="py-24 bg-white dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`text-center transition-all duration-700 ${s2.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <span className="inline-block text-sm font-semibold text-primary-600 bg-primary-50 rounded-full px-4 py-1 mb-4">
+            <span className="inline-block text-sm font-semibold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 rounded-full px-4 py-1 mb-4">
               {locale === "ar" ? "المميزات" : "Features"}
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
               {t("features.title")}
             </h2>
           </div>
@@ -297,16 +297,16 @@ export default function HeroLanding() {
             {features.map(({ key, icon: Icon, color }, i) => (
               <div
                 key={key}
-                className={`group relative p-6 rounded-2xl border border-gray-100 hover:border-transparent bg-white hover:bg-gradient-to-br hover:${color} transition-all duration-500 hover:shadow-xl hover:-translate-y-1 cursor-default ${s2.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+                className={`group relative p-6 rounded-2xl border border-gray-100 dark:border-slate-700 hover:border-transparent bg-white dark:bg-slate-800 hover:bg-gradient-to-br hover:${color} transition-all duration-500 hover:shadow-xl hover:-translate-y-1 cursor-default ${s2.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
                 style={{ transitionDelay: s2.inView ? `${i * 100}ms` : "0ms" }}
               >
                 <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                   <Icon className="w-7 h-7 text-white" />
                 </div>
-                <h3 className="mt-5 text-lg font-bold text-slate-900 group-hover:text-white transition-colors">
+                <h3 className="mt-5 text-lg font-bold text-slate-900 dark:text-white group-hover:text-white transition-colors">
                   {t(`features.${key}.title`)}
                 </h3>
-                <p className="mt-2 text-slate-500 group-hover:text-white/80 leading-relaxed transition-colors">
+                <p className="mt-2 text-slate-500 dark:text-slate-400 group-hover:text-white/80 leading-relaxed transition-colors">
                   {t(`features.${key}.desc`)}
                 </p>
               </div>
@@ -316,13 +316,13 @@ export default function HeroLanding() {
       </section>
 
       {/* ═══ How It Works ═══ */}
-      <section ref={s3.ref} className="py-24 bg-gradient-to-b from-slate-50 to-white">
+      <section ref={s3.ref} className="py-24 bg-gradient-to-b from-slate-50 to-white dark:from-slate-800 dark:to-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`text-center transition-all duration-700 ${s3.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <span className="inline-block text-sm font-semibold text-primary-600 bg-primary-50 rounded-full px-4 py-1 mb-4">
+            <span className="inline-block text-sm font-semibold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 rounded-full px-4 py-1 mb-4">
               {locale === "ar" ? "كيف يعمل" : "How It Works"}
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
               {locale === "ar" ? "4 خطوات بسيطة للبدء" : "4 Simple Steps to Get Started"}
             </h2>
           </div>
@@ -341,8 +341,8 @@ export default function HeroLanding() {
                     {i + 1}
                   </span>
                 </div>
-                <h3 className="text-lg font-bold text-slate-900">{step.title}</h3>
-                <p className="mt-2 text-sm text-slate-500">{step.desc}</p>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">{step.title}</h3>
+                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -350,18 +350,18 @@ export default function HeroLanding() {
       </section>
 
       {/* ═══ Why NileLink ═══ */}
-      <section ref={s4.ref} className="py-24 bg-white">
+      <section ref={s4.ref} className="py-24 bg-white dark:bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Text */}
             <div className={`transition-all duration-700 ${s4.inView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"}`}>
-              <span className="inline-block text-sm font-semibold text-primary-600 bg-primary-50 rounded-full px-4 py-1 mb-4">
+              <span className="inline-block text-sm font-semibold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 rounded-full px-4 py-1 mb-4">
                 {locale === "ar" ? "لماذا NileLink؟" : "Why NileLink?"}
               </span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">
+              <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
                 {locale === "ar" ? "كل ما تحتاجه في منصة واحدة" : "Everything You Need in One Platform"}
               </h2>
-              <p className="mt-4 text-slate-500 leading-relaxed">
+              <p className="mt-4 text-slate-500 dark:text-slate-400 leading-relaxed">
                 {locale === "ar"
                   ? "NileLink يوفر لك أدوات إدارة شبكات الواي فاي الأكثر تقدماً. تحكم كامل من أي مكان، بأمان عالي وسرعة فائقة."
                   : "NileLink provides the most advanced WiFi network management tools. Full control from anywhere, with high security and blazing speed."}
@@ -373,12 +373,12 @@ export default function HeroLanding() {
                     className={`flex items-start gap-4 transition-all duration-500 ${s4.inView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"}`}
                     style={{ transitionDelay: s4.inView ? `${300 + i * 150}ms` : "0ms" }}
                   >
-                    <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
-                      <item.icon className="w-5 h-5 text-primary-600" />
+                    <div className="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center shrink-0">
+                      <item.icon className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-slate-900">{item.title}</h4>
-                      <p className="text-sm text-slate-500">{item.desc}</p>
+                      <h4 className="font-semibold text-slate-900 dark:text-white">{item.title}</h4>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -433,14 +433,14 @@ export default function HeroLanding() {
                 </div>
 
                 {/* Floating notification */}
-                <div className="absolute -bottom-4 -start-4 bg-white rounded-xl shadow-xl p-3 border border-gray-100 animate-float-slow">
+                <div className="absolute -bottom-4 -start-4 bg-white dark:bg-slate-800 rounded-xl shadow-xl p-3 border border-gray-100 dark:border-slate-700 animate-float-slow">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center">
-                      <Ticket className="w-4 h-4 text-violet-600" />
+                    <div className="w-8 h-8 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center">
+                      <Ticket className="w-4 h-4 text-violet-600 dark:text-violet-400" />
                     </div>
                     <div>
-                      <div className="text-xs font-semibold text-slate-900">{locale === "ar" ? "كود جديد مُفعّل" : "New code activated"}</div>
-                      <div className="text-[10px] text-slate-400">{locale === "ar" ? "قبل ثانية" : "Just now"}</div>
+                      <div className="text-xs font-semibold text-slate-900 dark:text-white">{locale === "ar" ? "كود جديد مُفعّل" : "New code activated"}</div>
+                      <div className="text-[10px] text-slate-400 dark:text-slate-500">{locale === "ar" ? "قبل ثانية" : "Just now"}</div>
                     </div>
                   </div>
                 </div>
@@ -451,13 +451,13 @@ export default function HeroLanding() {
       </section>
 
       {/* ═══ Testimonials / Trust ═══ */}
-      <section ref={s5.ref} className="py-24 bg-gradient-to-b from-slate-50 to-white">
+      <section ref={s5.ref} className="py-24 bg-gradient-to-b from-slate-50 to-white dark:from-slate-800 dark:to-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`text-center transition-all duration-700 ${s5.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <span className="inline-block text-sm font-semibold text-primary-600 bg-primary-50 rounded-full px-4 py-1 mb-4">
+            <span className="inline-block text-sm font-semibold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 rounded-full px-4 py-1 mb-4">
               {locale === "ar" ? "ثقة العملاء" : "Trusted By"}
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
               {locale === "ar" ? "ماذا يقول عملاؤنا" : "What Our Customers Say"}
             </h2>
           </div>
@@ -469,19 +469,19 @@ export default function HeroLanding() {
             ].map((review, i) => (
               <div
                 key={i}
-                className={`bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all duration-500 ${s5.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+                className={`bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6 shadow-sm hover:shadow-md transition-all duration-500 ${s5.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
                 style={{ transitionDelay: s5.inView ? `${i * 150}ms` : "0ms" }}
               >
                 <div className="flex gap-1 mb-4">
                   {[...Array(5)].map((_, j) => <Star key={j} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
                 </div>
-                <p className="text-slate-600 leading-relaxed mb-4">&quot;{review.text}&quot;</p>
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-4">&quot;{review.text}&quot;</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-cyan-500 flex items-center justify-center text-white font-bold text-sm">
                     {review.name[0]}
                   </div>
                   <div>
-                    <div className="font-semibold text-slate-900 text-sm">{review.name}</div>
+                    <div className="font-semibold text-slate-900 dark:text-white text-sm">{review.name}</div>
                     <div className="text-xs text-slate-400">{review.role}</div>
                   </div>
                 </div>

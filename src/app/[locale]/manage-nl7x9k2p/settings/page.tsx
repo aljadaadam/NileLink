@@ -78,25 +78,25 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div className="flex items-center gap-2">
-        <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
-        <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-primary-600 transition-colors">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("title")}</h1>
+        <button onClick={() => setShowHelp(!showHelp)} className="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-primary-600 transition-colors">
           <HelpCircle className="w-5 h-5" />
         </button>
       </div>
       {showHelp && (
-        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 text-sm text-primary-800 leading-relaxed">
+        <div className="bg-primary-50 dark:bg-primary-900/30 border border-primary-100 dark:border-primary-800 rounded-xl p-4 text-sm text-primary-800 dark:text-primary-200 leading-relaxed">
           {t("helpDesc")}
         </div>
       )}
 
       {/* Profile */}
       <div className="card">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
           {t("profile")}
         </h2>
         <form onSubmit={handleProfileSubmit} className="space-y-4" key={profile ? "loaded" : "loading"}>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               {t("name")}
             </label>
             <input
@@ -107,30 +107,30 @@ export default function SettingsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               {t("email")}
             </label>
             <input
               value={profile?.email || session?.user?.email || ""}
               disabled
-              className="input-field bg-gray-50 text-slate-400"
+              className="input-field bg-gray-50 dark:bg-slate-800 text-slate-400 dark:text-slate-500"
               dir="ltr"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               {t("company")}
             </label>
             <input name="company" defaultValue={profile?.company || ""} className="input-field" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               {t("phone")}
             </label>
             <input name="phone" type="tel" defaultValue={profile?.phone || ""} className="input-field" dir="ltr" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               {t("language")}
             </label>
             <LanguageSwitcher />
@@ -144,12 +144,12 @@ export default function SettingsPage() {
 
       {/* Password */}
       <div className="card">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
           {t("changePassword")}
         </h2>
         <form onSubmit={handlePasswordSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               {t("currentPassword")}
             </label>
             <input
@@ -161,7 +161,7 @@ export default function SettingsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
               {t("newPassword")}
             </label>
             <input

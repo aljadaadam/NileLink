@@ -67,13 +67,13 @@ export default function PricingSection() {
   }, []);
 
   return (
-    <section className="py-24 bg-slate-50">
+    <section className="py-24 bg-slate-50 dark:bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
             {t("title")}
           </h2>
-          <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
             {t("subtitle")}
           </p>
         </div>
@@ -86,8 +86,8 @@ export default function PricingSection() {
                 key={key}
                 className={`relative rounded-2xl p-8 transition-all duration-300 ${
                   popular
-                    ? "bg-primary-600 text-white shadow-xl shadow-primary-200/50 scale-[1.02] border-2 border-primary-500"
-                    : "bg-white border border-gray-200 hover:border-primary-200 hover:shadow-lg"
+                    ? "bg-primary-600 text-white shadow-xl shadow-primary-200/50 dark:shadow-primary-900/50 scale-[1.02] border-2 border-primary-500"
+                    : "bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:border-primary-200 dark:hover:border-primary-600 hover:shadow-lg"
                 }`}
               >
                 {popular && (
@@ -101,18 +101,18 @@ export default function PricingSection() {
                 <div className="flex items-center gap-3 mb-6">
                   <div
                     className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                      popular ? "bg-white/20" : "bg-primary-50"
+                      popular ? "bg-white/20" : "bg-primary-50 dark:bg-primary-900/40"
                     }`}
                   >
-                    <Icon className={`w-5 h-5 ${popular ? "text-white" : "text-primary-600"}`} />
+                    <Icon className={`w-5 h-5 ${popular ? "text-white" : "text-primary-600 dark:text-primary-400"}`} />
                   </div>
-                  <h3 className={`text-xl font-bold ${popular ? "text-white" : "text-slate-900"}`}>
+                  <h3 className={`text-xl font-bold ${popular ? "text-white" : "text-slate-900 dark:text-white"}`}>
                     {t(`plans.${key}.name`)}
                   </h3>
                 </div>
 
                 <div className="mb-2">
-                  <span className={`text-4xl font-bold ${popular ? "text-white" : "text-slate-900"}`}>
+                  <span className={`text-4xl font-bold ${popular ? "text-white" : "text-slate-900 dark:text-white"}`}>
                     {formatPrice(price, currency)}
                   </span>
                   <span className={`text-sm ms-1 ${popular ? "text-primary-100" : "text-slate-500"}`}>
@@ -120,7 +120,7 @@ export default function PricingSection() {
                   </span>
                 </div>
 
-                <p className={`text-sm mb-8 ${popular ? "text-primary-100" : "text-slate-500"}`}>
+                <p className={`text-sm mb-8 ${popular ? "text-primary-100" : "text-slate-500 dark:text-slate-400"}`}>
                   {t(`plans.${key}.desc`)}
                 </p>
 
@@ -129,10 +129,10 @@ export default function PricingSection() {
                     <li key={f} className="flex items-start gap-2">
                       <Check
                         className={`w-5 h-5 mt-0.5 shrink-0 ${
-                          popular ? "text-primary-200" : "text-primary-500"
+                          popular ? "text-primary-200" : "text-primary-500 dark:text-primary-400"
                         }`}
                       />
-                      <span className={`text-sm ${popular ? "text-primary-50" : "text-slate-600"}`}>
+                      <span className={`text-sm ${popular ? "text-primary-50" : "text-slate-600 dark:text-slate-300"}`}>
                         {t(`features.${f}`)}
                       </span>
                     </li>

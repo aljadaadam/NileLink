@@ -152,7 +152,7 @@ export default function RoutersPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t("title")}</h1>
         {routers.length > 0 && (
           <button
             onClick={() => setShowWizard(true)}
@@ -220,10 +220,10 @@ export default function RoutersPage() {
                     <div className={cn(
                       "w-10 h-10 rounded-xl flex items-center justify-center",
                       router.status === "ONLINE"
-                        ? "bg-emerald-50"
+                        ? "bg-emerald-50 dark:bg-emerald-900/30"
                         : router.status === "ERROR"
-                        ? "bg-red-50"
-                        : "bg-slate-100"
+                        ? "bg-red-50 dark:bg-red-900/30"
+                        : "bg-slate-100 dark:bg-slate-800"
                     )}>
                       <Wifi className={cn(
                         "w-5 h-5",
@@ -235,7 +235,7 @@ export default function RoutersPage() {
                       )} />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-900">{router.name}</h3>
+                      <h3 className="font-semibold text-slate-900 dark:text-slate-100">{router.name}</h3>
                       <p className="text-sm text-slate-500" dir="ltr">{router.host}:{router.port}</p>
                     </div>
                   </div>
@@ -246,10 +246,10 @@ export default function RoutersPage() {
                 </div>
 
                 {/* API Key */}
-                <div className="bg-slate-50 rounded-xl p-3">
-                  <p className="text-xs text-slate-500 mb-1">{t("apiKey")}</p>
+                <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-3">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">{t("apiKey")}</p>
                   <div className="flex items-center gap-2">
-                    <code className="text-xs text-slate-700 flex-1 truncate" dir="ltr">{router.apiKey}</code>
+                    <code className="text-xs text-slate-700 dark:text-slate-300 flex-1 truncate" dir="ltr">{router.apiKey}</code>
                     <button
                       onClick={() => copyApiKey(router.apiKey)}
                       className="text-slate-400 hover:text-primary-600 transition-colors"
@@ -281,7 +281,7 @@ export default function RoutersPage() {
                 )}
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+                <div className="flex items-center gap-2 pt-2 border-t border-gray-100 dark:border-slate-700">
                   <button
                     onClick={() => handleTest(router.id)}
                     disabled={testingId === router.id}
@@ -296,13 +296,13 @@ export default function RoutersPage() {
                   </button>
                   <button
                     onClick={() => setEditingRouter(router)}
-                    className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                    className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition-colors"
                   >
                     <Pencil className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(router.id)}
-                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -316,34 +316,34 @@ export default function RoutersPage() {
       {/* Edit Router Modal — only for existing routers */}
       {editingRouter && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl dark:shadow-slate-950/50 w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-900">{tc("edit")}</h2>
-              <button onClick={() => setEditingRouter(null)} className="text-slate-400 hover:text-slate-600">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{tc("edit")}</h2>
+              <button onClick={() => setEditingRouter(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleEdit} className="space-y-4" key={editingRouter.id}>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">{t("name")}</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("name")}</label>
                 <input name="name" required className="input-field" defaultValue={editingRouter.name} />
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div className="col-span-2">
-                  <label className="block text-sm font-medium text-slate-700 mb-1">{t("host")}</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("host")}</label>
                   <input name="host" required className="input-field" dir="ltr" defaultValue={editingRouter.host} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">{t("port")}</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("port")}</label>
                   <input name="port" type="number" defaultValue={editingRouter.port} className="input-field" dir="ltr" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">{t("username")}</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("username")}</label>
                 <input name="username" required className="input-field" dir="ltr" defaultValue={editingRouter.username} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">{t("password")}</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("password")}</label>
                 <input name="password" type="password" placeholder={t("passwordPlaceholder")} className="input-field" dir="ltr" />
               </div>
               <div className="flex gap-3 pt-2">

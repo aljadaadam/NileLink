@@ -158,12 +158,12 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <div
         dir={isAr ? "rtl" : "ltr"}
-        className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+        className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl dark:shadow-slate-950/50 overflow-hidden animate-in fade-in zoom-in-95 duration-200"
       >
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-3 end-3 z-10 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+          className="absolute top-3 end-3 z-10 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
@@ -183,12 +183,12 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
             <div className="space-y-5">
               {/* Title */}
               <div className="text-center">
-                <h2 className="text-lg font-bold text-slate-900">{t("wizard.tokenTitle")}</h2>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{t("wizard.tokenTitle")}</h2>
                 <p className="text-sm text-slate-500 mt-1">{t("wizard.tokenDesc")}</p>
               </div>
 
               {/* API Key Box */}
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
                 <div className="flex items-center justify-between gap-3">
                   <code className="text-lg font-mono font-bold text-primary-700 truncate" dir="ltr">
                     {apiKey}
@@ -209,14 +209,14 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
               </div>
 
               {/* Waiting indicator */}
-              <div className="flex items-center gap-3 bg-primary-50 rounded-xl px-4 py-3">
+              <div className="flex items-center gap-3 bg-primary-50 dark:bg-primary-900/30 rounded-xl px-4 py-3">
                 <div className="relative shrink-0">
                   <Wifi className="w-5 h-5 text-primary-400" />
                   <span className="absolute -top-0.5 -end-0.5 w-2 h-2 bg-primary-500 rounded-full animate-ping" />
                   <span className="absolute -top-0.5 -end-0.5 w-2 h-2 bg-primary-500 rounded-full" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-primary-800">{t("wizard.autoCheckTitle")}</p>
+                  <p className="text-sm font-medium text-primary-800 dark:text-primary-200">{t("wizard.autoCheckTitle")}</p>
                   <p className="text-xs text-primary-500">
                     {t("wizard.autoCheckDesc")}
                     {pollCount > 0 && (
@@ -284,22 +284,22 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
                 <p className="text-sm text-slate-500">{t("wizard.autoRedirect")}</p>
 
                 {deviceInfo && (deviceInfo.routerOsVersion || deviceInfo.boardName) && (
-                  <div className="bg-slate-50 rounded-xl p-4 mt-6 w-full">
+                  <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 mt-6 w-full">
                     <div className="flex items-center gap-2 mb-3">
-                      <Cpu className="w-4 h-4 text-slate-500" />
-                      <p className="text-sm font-semibold text-slate-700">{t("wizard.detectedInfo")}</p>
+                      <Cpu className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t("wizard.detectedInfo")}</p>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       {deviceInfo.routerOsVersion && (
-                        <div className="bg-white rounded-lg px-3 py-2 border border-slate-200">
+                        <div className="bg-white dark:bg-slate-900 rounded-lg px-3 py-2 border border-slate-200 dark:border-slate-700">
                           <p className="text-[10px] text-slate-400 uppercase tracking-wider">{t("wizard.routerOs")}</p>
-                          <p className="text-sm font-medium text-slate-800" dir="ltr">{deviceInfo.routerOsVersion}</p>
+                          <p className="text-sm font-medium text-slate-800 dark:text-slate-200" dir="ltr">{deviceInfo.routerOsVersion}</p>
                         </div>
                       )}
                       {deviceInfo.boardName && (
-                        <div className="bg-white rounded-lg px-3 py-2 border border-slate-200">
+                        <div className="bg-white dark:bg-slate-900 rounded-lg px-3 py-2 border border-slate-200 dark:border-slate-700">
                           <p className="text-[10px] text-slate-400 uppercase tracking-wider">{t("wizard.boardName")}</p>
-                          <p className="text-sm font-medium text-slate-800" dir="ltr">{deviceInfo.boardName}</p>
+                          <p className="text-sm font-medium text-slate-800 dark:text-slate-200" dir="ltr">{deviceInfo.boardName}</p>
                         </div>
                       )}
                     </div>

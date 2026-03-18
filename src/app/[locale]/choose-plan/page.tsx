@@ -99,16 +99,16 @@ function ChoosePlanContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex flex-col items-center justify-center p-4">
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-2 mb-4">
           <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center">
             <Wifi className="w-6 h-6 text-white" />
           </div>
-          <span className="text-2xl font-bold text-slate-900">NileLink</span>
+          <span className="text-2xl font-bold text-slate-900 dark:text-white">NileLink</span>
         </div>
-        <h1 className="text-3xl font-bold text-slate-900">{tp("chooseTitle")}</h1>
-        <p className="mt-2 text-slate-500">{tp("chooseSubtitle")}</p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">{tp("chooseTitle")}</h1>
+        <p className="mt-2 text-slate-500 dark:text-slate-400">{tp("chooseSubtitle")}</p>
       </div>
 
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -117,8 +117,8 @@ function ChoosePlanContent() {
             key={key}
             className={`relative rounded-2xl p-6 transition-all duration-300 ${
               popular
-                ? "bg-primary-600 text-white shadow-xl shadow-primary-200/50 scale-[1.02] border-2 border-primary-500"
-                : "bg-white border border-gray-200 hover:border-primary-200 hover:shadow-lg"
+                ? "bg-primary-600 text-white shadow-xl shadow-primary-200/50 dark:shadow-primary-900/50 scale-[1.02] border-2 border-primary-500"
+                : "bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:border-primary-200 dark:hover:border-primary-700 hover:shadow-lg"
             }`}
           >
             {popular && (
@@ -130,16 +130,16 @@ function ChoosePlanContent() {
             )}
 
             <div className="flex items-center gap-3 mb-4">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${popular ? "bg-white/20" : "bg-primary-50"}`}>
-                <Icon className={`w-5 h-5 ${popular ? "text-white" : "text-primary-600"}`} />
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${popular ? "bg-white/20" : "bg-primary-50 dark:bg-primary-900/40"}`}>
+                <Icon className={`w-5 h-5 ${popular ? "text-white" : "text-primary-600 dark:text-primary-400"}`} />
               </div>
-              <h3 className={`text-lg font-bold ${popular ? "text-white" : "text-slate-900"}`}>
+              <h3 className={`text-lg font-bold ${popular ? "text-white" : "text-slate-900 dark:text-white"}`}>
                 {t(`plans.${key === "STARTER" ? "starter" : key === "PRO" ? "pro" : "enterprise"}.name`)}
               </h3>
             </div>
 
             <div className="mb-2">
-              <span className={`text-3xl font-bold ${popular ? "text-white" : "text-slate-900"}`}>
+              <span className={`text-3xl font-bold ${popular ? "text-white" : "text-slate-900 dark:text-white"}`}>
                 {formatPrice(priceUSD * currency.rate, currency)}
               </span>
               <span className={`text-sm ms-1 ${popular ? "text-primary-100" : "text-slate-500"}`}>
@@ -147,15 +147,15 @@ function ChoosePlanContent() {
               </span>
             </div>
 
-            <p className={`text-xs mb-4 ${popular ? "text-primary-200" : "text-emerald-600"}`}>
+            <p className={`text-xs mb-4 ${popular ? "text-primary-200" : "text-emerald-600 dark:text-emerald-400"}`}>
               {tp("trialNote")}
             </p>
 
             <ul className="space-y-2 mb-6">
               {features.map((f) => (
                 <li key={f} className="flex items-start gap-2">
-                  <Check className={`w-4 h-4 mt-0.5 shrink-0 ${popular ? "text-primary-200" : "text-primary-500"}`} />
-                  <span className={`text-sm ${popular ? "text-primary-50" : "text-slate-600"}`}>
+                  <Check className={`w-4 h-4 mt-0.5 shrink-0 ${popular ? "text-primary-200" : "text-primary-500 dark:text-primary-400"}`} />
+                  <span className={`text-sm ${popular ? "text-primary-50" : "text-slate-600 dark:text-slate-300"}`}>
                     {t(`features.${f}`)}
                   </span>
                 </li>

@@ -120,9 +120,9 @@ function VerifyEmailContent() {
 
   if (!email) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center p-4">
         <div className="card max-w-md text-center">
-          <p className="text-slate-500">{t("noEmail")}</p>
+          <p className="text-slate-500 dark:text-slate-400">{t("noEmail")}</p>
           <Link href="/auth/register" className="btn-primary mt-4 inline-block">
             {t("goRegister")}
           </Link>
@@ -132,7 +132,7 @@ function VerifyEmailContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-slate-50 to-accent-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -140,35 +140,35 @@ function VerifyEmailContent() {
             <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center">
               <Wifi className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-bold text-slate-900">NileLink</span>
+            <span className="text-2xl font-bold text-slate-900 dark:text-white">NileLink</span>
           </Link>
         </div>
 
         <div className="card text-center">
           {success ? (
             <>
-              <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-4">
-                <MailCheck className="w-8 h-8 text-emerald-500" />
+              <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-4">
+                <MailCheck className="w-8 h-8 text-emerald-500 dark:text-emerald-400" />
               </div>
-              <h1 className="text-2xl font-bold text-slate-900">{t("successTitle")}</h1>
-              <p className="mt-2 text-slate-500">{t("successMessage")}</p>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t("successTitle")}</h1>
+              <p className="mt-2 text-slate-500 dark:text-slate-400">{t("successMessage")}</p>
               <div className="mt-4">
                 <Loader2 className="w-5 h-5 animate-spin text-primary-500 mx-auto" />
               </div>
             </>
           ) : (
             <>
-              <div className="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4">
-                <MailCheck className="w-8 h-8 text-primary-500" />
+              <div className="w-16 h-16 rounded-full bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center mx-auto mb-4">
+                <MailCheck className="w-8 h-8 text-primary-500 dark:text-primary-400" />
               </div>
-              <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
-              <p className="mt-2 text-slate-500">{t("subtitle")}</p>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{t("title")}</h1>
+              <p className="mt-2 text-slate-500 dark:text-slate-400">{t("subtitle")}</p>
               <p className="mt-1 text-sm font-medium text-primary-600" dir="ltr">
                 {email}
               </p>
 
               {error && (
-                <div className="mt-4 p-3 rounded-xl bg-red-50 text-red-600 text-sm">
+                <div className="mt-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-300 text-sm">
                   {error}
                 </div>
               )}
@@ -186,7 +186,7 @@ function VerifyEmailContent() {
                     onChange={(e) => handleChange(i, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(i, e)}
                     disabled={loading}
-                    className="w-12 h-14 text-center text-xl font-bold border-2 border-slate-200 rounded-xl outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all disabled:opacity-50"
+                    className="w-12 h-14 text-center text-xl font-bold border-2 border-slate-200 dark:border-slate-600 rounded-xl outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900 transition-all disabled:opacity-50 bg-white dark:bg-slate-800 dark:text-white"
                   />
                 ))}
               </div>

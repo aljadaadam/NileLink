@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
@@ -8,6 +9,48 @@ const SITE_URL = "https://nilelink.net";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const isAr = locale === "ar";
+
+  const title = isAr
+    ? "NileLink — منصة إدارة هوت سبوت مايكروتك"
+    : "NileLink — MikroTik Hotspot Management Platform";
+  const description = isAr
+    ? "أسهل ربط للمايكروتيك. أنشئ أكواد واي فاي، أدِر المستخدمين والباقات، وتحكم بالراوترات من لوحة تحكم واحدة. نظام وكلاء متكامل وإعداد تلقائي بضغطة واحدة."
+    : "The easiest MikroTik hotspot management platform. Generate WiFi vouchers, manage users & packages, and control routers from one dashboard. Full reseller system with one-click setup.";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      type: "website",
+      locale: isAr ? "ar_EG" : "en_US",
+      alternateLocale: isAr ? "en_US" : "ar_EG",
+      url: `${SITE_URL}/${locale}`,
+      siteName: "NileLink",
+      title,
+      description,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    alternates: {
+      canonical: `${SITE_URL}/${locale}`,
+      languages: {
+        en: `${SITE_URL}/en`,
+        ar: `${SITE_URL}/ar`,
+      },
+    },
+  };
 }
 
 export default async function LocaleLayout({

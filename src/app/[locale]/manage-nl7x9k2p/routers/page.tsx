@@ -18,10 +18,13 @@ import {
   BookOpen,
   Terminal,
   ExternalLink,
+  Rocket,
+  Cpu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import type { RouterFormData } from "@/types";
+import RouterSetupWizard from "@/components/dashboard/RouterSetupWizard";
 
 interface RouterItem {
   id: string;
@@ -33,6 +36,8 @@ interface RouterItem {
   status: "ONLINE" | "OFFLINE" | "ERROR";
   lastSeen: string | null;
   createdAt: string;
+  routerOsVersion?: string;
+  boardName?: string;
 }
 
 export default function RoutersPage() {
@@ -48,6 +53,7 @@ export default function RoutersPage() {
   const [showHelp, setShowHelp] = useState(false);
   const [guideRouter, setGuideRouter] = useState<RouterItem | null>(null);
   const [copiedCmd, setCopiedCmd] = useState<string | null>(null);
+  const [showWizard, setShowWizard] = useState(false);
 
   async function loadRouters() {
     try {
@@ -168,10 +174,19 @@ export default function RoutersPage() {
             <HelpCircle className="w-5 h-5" />
           </button>
         </div>
-        <button onClick={() => { setEditingRouter(null); setShowModal(true); }} className="btn-primary">
-          <Plus className="w-4 h-4" />
-          {t("add")}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowWizard(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all shadow-md shadow-primary-500/20 text-sm"
+          >
+            <Rocket className="w-4 h-4" />
+            {t("quickSetup")}
+          </button>
+          <button onClick={() => { setEditingRouter(null); setShowModal(true); }} className="btn-primary">
+            <Plus className="w-4 h-4" />
+            {t("add")}
+          </button>
+        </div>
       </div>
 
       {showHelp && (
@@ -317,6 +332,16 @@ export default function RoutersPage() {
                     </button>
                   </div>
                 </div>
+
+                {/* Device Info */}
+                {(router.routerOsVersion || router.boardName) && (
+                  <div className="flex items-center gap-3 text-xs text-slate-500">
+                    <Cpu className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    {router.routerOsVersion && <span>RouterOS {router.routerOsVersion}</span>}
+                    {router.routerOsVersion && router.boardName && <span className="text-slate-300">|</span>}
+                    {router.boardName && <span>{router.boardName}</span>}
+                  </div>
+                )}
 
                 {/* Last Seen */}
                 {router.lastSeen && (
@@ -589,6 +614,17 @@ export default function RoutersPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Quick Setup Wizard */}
+      {showWizard && (
+        <RouterSetupWizard
+          onComplete={() => {
+            setShowWizard(false);
+            loadRouters();
+          }}
+          onClose={() => setShowWizard(false)}
+        />
       )}
     </div>
   );

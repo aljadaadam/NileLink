@@ -147,4 +147,35 @@ export class MikroTikClient {
       await api.close();
     }
   }
+
+  async getDeviceIdentity(): Promise<string> {
+    const api = await this.connect();
+    try {
+      const res = await api.write("/system/identity/print");
+      return (res as Record<string, string>[])[0]?.name ?? "";
+    } finally {
+      await api.close();
+    }
+  }
+
+  async getDeviceInfo(): Promise<{
+    version: string;
+    boardName: string;
+    architecture: string;
+    uptime: string;
+    cpuLoad: string;
+    freeMemory: string;
+    totalMemory: string;
+  }> {
+    const info = await this.getSystemInfo();
+    return {
+      version: info.version ?? "",
+      boardName: info["board-name"] ?? "",
+      architecture: info["architecture-name"] ?? "",
+      uptime: info.uptime ?? "",
+      cpuLoad: info["cpu-load"] ?? "",
+      freeMemory: info["free-memory"] ?? "",
+      totalMemory: info["total-memory"] ?? "",
+    };
+  }
 }

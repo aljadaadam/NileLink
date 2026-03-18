@@ -37,15 +37,32 @@ export async function POST(
 
     const success = await client.testConnection();
 
+    // Auto-detect device info on successful connection
+    let deviceInfo: { version?: string; boardName?: string } = {};
+    if (success) {
+      try {
+        const info = await client.getDeviceInfo();
+        deviceInfo = { version: info.version, boardName: info.boardName };
+      } catch {
+        // Non-critical — continue without device info
+      }
+    }
+
     await prisma.router.update({
       where: { id },
       data: {
         status: success ? "ONLINE" : "ERROR",
         lastSeen: success ? new Date() : undefined,
+        ...(deviceInfo.version ? { routerOsVersion: deviceInfo.version } : {}),
+        ...(deviceInfo.boardName ? { boardName: deviceInfo.boardName } : {}),
       },
     });
 
-    return NextResponse.json({ success });
+    return NextResponse.json({
+      success,
+      ...(success && deviceInfo.version ? { routerOsVersion: deviceInfo.version } : {}),
+      ...(success && deviceInfo.boardName ? { boardName: deviceInfo.boardName } : {}),
+    });
   } catch {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

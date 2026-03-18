@@ -41,6 +41,8 @@ export async function GET() {
       loginPageTemplate: true,
       loginPageTitle: true,
       loginPageLogo: true,
+      routerOsVersion: true,
+      boardName: true,
       createdAt: true,
     },
     orderBy: { createdAt: "desc" },

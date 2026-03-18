@@ -138,6 +138,8 @@ model Router {
   loginPageTemplate String?      @default("modern")
   loginPageTitle    String?
   loginPageLogo     String?      @db.Text
+  routerOsVersion   String?
+  boardName         String?
   userId            String
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt

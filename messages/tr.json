@@ -335,7 +335,10 @@
     "qrRouter": "QR'ı Router'a Bağla",
     "qrCodeOnly": "Yalnızca kod (otomatik giriş yok)",
     "qrSmart": "Akıllı QR",
-    "designCard": "Kart Tasarımı"
+    "designCard": "Kart Tasarımı",
+    "printCards": "Kartları Yazdır",
+    "noPrintable": "Yazdırılabilir kart bulunamadı",
+    "preparingPrint": "Yazdırma hazırlanıyor..."
   },
   "cardDesign": {
     "title": "Kart Tasarımı",

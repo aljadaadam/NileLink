@@ -335,7 +335,10 @@
     "qrRouter": "Vincular QR al Router",
     "qrCodeOnly": "Solo código (sin inicio automático)",
     "qrSmart": "QR Inteligente",
-    "designCard": "Diseño de Tarjeta"
+    "designCard": "Diseño de Tarjeta",
+    "printCards": "Imprimir Tarjetas",
+    "noPrintable": "No hay tarjetas imprimibles",
+    "preparingPrint": "Preparando impresión..."
   },
   "cardDesign": {
     "title": "Diseño de Tarjeta",

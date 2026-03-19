@@ -23,6 +23,7 @@ import {
   Hash,
   HelpCircle,
   Palette,
+  FileDown,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -299,6 +300,102 @@ export default function VouchersPage() {
     win.document.close();
   }
 
+  async function handlePrintAll() {
+    const toPrint = filtered.filter((v) => v.status === "UNUSED" || v.status === "ACTIVE");
+    if (toPrint.length === 0) {
+      toast.error(t("noPrintable"));
+      return;
+    }
+
+    toast.loading(t("preparingPrint"), { id: "print-all" });
+
+    const qrPromises = toPrint.map((v) => generateQr(v.code));
+    const qrs = await Promise.all(qrPromises);
+
+    const d = cardDesign;
+    const bgColor = d.backgroundColor || "#f0fdfa";
+    const gradTo = d.gradientTo || "#ecfeff";
+    const border = d.borderColor || "#0891b2";
+    const codeClr = d.codeColor || "#0e7490";
+    const brandClr = d.brandColor || "#64748b";
+    const footerClr = d.footerColor || "#94a3b8";
+    const brandTxt = d.brandText || "NileLink WiFi";
+    const footerTxt = d.footerText || (selectedRouter ? "Scan QR to auto-connect" : "Scan QR or enter code to connect");
+    const showQr = d.showQr !== false;
+    const showPkg = d.showPackage !== false;
+    const showPrc = d.showPrice !== false;
+    const bgImg = d.backgroundImage;
+    const logo = d.logo;
+
+    const cards = toPrint.map((v, i) => `
+      <div class="voucher">
+        ${showQr ? `<div class="qr-side"><img class="qr" src="${qrs[i]}" width="90" height="90" /></div>` : ""}
+        <div class="info-side">
+          ${logo ? `<img class="logo" src="${logo}" />` : ""}
+          <div class="brand">${escapeHtml(brandTxt)}</div>
+          <div class="code">${escapeHtml(v.code)}</div>
+          ${showPkg ? `<div class="pkg">${escapeHtml(v.package.name)}</div>` : ""}
+          ${showPrc ? `<div class="price">${escapeHtml(v.package.price)} ${escapeHtml(v.package.currency)}</div>` : ""}
+          <div class="footer">${escapeHtml(footerTxt)}</div>
+        </div>
+      </div>
+    `).join("");
+
+    const win = window.open("", "_blank");
+    if (!win) { toast.dismiss("print-all"); return; }
+    win.document.write(`
+      <html><head><title>Print All Cards</title>
+      <style>
+        @page { size: A4; margin: 8mm; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #fff; }
+        .grid { display: grid; grid-template-columns: repeat(2, 86mm); gap: 6mm; justify-content: center; }
+        .voucher { border: 2px dashed ${border}; padding: 6px 10px;
+          border-radius: 8px; position: relative; overflow: hidden;
+          width: 86mm; height: 54mm; display: flex; align-items: center; gap: 8px;
+          ${bgImg ? `background: url('${bgImg}') center/cover;` : `background: linear-gradient(135deg, ${bgColor} 0%, ${gradTo} 100%);`}
+          break-inside: avoid; }
+        ${bgImg ? `.voucher::before { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.82); }` : ""}
+        .voucher > * { position: relative; z-index: 1; }
+        .qr-side { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .info-side { flex: 1; text-align: center; min-width: 0; }
+        .logo { max-height: 24px; max-width: 70px; margin: 0 auto 3px; display: block; object-fit: contain; }
+        .brand { font-size: 7px; color: ${brandClr}; text-transform: uppercase; letter-spacing: 2px;
+          margin-bottom: 3px; font-weight: 700; }
+        .qr { display: block; }
+        .code { font-size: 14px; font-weight: 900; letter-spacing: 2px; color: ${codeClr};
+          font-family: 'Courier New', monospace; margin: 3px 0; }
+        .pkg { font-size: 10px; color: #334155; font-weight: 700; margin-top: 1px; }
+        .price { font-size: 9px; color: #64748b; margin-top: 1px; font-weight: 600; }
+        .footer { font-size: 6px; color: ${footerClr}; margin-top: 3px; letter-spacing: 0.2px; }
+        .header { text-align: center; margin-bottom: 6mm; padding: 4mm 0; border-bottom: 1px solid #e2e8f0; }
+        .header h1 { font-size: 14px; color: #334155; font-weight: 700; }
+        .header p { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+        @media print { .header { display: none; } }
+      </style></head><body>
+      <div class="header">
+        <h1>${escapeHtml(brandTxt)}</h1>
+        <p>${toPrint.length} cards</p>
+      </div>
+      <div class="grid">
+        ${cards}
+      </div>
+      <script>
+        var imgs = document.querySelectorAll('img');
+        var loaded = 0;
+        function checkPrint() { loaded++; if (loaded >= imgs.length) { window.print(); } }
+        if (imgs.length === 0) window.print();
+        else imgs.forEach(function(img) {
+          if (img.complete) checkPrint();
+          else img.onload = checkPrint;
+        });
+      <\/script>
+      </body></html>
+    `);
+    win.document.close();
+    toast.dismiss("print-all");
+  }
+
   function copyCode(code: string) {
     navigator.clipboard.writeText(code);
     setCopiedCode(code);
@@ -474,6 +571,13 @@ export default function VouchersPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={handlePrintAll}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800 transition-all"
+          >
+            <Printer className="w-4 h-4" />
+            {t("printCards")}
+          </button>
           <Link
             href="/manage-nl7x9k2p/vouchers/card-design"
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 hover:bg-primary-100 dark:hover:bg-primary-900/50 border border-primary-200 dark:border-primary-800 transition-all"

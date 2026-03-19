@@ -335,7 +335,10 @@
     "qrRouter": "Link QR to Router",
     "qrCodeOnly": "Code only (no auto-login)",
     "qrSmart": "Smart QR",
-    "designCard": "Card Design"
+    "designCard": "Card Design",
+    "printCards": "Print Cards",
+    "noPrintable": "No printable cards found",
+    "preparingPrint": "Preparing print..."
   },
   "cardDesign": {
     "title": "Card Design",

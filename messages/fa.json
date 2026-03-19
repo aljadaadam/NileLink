@@ -335,7 +335,10 @@
     "qrRouter": "اتصال QR به روتر",
     "qrCodeOnly": "فقط کد (بدون ورود خودکار)",
     "qrSmart": "QR هوشمند",
-    "designCard": "طراحی کارت"
+    "designCard": "طراحی کارت",
+    "printCards": "چاپ کارت‌ها",
+    "noPrintable": "کارت قابل چاپی یافت نشد",
+    "preparingPrint": "در حال آماده‌سازی چاپ..."
   },
   "cardDesign": {
     "title": "طراحی کارت",

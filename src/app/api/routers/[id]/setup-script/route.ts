@@ -30,7 +30,7 @@ export async function GET(
 
     const password = randomBytes(16).toString("hex");
     const script = generateMikroTikScript(router.apiKey, router.port, password);
-    const oneliner = generateOneLiner(router.apiKey, router.port, password);
+    const oneliner = generateOneLiner(router.apiKey);
 
     return NextResponse.json({
       script,
@@ -46,9 +46,8 @@ export async function GET(
   }
 }
 
-function generateOneLiner(apiKey: string, port: number, password: string): string {
-  return `/ip service enable api; /ip service set api port=${port}; /user group add name=nilelink_group policy=api,read,write,test,!ftp,!local,!telnet,!ssh,!reboot,!policy,!winbox,!password,!web,!sniff,!sensitive,!romon,!rest-api; /user add name=nilelink_user password="${password}" group=nilelink_group comment="NileLink"; /ip hotspot walled-garden ip add dst-host=nilelink.net action=accept comment="NileLink"; /tool fetch url="https://nilelink.net/api/hotspot/login/${apiKey}" dst-path="hotspot/login.html"; :do {/ip cloud set ddns-enabled=yes} on-error={}; :delay 3s; :local d ""; :do {:set d [/ip cloud get dns-name]} on-error={}; :local u "https://nilelink.net/api/routers/phonehome?key=${apiKey}"; :if ([:len \$d] > 0) do={:set u (\$u . "&dns=" . \$d)}; /tool fetch url=\$u keep-result=no; /system scheduler add name=nilelink_phonehome interval=1m on-event=":local d \\\"\\\";:do {:set d [/ip cloud get dns-name]} on-error={};:local u \\\"https://nilelink.net/api/routers/phonehome?key=${apiKey}\\\";:if ([:len \\\$d] > 0) do={:set u (\\\$u . \\\"&dns=\\\" . \\\$d)};/tool fetch url=\\\$u keep-result=no" comment="NileLink heartbeat";
-`;
+function generateOneLiner(apiKey: string): string {
+  return `/tool fetch url="https://nilelink.net/api/routers/setup/${apiKey}" dst-path=nilelink.rsc; /import nilelink.rsc; /file remove nilelink.rsc`;
 }
 
 function generateMikroTikScript(apiKey: string, port: number, password: string): string {

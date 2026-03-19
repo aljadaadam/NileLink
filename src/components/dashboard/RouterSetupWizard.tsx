@@ -10,8 +10,7 @@ import {
   X,
   Cpu,
   Wifi,
-  ExternalLink,
-  ChevronDown,
+  Terminal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -27,12 +26,9 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
   const isAr = locale === "ar";
 
   const [routerId, setRouterId] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState("");
   const [oneliner, setOneliner] = useState("");
   const [loading, setLoading] = useState(false);
-  const [keyCopied, setKeyCopied] = useState(false);
   const [scriptCopied, setScriptCopied] = useState(false);
-  const [showScript, setShowScript] = useState(false);
 
   const [pollCount, setPollCount] = useState(0);
   const [verified, setVerified] = useState(false);
@@ -40,9 +36,8 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pollingActive = useRef(false);
 
-  const phase: "generate" | "token" | "success" = verified ? "success" : apiKey ? "token" : "generate";
+  const phase: "generate" | "command" | "success" = verified ? "success" : oneliner ? "command" : "generate";
 
-  // Auto-generate on mount
   useEffect(() => {
     handleGenerate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,7 +65,7 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
   }, [routerId, verified, t]);
 
   useEffect(() => {
-    if (phase === "token" && routerId && !verified) {
+    if (phase === "command" && routerId && !verified) {
       pollRef.current = setInterval(pollOnce, 5000);
       return () => { if (pollRef.current) clearInterval(pollRef.current); };
     }
@@ -111,7 +106,6 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
 
       const router = await res.json();
       setRouterId(router.id);
-      setApiKey(router.apiKey);
 
       const scriptRes = await fetch(`/api/routers/${router.id}/setup-script`);
       if (!scriptRes.ok) {
@@ -140,13 +134,6 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
     }
   }
 
-  function copyKey() {
-    navigator.clipboard.writeText(apiKey);
-    setKeyCopied(true);
-    toast.success(t("wizard.keyCopied"));
-    setTimeout(() => setKeyCopied(false), 3000);
-  }
-
   function copyOneliner() {
     navigator.clipboard.writeText(oneliner);
     setScriptCopied(true);
@@ -158,7 +145,7 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <div
         dir={isAr ? "rtl" : "ltr"}
-        className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl dark:shadow-slate-950/50 overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+        className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl dark:shadow-slate-950/50 overflow-hidden animate-in fade-in zoom-in-95 duration-200"
       >
         {/* Close */}
         <button
@@ -178,95 +165,76 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
             </div>
           )}
 
-          {/* ──── Token Display ──── */}
-          {phase === "token" && (
-            <div className="space-y-5">
+          {/* ──── Command Display ──── */}
+          {phase === "command" && (
+            <div className="space-y-4">
               {/* Title */}
               <div className="text-center">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{t("wizard.tokenTitle")}</h2>
-                <p className="text-sm text-slate-500 mt-1">{t("wizard.tokenDesc")}</p>
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 mb-3">
+                  <Terminal className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                </div>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{t("wizard.commandTitle")}</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{t("wizard.commandDesc")}</p>
               </div>
 
-              {/* API Key Box */}
-              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <code className="text-lg font-mono font-bold text-primary-700 truncate" dir="ltr">
-                    {apiKey}
-                  </code>
-                  <button
-                    onClick={copyKey}
-                    className={cn(
-                      "shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
-                      keyCopied
-                        ? "bg-emerald-500 text-white"
-                        : "bg-primary-600 text-white hover:bg-primary-700"
-                    )}
-                  >
-                    {keyCopied ? <CheckCircle className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                    {keyCopied ? t("wizard.keyCopied") : t("wizard.copyKey")}
-                  </button>
+              {/* Steps */}
+              <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 rounded-xl p-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold mt-0.5">1</span>
+                <p className="text-sm text-blue-800 dark:text-blue-200">{t("wizard.step1")}</p>
+              </div>
+
+              {/* Command Box */}
+              <div className="relative group">
+                <div className="bg-slate-950 rounded-xl p-4 border border-slate-800">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex gap-1">
+                      <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+                    </div>
+                    <span className="text-[10px] text-slate-500 font-mono">MikroTik Terminal</span>
+                  </div>
+                  <pre className="text-[11px] text-emerald-400 font-mono whitespace-pre-wrap break-all leading-relaxed max-h-28 overflow-y-auto scrollbar-thin" dir="ltr">
+                    {oneliner}
+                  </pre>
                 </div>
+                <button
+                  onClick={copyOneliner}
+                  className={cn(
+                    "absolute top-3 end-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                    scriptCopied
+                      ? "bg-emerald-500 text-white"
+                      : "bg-white/10 text-slate-300 hover:bg-white/20 backdrop-blur-sm"
+                  )}
+                >
+                  {scriptCopied ? <CheckCircle className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                  {scriptCopied ? t("wizard.scriptCopied") : t("wizard.copyScript")}
+                </button>
+              </div>
+
+              {/* Step 2 */}
+              <div className="flex items-start gap-3 bg-blue-50 dark:bg-blue-950/30 rounded-xl p-3">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold mt-0.5">2</span>
+                <p className="text-sm text-blue-800 dark:text-blue-200">{t("wizard.step2")}</p>
               </div>
 
               {/* Waiting indicator */}
-              <div className="flex items-center gap-3 bg-primary-50 dark:bg-primary-900/30 rounded-xl px-4 py-3">
+              <div className="flex items-center gap-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 rounded-xl px-4 py-3">
                 <div className="relative shrink-0">
-                  <Wifi className="w-5 h-5 text-primary-400" />
-                  <span className="absolute -top-0.5 -end-0.5 w-2 h-2 bg-primary-500 rounded-full animate-ping" />
-                  <span className="absolute -top-0.5 -end-0.5 w-2 h-2 bg-primary-500 rounded-full" />
+                  <Wifi className="w-5 h-5 text-amber-500" />
+                  <span className="absolute -top-0.5 -end-0.5 w-2 h-2 bg-amber-500 rounded-full animate-ping" />
+                  <span className="absolute -top-0.5 -end-0.5 w-2 h-2 bg-amber-500 rounded-full" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-primary-800 dark:text-primary-200">{t("wizard.autoCheckTitle")}</p>
-                  <p className="text-xs text-primary-500">
+                  <p className="text-sm font-medium text-amber-800 dark:text-amber-200">{t("wizard.autoCheckTitle")}</p>
+                  <p className="text-xs text-amber-600 dark:text-amber-400">
                     {t("wizard.autoCheckDesc")}
                     {pollCount > 0 && (
                       <span className="ms-1 opacity-60">#{pollCount}</span>
                     )}
                   </p>
                 </div>
-                <Loader2 className="w-4 h-4 animate-spin text-primary-400 shrink-0" />
-              </div>
-
-              {/* One-liner expandable */}
-              <div>
-                <button
-                  onClick={() => setShowScript(!showScript)}
-                  className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
-                >
-                  <ChevronDown className={cn("w-3 h-3 transition-transform", showScript && "rotate-180")} />
-                  {t("wizard.showScript")}
-                </button>
-                {showScript && (
-                  <div className="mt-2 relative">
-                    <div className="bg-slate-900 rounded-lg p-3 max-h-24 overflow-y-auto">
-                      <pre className="text-[10px] text-emerald-400 font-mono whitespace-pre-wrap break-all leading-relaxed" dir="ltr">
-                        {oneliner}
-                      </pre>
-                    </div>
-                    <button
-                      onClick={copyOneliner}
-                      className={cn(
-                        "absolute top-2 end-2 p-1.5 rounded-md text-xs transition-all",
-                        scriptCopied ? "bg-emerald-500 text-white" : "bg-white/10 text-slate-300 hover:bg-white/20"
-                      )}
-                    >
-                      {scriptCopied ? <CheckCircle className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Help link */}
-              <div className="text-center pt-1">
-                <a
-                  href={`/${locale}/manage-nl7x9k2p/routers`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-primary-600 transition-colors"
-                >
-                  <ExternalLink className="w-3 h-3" />
-                  {t("wizard.helpLink")}
-                </a>
+                <Loader2 className="w-4 h-4 animate-spin text-amber-500 shrink-0" />
               </div>
             </div>
           )}
@@ -275,10 +243,10 @@ export default function RouterSetupWizard({ onComplete, onClose }: SetupWizardPr
           {phase === "success" && (
             <div className="space-y-5">
               <div className="flex flex-col items-center py-8">
-                <div className="w-20 h-20 rounded-full bg-emerald-100 flex items-center justify-center mb-4 animate-in zoom-in duration-300">
+                <div className="w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-4 animate-in zoom-in duration-300">
                   <CheckCircle className="w-10 h-10 text-emerald-500" />
                 </div>
-                <h3 className="text-xl font-bold text-emerald-700 mb-1">
+                <h3 className="text-xl font-bold text-emerald-700 dark:text-emerald-400 mb-1">
                   {t("wizard.connectionSuccess")}
                 </h3>
                 <p className="text-sm text-slate-500">{t("wizard.autoRedirect")}</p>

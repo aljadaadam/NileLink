@@ -365,7 +365,7 @@ export default function CardDesignPage() {
             </h3>
             <div className="flex justify-center py-4">
               <div
-                className="relative w-[300px] rounded-xl overflow-hidden"
+                className="relative w-[340px] h-[210px] rounded-xl overflow-hidden flex items-center gap-3 p-3"
                 style={{
                   border: `2px dashed ${design.borderColor}`,
                   background: design.backgroundImage
@@ -377,51 +377,47 @@ export default function CardDesignPage() {
                 {design.backgroundImage && (
                   <div className="absolute inset-0 bg-white/80 dark:bg-black/40" />
                 )}
-                <div className="relative p-5 text-center space-y-3">
+
+                {/* QR Side */}
+                {design.showQr && (
+                  <div className="relative z-[1] flex-shrink-0 flex items-center justify-center">
+                    <div
+                      className="w-[110px] h-[110px] rounded-lg flex items-center justify-center"
+                      style={{
+                        background: `repeating-conic-gradient(${design.codeColor} 0% 25%, #fff 0% 50%) 50%/10px 10px`,
+                      }}
+                    >
+                      <div className="w-[90px] h-[90px] bg-white/90 rounded flex items-center justify-center text-xs text-slate-400">
+                        QR Code
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Info Side */}
+                <div className="relative z-[1] flex-1 text-center space-y-1.5 min-w-0">
                   {/* Logo */}
                   {design.logo && (
-                    <div className="flex justify-center mb-2">
+                    <div className="flex justify-center mb-1">
                       <img
                         src={design.logo}
                         alt="Logo"
-                        className="max-h-12 max-w-[120px] object-contain"
+                        className="max-h-8 max-w-[80px] object-contain"
                       />
                     </div>
                   )}
 
                   {/* Brand */}
                   <div
-                    className="text-[10px] uppercase tracking-[5px] font-bold"
+                    className="text-[8px] uppercase tracking-[3px] font-bold"
                     style={{ color: design.brandColor }}
                   >
                     {design.brandText || "NileLink WiFi"}
                   </div>
 
-                  {/* QR */}
-                  {design.showQr && (
-                    <div className="flex justify-center">
-                      <div
-                        className="w-[120px] h-[120px] rounded-lg flex items-center justify-center"
-                        style={{
-                          background: `repeating-conic-gradient(${design.codeColor} 0% 25%, #fff 0% 50%) 50%/12px 12px`,
-                        }}
-                      >
-                        <div className="w-[100px] h-[100px] bg-white/90 rounded flex items-center justify-center text-xs text-slate-400">
-                          QR Code
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Divider */}
-                  <hr
-                    className="border-t-[1.5px] border-dashed my-2"
-                    style={{ borderColor: design.borderColor + "80" }}
-                  />
-
                   {/* Code */}
                   <div
-                    className="text-xl font-black tracking-[5px] font-mono"
+                    className="text-base font-black tracking-[3px] font-mono"
                     style={{ color: design.codeColor }}
                   >
                     A1B2C3D4
@@ -429,21 +425,21 @@ export default function CardDesignPage() {
 
                   {/* Package */}
                   {design.showPackage && (
-                    <div className="text-[13px] font-bold text-slate-700 dark:text-slate-200">
+                    <div className="text-[11px] font-bold text-slate-700 dark:text-slate-200">
                       Basic Plan
                     </div>
                   )}
 
                   {/* Price */}
                   {design.showPrice && (
-                    <div className="text-xs font-semibold text-slate-500">
+                    <div className="text-[10px] font-semibold text-slate-500">
                       10.00 USD
                     </div>
                   )}
 
                   {/* Footer */}
                   <div
-                    className="text-[9px] tracking-wide mt-2"
+                    className="text-[7px] tracking-wide mt-1"
                     style={{ color: design.footerColor }}
                   >
                     {design.footerText || "Scan QR or enter code to connect"}

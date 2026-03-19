@@ -243,14 +243,15 @@ export default function VouchersPage() {
 
     const cards = selected.map((v, i) => `
       <div class="voucher">
-        ${logo ? `<img class="logo" src="${logo}" />` : ""}
-        <div class="brand">${escapeHtml(brandTxt)}</div>
-        ${showQr ? `<img class="qr" src="${qrs[i]}" width="140" height="140" />` : ""}
-        <hr class="divider" />
-        <div class="code">${escapeHtml(v.code)}</div>
-        ${showPkg ? `<div class="pkg">${escapeHtml(v.package.name)}</div>` : ""}
-        ${showPrc ? `<div class="price">${escapeHtml(v.package.price)} ${escapeHtml(v.package.currency)}</div>` : ""}
-        <div class="footer">${escapeHtml(footerTxt)}</div>
+        ${showQr ? `<div class="qr-side"><img class="qr" src="${qrs[i]}" width="110" height="110" /></div>` : ""}
+        <div class="info-side">
+          ${logo ? `<img class="logo" src="${logo}" />` : ""}
+          <div class="brand">${escapeHtml(brandTxt)}</div>
+          <div class="code">${escapeHtml(v.code)}</div>
+          ${showPkg ? `<div class="pkg">${escapeHtml(v.package.name)}</div>` : ""}
+          ${showPrc ? `<div class="price">${escapeHtml(v.package.price)} ${escapeHtml(v.package.currency)}</div>` : ""}
+          <div class="footer">${escapeHtml(footerTxt)}</div>
+        </div>
       </div>
     `).join("");
 
@@ -259,26 +260,28 @@ export default function VouchersPage() {
     win.document.write(`
       <html><head><title>Vouchers</title>
       <style>
-        @page { size: 80mm auto; margin: 0; }
+        @page { size: 86mm 54mm; margin: 0; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #fff; width: 80mm; margin: 0 auto; }
-        .voucher { border: 2px dashed ${border}; padding: 16px 20px; margin: 8px;
-          text-align: center; border-radius: 12px; position: relative; overflow: hidden;
+        body { font-family: 'Segoe UI', sans-serif; background: #fff; width: 86mm; margin: 0 auto; }
+        .voucher { border: 2px dashed ${border}; padding: 8px 12px; margin: 0;
+          border-radius: 10px; position: relative; overflow: hidden;
+          width: 86mm; height: 54mm; display: flex; align-items: center; gap: 10px;
           ${bgImg ? `background: url('${bgImg}') center/cover;` : `background: linear-gradient(135deg, ${bgColor} 0%, ${gradTo} 100%);`}
-          break-inside: avoid; page-break-inside: avoid; }
+          break-inside: avoid; page-break-inside: avoid; page-break-after: always; }
         ${bgImg ? `.voucher::before { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.82); }` : ""}
         .voucher > * { position: relative; z-index: 1; }
-        .logo { max-height: 36px; max-width: 100px; margin: 0 auto 6px; display: block; object-fit: contain; }
-        .brand { font-size: 10px; color: ${brandClr}; text-transform: uppercase; letter-spacing: 5px;
-          margin-bottom: 10px; font-weight: 700; }
-        .qr { margin: 8px auto; display: block; }
-        .divider { border: none; border-top: 1.5px dashed ${border}80; margin: 12px 0; }
-        .code { font-size: 22px; font-weight: 900; letter-spacing: 5px; color: ${codeClr};
-          font-family: 'Courier New', monospace; margin: 8px 0; }
-        .pkg { font-size: 13px; color: #334155; font-weight: 700; margin-top: 4px; }
-        .price { font-size: 12px; color: #64748b; margin-top: 3px; font-weight: 600; }
-        .footer { font-size: 9px; color: ${footerClr}; margin-top: 10px; letter-spacing: 0.5px; }
-        @media print { body { width: 80mm; } .voucher { box-shadow: none; } }
+        .qr-side { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .info-side { flex: 1; text-align: center; min-width: 0; }
+        .logo { max-height: 28px; max-width: 80px; margin: 0 auto 4px; display: block; object-fit: contain; }
+        .brand { font-size: 8px; color: ${brandClr}; text-transform: uppercase; letter-spacing: 3px;
+          margin-bottom: 4px; font-weight: 700; }
+        .qr { display: block; }
+        .code { font-size: 16px; font-weight: 900; letter-spacing: 3px; color: ${codeClr};
+          font-family: 'Courier New', monospace; margin: 4px 0; }
+        .pkg { font-size: 11px; color: #334155; font-weight: 700; margin-top: 2px; }
+        .price { font-size: 10px; color: #64748b; margin-top: 2px; font-weight: 600; }
+        .footer { font-size: 7px; color: ${footerClr}; margin-top: 4px; letter-spacing: 0.3px; }
+        @media print { body { width: 86mm; } .voucher { box-shadow: none; } }
       </style></head><body>
       ${cards}
       <script>
@@ -349,39 +352,42 @@ export default function VouchersPage() {
     win.document.write(`
       <html><head><title>Voucher</title>
       <style>
-        @page { size: 80mm 120mm; margin: 0; }
+        @page { size: 86mm 54mm; margin: 0; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #fff;
-          width: 80mm; margin: 0 auto; }
-        .voucher { border: 2px dashed ${border}; padding: 16px 20px; margin: 8px;
-          text-align: center; border-radius: 12px; position: relative; overflow: hidden;
+          width: 86mm; margin: 0 auto; }
+        .voucher { border: 2px dashed ${border}; padding: 8px 12px;
+          border-radius: 10px; position: relative; overflow: hidden;
+          width: 86mm; height: 54mm; display: flex; align-items: center; gap: 10px;
           ${bgImg ? `background: url('${bgImg}') center/cover;` : `background: linear-gradient(135deg, ${bgColor} 0%, ${gradTo} 100%);`} }
         ${bgImg ? `.voucher::before { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.82); }` : ""}
         .voucher > * { position: relative; z-index: 1; }
-        .logo { max-height: 36px; max-width: 100px; margin: 0 auto 6px; display: block; object-fit: contain; }
-        .brand { font-size: 10px; color: ${brandClr}; text-transform: uppercase; letter-spacing: 5px;
-          margin-bottom: 10px; font-weight: 700; }
-        .qr { margin: 8px auto; display: block; }
-        .divider { border: none; border-top: 1.5px dashed ${border}80; margin: 12px 0; }
-        .code { font-size: 22px; font-weight: 900; letter-spacing: 5px; color: ${codeClr};
-          font-family: 'Courier New', monospace; margin: 8px 0; }
-        .pkg { font-size: 13px; color: #334155; font-weight: 700; margin-top: 4px; }
-        .price { font-size: 12px; color: #64748b; margin-top: 3px; font-weight: 600; }
-        .footer { font-size: 9px; color: ${footerClr}; margin-top: 10px; letter-spacing: 0.5px; }
+        .qr-side { flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .info-side { flex: 1; text-align: center; min-width: 0; }
+        .logo { max-height: 28px; max-width: 80px; margin: 0 auto 4px; display: block; object-fit: contain; }
+        .brand { font-size: 8px; color: ${brandClr}; text-transform: uppercase; letter-spacing: 3px;
+          margin-bottom: 4px; font-weight: 700; }
+        .qr { display: block; }
+        .code { font-size: 16px; font-weight: 900; letter-spacing: 3px; color: ${codeClr};
+          font-family: 'Courier New', monospace; margin: 4px 0; }
+        .pkg { font-size: 11px; color: #334155; font-weight: 700; margin-top: 2px; }
+        .price { font-size: 10px; color: #64748b; margin-top: 2px; font-weight: 600; }
+        .footer { font-size: 7px; color: ${footerClr}; margin-top: 4px; letter-spacing: 0.3px; }
         @media print {
-          body { width: 80mm; }
+          body { width: 86mm; }
           .voucher { break-inside: avoid; box-shadow: none; }
         }
       </style></head><body>
       <div class="voucher">
-        ${logo ? `<img class="logo" src="${logo}" />` : ""}
-        <div class="brand">${escapeHtml(brandTxt)}</div>
-        ${showQr ? `<img class="qr" src="${qr}" width="140" height="140" />` : ""}
-        <hr class="divider" />
-        <div class="code">${escapeHtml(voucher.code)}</div>
-        ${showPkg ? `<div class="pkg">${escapeHtml(voucher.package.name)}</div>` : ""}
-        ${showPrc ? `<div class="price">${escapeHtml(voucher.package.price)} ${escapeHtml(voucher.package.currency)}</div>` : ""}
-        <div class="footer">${escapeHtml(footerTxt)}</div>
+        ${showQr ? `<div class="qr-side"><img class="qr" src="${qr}" width="110" height="110" /></div>` : ""}
+        <div class="info-side">
+          ${logo ? `<img class="logo" src="${logo}" />` : ""}
+          <div class="brand">${escapeHtml(brandTxt)}</div>
+          <div class="code">${escapeHtml(voucher.code)}</div>
+          ${showPkg ? `<div class="pkg">${escapeHtml(voucher.package.name)}</div>` : ""}
+          ${showPrc ? `<div class="price">${escapeHtml(voucher.package.price)} ${escapeHtml(voucher.package.currency)}</div>` : ""}
+          <div class="footer">${escapeHtml(footerTxt)}</div>
+        </div>
       </div>
       <script>
         var imgs = document.querySelectorAll('img');

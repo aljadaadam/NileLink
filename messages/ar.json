@@ -338,7 +338,12 @@
     "designCard": "تصميم الكرت",
     "printCards": "طباعة الكروت",
     "noPrintable": "لا توجد كروت قابلة للطباعة",
-    "preparingPrint": "جاري تجهيز الطباعة..."
+    "preparingPrint": "جاري تجهيز الطباعة...",
+    "printCount": "عدد الكروت",
+    "printableAvailable": "كرت متاح للطباعة",
+    "printHint": "سيتم فتح نافذة الطباعة. يمكنك اختيار طباعة مباشرة أو حفظ كملف PDF من إعدادات الطابعة.",
+    "printNow": "طباعة",
+    "savePdf": "تنزيل PDF"
   },
   "cardDesign": {
     "title": "تصميم الكرت",

@@ -338,7 +338,12 @@
     "designCard": "Card Design",
     "printCards": "Print Cards",
     "noPrintable": "No printable cards found",
-    "preparingPrint": "Preparing print..."
+    "preparingPrint": "Preparing print...",
+    "printCount": "Number of cards",
+    "printableAvailable": "cards available to print",
+    "printHint": "A print window will open. You can print directly or save as PDF from the printer settings.",
+    "printNow": "Print",
+    "savePdf": "Download PDF"
   },
   "cardDesign": {
     "title": "Card Design",

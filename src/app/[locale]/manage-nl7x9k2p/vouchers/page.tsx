@@ -80,6 +80,9 @@ export default function VouchersPage() {
   const [showHelp, setShowHelp] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkDeleting, setBulkDeleting] = useState(false);
+  const [showPrintModal, setShowPrintModal] = useState(false);
+  const [printCount, setPrintCount] = useState(0);
+  const [printing, setPrinting] = useState(false);
   const [routers, setRouters] = useState<RouterOption[]>([]);
   const [selectedRouter, setSelectedRouter] = useState<string>("");
   const [cardDesign, setCardDesign] = useState<{
@@ -300,13 +303,26 @@ export default function VouchersPage() {
     win.document.close();
   }
 
-  async function handlePrintAll() {
-    const toPrint = filtered.filter((v) => v.status === "UNUSED" || v.status === "ACTIVE");
+  function openPrintModal() {
+    const printable = filtered.filter((v) => v.status === "UNUSED" || v.status === "ACTIVE");
+    if (printable.length === 0) {
+      toast.error(t("noPrintable"));
+      return;
+    }
+    setPrintCount(printable.length);
+    setShowPrintModal(true);
+  }
+
+  async function handlePrintAll(count?: number) {
+    const allPrintable = filtered.filter((v) => v.status === "UNUSED" || v.status === "ACTIVE");
+    const toPrint = count ? allPrintable.slice(0, count) : allPrintable;
     if (toPrint.length === 0) {
       toast.error(t("noPrintable"));
       return;
     }
 
+    setPrinting(true);
+    setShowPrintModal(false);
     toast.loading(t("preparingPrint"), { id: "print-all" });
 
     const qrPromises = toPrint.map((v) => generateQr(v.code));
@@ -394,6 +410,7 @@ export default function VouchersPage() {
     `);
     win.document.close();
     toast.dismiss("print-all");
+    setPrinting(false);
   }
 
   function copyCode(code: string) {
@@ -572,7 +589,7 @@ export default function VouchersPage() {
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={handlePrintAll}
+            onClick={openPrintModal}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800 transition-all"
           >
             <Printer className="w-4 h-4" />
@@ -1064,6 +1081,113 @@ export default function VouchersPage() {
           </div>
         </div>
       )}
+      {/* Print Cards Modal */}
+      {showPrintModal && (() => {
+        const printable = filtered.filter((v) => v.status === "UNUSED" || v.status === "ACTIVE").length;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowPrintModal(false)} />
+            <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl dark:shadow-slate-950/50 w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+              {/* Modal Header */}
+              <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-5 text-white">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                      <Printer className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold">{t("printCards")}</h2>
+                      <p className="text-emerald-100 text-xs mt-0.5">{printable} {t("printableAvailable")}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowPrintModal(false)}
+                    className="p-1.5 rounded-lg hover:bg-white/20 transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-5 space-y-5">
+                {/* Count */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                    <Hash className="w-4 h-4 text-emerald-500" />
+                    {t("printCount")}
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={printable}
+                    value={printCount}
+                    onChange={(e) => setPrintCount(Math.min(Number(e.target.value) || 1, printable))}
+                    className="input-field"
+                    dir="ltr"
+                  />
+                  <div className="flex gap-2 mt-2">
+                    {[10, 20, 50].filter((n) => n <= printable).map((n) => (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => setPrintCount(n)}
+                        className={cn(
+                          "px-3 py-1 text-xs font-medium rounded-lg border transition-colors",
+                          printCount === n
+                            ? "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300"
+                            : "border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        )}
+                      >
+                        {n}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setPrintCount(printable)}
+                      className={cn(
+                        "px-3 py-1 text-xs font-medium rounded-lg border transition-colors",
+                        printCount === printable
+                          ? "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300"
+                          : "border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
+                      )}
+                    >
+                      {tc("all")} ({printable})
+                    </button>
+                  </div>
+                </div>
+
+                {/* Info */}
+                <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                  <p>{t("printHint")}</p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    disabled={printing}
+                    onClick={() => handlePrintAll(printCount)}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/25 transition-all disabled:opacity-50"
+                  >
+                    {printing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Printer className="w-4 h-4" />}
+                    {t("printNow")}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={printing}
+                    onClick={() => handlePrintAll(printCount)}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800 transition-all disabled:opacity-50"
+                  >
+                    {printing ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileDown className="w-4 h-4" />}
+                    {t("savePdf")}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

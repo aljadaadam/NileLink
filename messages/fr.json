@@ -338,7 +338,12 @@
     "designCard": "Design Carte",
     "printCards": "Imprimer Cartes",
     "noPrintable": "Aucune carte imprimable",
-    "preparingPrint": "Préparation de l'impression..."
+    "preparingPrint": "Préparation de l'impression...",
+    "printCount": "Nombre de cartes",
+    "printableAvailable": "cartes disponibles",
+    "printHint": "Une fenêtre d'impression s'ouvrira. Vous pouvez imprimer directement ou enregistrer en PDF.",
+    "printNow": "Imprimer",
+    "savePdf": "Télécharger PDF"
   },
   "cardDesign": {
     "title": "Design Carte",

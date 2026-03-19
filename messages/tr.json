@@ -338,7 +338,12 @@
     "designCard": "Kart Tasarımı",
     "printCards": "Kartları Yazdır",
     "noPrintable": "Yazdırılabilir kart bulunamadı",
-    "preparingPrint": "Yazdırma hazırlanıyor..."
+    "preparingPrint": "Yazdırma hazırlanıyor...",
+    "printCount": "Kart sayısı",
+    "printableAvailable": "kart yazdırılabilir",
+    "printHint": "Bir yazdırma penceresi açılacak. Doğrudan yazdırabilir veya PDF olarak kaydedebilirsiniz.",
+    "printNow": "Yazdır",
+    "savePdf": "PDF İndir"
   },
   "cardDesign": {
     "title": "Kart Tasarımı",

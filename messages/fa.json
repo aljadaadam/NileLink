@@ -338,7 +338,12 @@
     "designCard": "طراحی کارت",
     "printCards": "چاپ کارت‌ها",
     "noPrintable": "کارت قابل چاپی یافت نشد",
-    "preparingPrint": "در حال آماده‌سازی چاپ..."
+    "preparingPrint": "در حال آماده‌سازی چاپ...",
+    "printCount": "تعداد کارت‌ها",
+    "printableAvailable": "کارت قابل چاپ",
+    "printHint": "یک پنجره چاپ باز می‌شود. می‌توانید مستقیماً چاپ کنید یا به صورت PDF ذخیره کنید.",
+    "printNow": "چاپ",
+    "savePdf": "دانلود PDF"
   },
   "cardDesign": {
     "title": "طراحی کارت",

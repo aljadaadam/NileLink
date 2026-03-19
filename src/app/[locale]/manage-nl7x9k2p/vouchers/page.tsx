@@ -343,10 +343,10 @@ export default function VouchersPage() {
   }
 
   const statusConfig = {
-    UNUSED: { label: t("unused"), badge: "bg-sky-50 text-sky-700 ring-sky-600/20", icon: Ticket, color: "text-sky-600" },
-    ACTIVE: { label: tc("active"), badge: "bg-emerald-50 text-emerald-700 ring-emerald-600/20", icon: Zap, color: "text-emerald-600" },
-    USED: { label: t("used"), badge: "bg-slate-100 text-slate-600 ring-slate-500/20", icon: CheckCircle, color: "text-slate-500" },
-    EXPIRED: { label: t("expired"), badge: "bg-red-50 text-red-700 ring-red-600/20", icon: Ban, color: "text-red-600" },
+    UNUSED: { label: t("unused"), badge: "bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 ring-sky-600/20", icon: Ticket, color: "text-sky-600" },
+    ACTIVE: { label: tc("active"), badge: "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-emerald-600/20", icon: Zap, color: "text-emerald-600" },
+    USED: { label: t("used"), badge: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 ring-slate-500/20", icon: CheckCircle, color: "text-slate-500" },
+    EXPIRED: { label: t("expired"), badge: "bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 ring-red-600/20", icon: Ban, color: "text-red-600" },
   };
 
   // Stats

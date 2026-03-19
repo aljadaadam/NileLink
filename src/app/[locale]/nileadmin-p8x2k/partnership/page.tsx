@@ -336,7 +336,7 @@ export default function PartnershipPage() {
                           <p className="text-[10px] text-slate-400" dir="ltr">{p.user.email}</p>
                         </td>
                         <td className="py-2.5 px-3">
-                          <span className="text-xs font-medium bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full">{p.plan}</span>
+                          <span className="text-xs font-medium bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 px-2 py-0.5 rounded-full">{p.plan}</span>
                         </td>
                         <td className="py-2.5 px-3 font-semibold text-emerald-600">${p.amount}</td>
                         <td className="py-2.5 px-3">

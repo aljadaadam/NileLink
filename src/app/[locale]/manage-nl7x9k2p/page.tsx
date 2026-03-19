@@ -64,25 +64,25 @@ export default function DashboardPage() {
       label: ts("routers"),
       href: "/manage-nl7x9k2p/routers",
       icon: Router,
-      color: "bg-primary-50 text-primary-600",
+      color: "bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400",
     },
     {
       label: ts("vouchers"),
       href: "/manage-nl7x9k2p/vouchers",
       icon: Ticket,
-      color: "bg-accent-50 text-accent-600",
+      color: "bg-accent-50 dark:bg-accent-900/30 text-accent-600 dark:text-accent-400",
     },
     {
       label: ts("packages"),
       href: "/manage-nl7x9k2p/packages",
       icon: Zap,
-      color: "bg-emerald-50 text-emerald-600",
+      color: "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400",
     },
     {
       label: ts("users"),
       href: "/manage-nl7x9k2p/users",
       icon: Users,
-      color: "bg-purple-50 text-purple-600",
+      color: "bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400",
     },
   ];
 

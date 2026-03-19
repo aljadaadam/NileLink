@@ -15,7 +15,7 @@ export async function GET() {
   return NextResponse.json(design || {});
 }
 
-const MAX_IMAGE_SIZE = 500_000; // ~500KB base64
+const MAX_IMAGE_SIZE = 2_800_000; // ~2.8MB base64 (2MB raw file)
 
 export async function PUT(req: NextRequest) {
   const session = await auth();

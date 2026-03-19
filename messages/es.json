@@ -352,6 +352,8 @@
     "uploadLogo": "Subir Logo",
     "backgroundImage": "Imagen de Fondo",
     "uploadBg": "Subir Fondo",
+    "logoDimHint": "Recomendado: 200 × 80 px • Máx 2MB",
+    "bgDimHint": "Recomendado: 1016 × 638 px (86×54 mm) • Máx 2MB",
     "bgColor": "Fondo",
     "gradientColor": "Degradado",
     "borderColor": "Borde",

@@ -352,6 +352,8 @@
     "uploadLogo": "Upload Logo",
     "backgroundImage": "Background Image",
     "uploadBg": "Upload Background",
+    "logoDimHint": "Recommended: 200 × 80 px • Max 2MB",
+    "bgDimHint": "Recommended: 1016 × 638 px (86×54 mm) • Max 2MB",
     "bgColor": "Background",
     "gradientColor": "Gradient",
     "borderColor": "Border",

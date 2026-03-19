@@ -352,6 +352,8 @@
     "uploadLogo": "آپلود لوگو",
     "backgroundImage": "تصویر پس‌زمینه",
     "uploadBg": "آپلود پس‌زمینه",
+    "logoDimHint": "پیشنهادی: 200 × 80 پیکسل • حداکثر 2MB",
+    "bgDimHint": "پیشنهادی: 1016 × 638 پیکسل (86×54 میلی‌متر) • حداکثر 2MB",
     "bgColor": "پس‌زمینه",
     "gradientColor": "گرادیان",
     "borderColor": "حاشیه",

@@ -94,8 +94,8 @@ export default function CardDesignPage() {
         toast.error("Invalid image");
         return;
       }
-      if (file.size > 400_000) {
-        toast.error("Max 400KB");
+      if (file.size > 2_000_000) {
+        toast.error("Max 2MB");
         return;
       }
       const reader = new FileReader();
@@ -284,6 +284,7 @@ export default function CardDesignPage() {
                     onChange={handleImageUpload("logo")}
                   />
                 </div>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">{t("logoDimHint")}</p>
               </div>
 
               {/* Background Image Upload */}
@@ -318,6 +319,7 @@ export default function CardDesignPage() {
                     onChange={handleImageUpload("backgroundImage")}
                   />
                 </div>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">{t("bgDimHint")}</p>
               </div>
             </div>
           </div>

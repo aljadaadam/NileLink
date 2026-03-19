@@ -352,6 +352,8 @@
     "uploadLogo": "Télécharger Logo",
     "backgroundImage": "Image de Fond",
     "uploadBg": "Télécharger Fond",
+    "logoDimHint": "Recommandé : 200 × 80 px • Max 2 Mo",
+    "bgDimHint": "Recommandé : 1016 × 638 px (86×54 mm) • Max 2 Mo",
     "bgColor": "Fond",
     "gradientColor": "Dégradé",
     "borderColor": "Bordure",

@@ -352,6 +352,8 @@
     "uploadLogo": "رفع شعار",
     "backgroundImage": "صورة الخلفية",
     "uploadBg": "رفع خلفية",
+    "logoDimHint": "الحجم المُوصى: 200 × 80 بكسل • أقصى حجم 2MB",
+    "bgDimHint": "الحجم المُوصى: 1016 × 638 بكسل (86×54 مم) • أقصى حجم 2MB",
     "bgColor": "لون الخلفية",
     "gradientColor": "لون التدرج",
     "borderColor": "لون الإطار",

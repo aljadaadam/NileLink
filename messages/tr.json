@@ -352,6 +352,8 @@
     "uploadLogo": "Logo Yükle",
     "backgroundImage": "Arka Plan Resmi",
     "uploadBg": "Arka Plan Yükle",
+    "logoDimHint": "Önerilen: 200 × 80 px • Maks 2MB",
+    "bgDimHint": "Önerilen: 1016 × 638 px (86×54 mm) • Maks 2MB",
     "bgColor": "Arka Plan",
     "gradientColor": "Gradyan",
     "borderColor": "Kenarlık",

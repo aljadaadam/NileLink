@@ -5,6 +5,7 @@ import { routing, RTL_LOCALES, type Locale } from "@/i18n/routing";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { Toaster } from "sonner";
 import ThemeGuard from "@/components/layout/ThemeGuard";
+import LocaleTransition from "@/components/layout/LocaleTransition";
 
 const SITE_URL = "https://nilelink.net";
 
@@ -160,7 +161,9 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider messages={messages}>
           <ThemeGuard />
-          {children}
+          <LocaleTransition>
+            {children}
+          </LocaleTransition>
           <Toaster
             position={dir === "rtl" ? "top-left" : "top-right"}
             richColors

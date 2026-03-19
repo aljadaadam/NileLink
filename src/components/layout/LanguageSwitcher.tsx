@@ -8,6 +8,7 @@ import {
   locales,
   LOCALE_NAMES,
   LOCALE_FLAGS,
+  RTL_LOCALES,
   type Locale,
 } from "@/i18n/routing";
 
@@ -36,7 +37,16 @@ export default function LanguageSwitcher() {
     document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=${365 * 24 * 60 * 60};SameSite=Lax`;
     setOpen(false);
 
-    router.replace(pathname, { locale: newLocale });
+    // Start fade-out + progress bar
+    window.dispatchEvent(new CustomEvent("locale-switch-start"));
+
+    // After fade-out completes, update dir/lang and navigate
+    setTimeout(() => {
+      const newDir = RTL_LOCALES.includes(newLocale) ? "rtl" : "ltr";
+      document.documentElement.setAttribute("dir", newDir);
+      document.documentElement.setAttribute("lang", newLocale);
+      router.replace(pathname, { locale: newLocale });
+    }, 220);
   }
 
   return (

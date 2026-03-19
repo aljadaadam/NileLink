@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { routing, RTL_LOCALES, type Locale } from "@/i18n/routing";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { Toaster } from "sonner";
+import ThemeGuard from "@/components/layout/ThemeGuard";
 
 const SITE_URL = "https://nilelink.net";
 
@@ -158,6 +159,7 @@ export default async function LocaleLayout({
       </head>
       <body>
         <NextIntlClientProvider messages={messages}>
+          <ThemeGuard />
           {children}
           <Toaster
             position={dir === "rtl" ? "top-left" : "top-right"}

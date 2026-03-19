@@ -35,6 +35,7 @@ export default function LanguageSwitcher() {
     }
     document.cookie = `NEXT_LOCALE=${newLocale};path=/;max-age=${365 * 24 * 60 * 60};SameSite=Lax`;
     setOpen(false);
+
     router.replace(pathname, { locale: newLocale });
   }
 

@@ -323,8 +323,9 @@ export default function VouchersPage() {
 
     setPrinting(true);
     setShowPrintModal(false);
-    toast.loading(t("preparingPrint"), { id: "print-all" });
+    toast.loading(t("preparingPrint"), { id: "print-all", duration: 15000 });
 
+    try {
     const qrPromises = toPrint.map((v) => generateQr(v.code));
     const qrs = await Promise.all(qrPromises);
 
@@ -358,7 +359,7 @@ export default function VouchersPage() {
     `).join("");
 
     const win = window.open("", "_blank");
-    if (!win) { toast.dismiss("print-all"); return; }
+    if (!win) { toast.dismiss("print-all"); setPrinting(false); return; }
     win.document.write(`
       <html><head><title>Print All Cards</title>
       <style>
@@ -409,8 +410,12 @@ export default function VouchersPage() {
       </body></html>
     `);
     win.document.close();
-    toast.dismiss("print-all");
-    setPrinting(false);
+    } catch {
+      toast.error(tc("error"));
+    } finally {
+      toast.dismiss("print-all");
+      setPrinting(false);
+    }
   }
 
   function copyCode(code: string) {

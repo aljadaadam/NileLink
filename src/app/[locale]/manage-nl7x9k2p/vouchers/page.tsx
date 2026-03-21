@@ -323,7 +323,7 @@ export default function VouchersPage() {
 
     setPrinting(true);
     setShowPrintModal(false);
-    toast.loading(t("preparingPrint"), { id: "print-all", duration: 15000 });
+    toast.loading(t("preparingPrint"), { id: "print-all" });
 
     try {
     const qrPromises = toPrint.map((v) => generateQr(v.code));
